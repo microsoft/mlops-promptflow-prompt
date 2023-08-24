@@ -1,0 +1,24 @@
+pr: none
+trigger:
+  branches:
+   include:
+     - development
+  paths:
+    include:
+      - flows/*
+      - mlops/*
+      - .azure-pipelines/*
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: MLOps-DEV-VG-pf
+
+steps:
+- task: UsePythonVersion@0
+  displayName: "Setting Python version to 3.9 as required by functions"
+  inputs:
+    versionSpec: '3.9'
+    architecture: 'x64'
+

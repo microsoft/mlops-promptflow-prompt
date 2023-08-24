@@ -1,0 +1,37 @@
+trigger: none
+pr:
+  branches:
+   include:
+     - development
+  paths:
+    include:
+      - flows/*
+      - mlops/*
+      - .azure-pipelines/*
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: MLOps-DEV-VG-pf
+
+stages:
+    - stage: build
+      displayName: build_validation
+      jobs:
+        - template: build_validation_pipeline.yml
+
+    - stage: execute
+      displayName: execute_prompt_evaluation
+      jobs:
+      - job: execute_summarize_evaluation
+        steps:
+        - script: |
+            python -m pip install --upgrade pip
+            pip install -r .azure-pipelines/requirements/evaluation_prompt_requirements.txt
+          displayName: "Load Python Dependencies"
+        - template: templates/get_connection_details.yml
+        - template: templates/execute_mlops_evaluation.yml
+          parameters:
+            script_parameter: |
+              python -m mlops.evaluate_basic_with_llm

@@ -1,0 +1,18 @@
+parameters:
+  - name: script_parameter
+    type: string
+
+steps:
+  - task: AzureCLI@2
+    name: execute_evaluation_task
+    displayName: Execute Evaluation Task
+    continueOnError: false
+    env:
+      EXPERIMENT_TYPE:  ${{parameters.experiment_type}}
+    inputs: 
+      azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+      scriptType: bash
+      workingDirectory: $(System.DefaultWorkingDirectory)
+      scriptLocation: inlineScript
+      inlineScript: |
+        ${{parameters.script_parameter}}

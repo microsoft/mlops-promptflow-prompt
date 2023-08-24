@@ -1,0 +1,3 @@
+{"question": "Python Hello World!","prediction": "print(\"Hello"}
+{"question": "C Hello World!","prediction": "printf(\"Hello"}
+{"question": "C# Hello World!","prediction": "Console.WriteLine(\"Hello"}
