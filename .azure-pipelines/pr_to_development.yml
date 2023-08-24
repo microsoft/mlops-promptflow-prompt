@@ -30,8 +30,15 @@ stages:
             python -m pip install --upgrade pip
             pip install -r .azure-pipelines/requirements/evaluation_prompt_requirements.txt
           displayName: "Load Python Dependencies"
-        - template: templates/get_connection_details.yml
-        - template: templates/execute_mlops_evaluation.yml
-          parameters:
-            script_parameter: |
-              python -m mlops.evaluate_basic_with_llm
+        - script: |
+            python -m mlops.create_connection
+          env:
+            CONNECTION_NAME: azure_open_ai_connection
+            API_KEY: $(API_KEY)
+            API_BASE: $(API_BASE)
+            API_VERSION: 2023-03-15-preview
+            API_TYPE: azure
+          displayName: "Initialize PF Connection"
+        - script: |
+            python -m mlops.evaluate_basic_with_llm
+          displayName: "Initialize PF Connection"
