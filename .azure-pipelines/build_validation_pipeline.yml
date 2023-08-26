@@ -12,7 +12,7 @@ jobs:
 
   - script: |
       python -m pip install --upgrade pip
-      pip install -r devops/pipeline/requirements/build_validation_requirements.txt
+      pip install -r .azure-pipelines/requirements/build_validation_requirements.txt
     displayName: "Load Python Dependencies"
 
 
