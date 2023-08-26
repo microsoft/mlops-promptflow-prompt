@@ -5,7 +5,7 @@
             "ENV_NAME": "pr",
             "AZURE_RM_SVC_CONNECTION": "azure_connection",
             "DATA_PURPOSE": "pr_data",
-            "DATA_PATH":"mlops/named_entity_recognition/data/data.jsonl",
+            "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
             "DATASET_NAME":"temp_dataset",
             "DATASET_DESC":"this dataset is for pr validation only"
         },
@@ -14,7 +14,7 @@
             "ENV_NAME": "dev",
             "AZURE_RM_SVC_CONNECTION": "azure_connection",
             "DATA_PURPOSE": "test_data",
-            "DATA_PATH":"mlops/named_entity_recognition/data/eval_data.jsonl",
+            "DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
             "DATASET_NAME":"named_entity_recognition_test",
             "DATASET_DESC":"this dataset is for testing batch deployments"
         },
@@ -23,7 +23,7 @@
             "ENV_NAME": "dev",
             "AZURE_RM_SVC_CONNECTION": "azure_connection",
             "DATA_PURPOSE": "training_data",
-            "DATA_PATH":"mlops/named_entity_recognition/data/data.jsonl",
+            "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
             "DATASET_NAME":"named_entity_recognition_train",
             "DATASET_DESC":"this dataset is for training models"
         }
