@@ -44,7 +44,7 @@ stages:
         - template: templates/execute_mlops_pipeline.yml
           parameters:
             script_parameter: |
-              python -m mlops.${{ parameters.model_type }}.src.mlops_pipeline \
+              python -m mlops.${{ parameters.model_type }}.mlops_pipeline \
                 --subscription_id $(SUBSCRIPTION_ID) \
                 --resource_group_name $(RESOURCE_GROUP_NAME) \
                 --workspace_name $(WORKSPACE_NAME) \
