@@ -9,7 +9,6 @@ trigger:
       - mlops/common/*
       - mlops/named_entity_recognition/*
       - flows/named_entity_recognition/*
-      - model/named_entity_recognition/*
 
 pool:
   vmImage: ubuntu-latest
