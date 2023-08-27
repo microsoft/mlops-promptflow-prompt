@@ -4,6 +4,9 @@
 
 ```bash
 python -m mlops.named_entity_recognition.local_create_aoai_connection
+python -m mlops.named_entity_recognition.local_prompt_test
+python -m mlops.named_entity_recognition.local_prompt_pipeline
+python -m mlops.named_entity_recognition.local_prompt_eval
 ```
 
 ## Azure DevOps Setup
