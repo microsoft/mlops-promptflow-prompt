@@ -1,14 +1,14 @@
-# Project
+# MLOps for PromptFlow Workloads
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## Local Execution
 
-As the maintainer of this project, please make a few updates:
+```bash
+python -m mlops.named_entity_recognition.local_create_aoai_connection
+```
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+## Azure DevOps Setup
+
+## How to Add More Flows
 
 ## Contributing
 
