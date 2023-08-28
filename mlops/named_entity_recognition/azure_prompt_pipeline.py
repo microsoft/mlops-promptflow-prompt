@@ -49,9 +49,9 @@ def prepare_and_execute(
             if stage == elem['ENV_NAME'] and data_purpose == elem['DATA_PURPOSE']:
                 dataset_name = elem["DATASET_NAME"]
 
-    data = ml_client.data.get(name=dataset_name,label='latest')
+    # data = ml_client.data.get(name=dataset_name,label='latest')
 
-    data_id = f"azureml:{dataset_name}:latest" # added
+    data_id = f"azureml:{dataset_name}@latest" # added
     print(data_id) # added
 
     run_ids = []
