@@ -57,5 +57,5 @@ stages:
                 --standard_flow_path $(STANDARD_FLOW_PATH) \
                 --model_name $(MODEL_NAME) \
                 --data_config_path "$(DATA_CONFIG_PATH)" \
-                --data_purpose "training_data" \
+                --data_purpose "pr_data" \
                 --output_file run_id.txt
