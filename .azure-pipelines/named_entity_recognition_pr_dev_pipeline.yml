@@ -1,5 +1,5 @@
-pr: none
-trigger:
+trigger: none
+pr:
   branches:
    include:
      - development
@@ -26,7 +26,7 @@ parameters:
    default: "named_entity_recognition"
 
 stages:
-  - template: ../templates/variables_template.yml
+  - template: ./templates/variables_template.yml
     parameters:
       env_name: ${{parameters.env_name}}
       model_type: ${{parameters.model_type}}
