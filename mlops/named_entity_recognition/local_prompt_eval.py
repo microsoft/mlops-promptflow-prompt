@@ -1,8 +1,11 @@
 import json
+from dotenv import load_dotenv
 from promptflow import PFClient
 from promptflow.entities import Run
 
 def main():
+    load_dotenv()
+    
     # Get a pf client to manage runs
     pf = PFClient()
 
