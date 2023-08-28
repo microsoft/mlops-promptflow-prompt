@@ -1,9 +1,9 @@
 import unittest
 
-from match import is_match
+from flows.named_entity_recognition.flows.evaluation.match import is_match
 
 
-class IsMatchTest(unittest.TestCase):
+class TestIsMatch(unittest.TestCase):
     def test_normal(self):
         self.assertEqual(is_match(["a", "b"], ["B", "a"], True, True, False), True)
         self.assertEqual(is_match(["a", "b"], ["B", "a"], True, False, False), False)

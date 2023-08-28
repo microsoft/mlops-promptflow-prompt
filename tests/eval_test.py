@@ -7,7 +7,7 @@ from azure.ai.ml import MLClient
 import promptflow
 
 
-class BaseTest(unittest.TestCase):
+class TestBase(unittest.TestCase):
     def setUp(self) -> None:
         root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")
         self.flow_path = os.path.join(root, "named_entity_recognition")
