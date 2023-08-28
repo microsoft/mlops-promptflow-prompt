@@ -1,7 +1,3 @@
-parameters:
- - name: model_type
-   displayName: "type of model to execute"
-
 jobs:
 - job: Build_Validation_Pipeline
   steps:

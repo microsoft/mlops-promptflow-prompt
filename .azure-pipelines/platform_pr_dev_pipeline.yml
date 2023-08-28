@@ -16,8 +16,6 @@ stages:
       - template: templates/experiment_variables.yml
       jobs:
         - template: build_validation_pipeline.yml
-          parameters:
-            model_type: ${{ parameters.model_type }}
     - stage: execute_training_job
       displayName: execute_training_job
       dependsOn: 
