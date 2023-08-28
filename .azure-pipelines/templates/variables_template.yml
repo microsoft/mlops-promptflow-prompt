@@ -76,13 +76,13 @@ stages:
           printenv
         fi
       name: validate_variable_load
-    - task: AzureKeyVault@2
-      continueOnError: false
-      inputs:
-        azureSubscription: $(AZURE_RM_SVC_CONNECTION)
-        KeyVaultName: $(KEYVAULT_NAME)
-        SecretsFilter: '*'
-        RunAsPreJob: false
-      name: load_keyvault_secrets
+    #- task: AzureKeyVault@2
+    #  continueOnError: false
+    #  inputs:
+    #    azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+    #    KeyVaultName: $(KEYVAULT_NAME)
+    #    SecretsFilter: '*'
+    #    RunAsPreJob: false
+    #  name: load_keyvault_secrets
 
           
