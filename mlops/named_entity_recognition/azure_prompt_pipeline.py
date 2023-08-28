@@ -51,7 +51,7 @@ def prepare_and_execute(
 
     data = ml_client.data.get(name=dataset_name,label='latest')
 
-    data_id = f"azureml:{data.name}:{data.version}" # added
+    data_id = f"azureml:{dataset_name}:latest" # added
     print(data_id) # added
 
     run_ids = []

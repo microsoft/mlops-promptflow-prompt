@@ -9,7 +9,7 @@ def main():
     pf = PFClient()
 
     results = pf.run( 
-        flow="./flows/named_entity_recognition/flows/standard",
+        flow="./flows/named_entity_recognition/standard",
         data="./flows/named_entity_recognition/data/data.jsonl",
         connections=
             {"NER_LLM": 

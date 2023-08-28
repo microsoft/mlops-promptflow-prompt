@@ -12,10 +12,10 @@
             "WORKSPACE_NAME": "sbaydachmlwrksp",
             "CONNECTION_NAME": "aoai",
             "DEPLOYMENT_NAME": "gpt-35-turbo",
-            "STANDARD_FLOW_PATH": "flows/named_entity_recognition/flows/standard",
-            "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/flows/evaluation",
-            "DATA_CONFIG_PATH": "flows/named_entity_recognition/configs/data_config.json",
-            "REALTIME_DEPLOYMENT_CONFIG": "flows/named_entity_recognition/configs/deployment_config.json"           
+            "STANDARD_FLOW_PATH": "flows/named_entity_recognition/standard",
+            "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/evaluation",
+            "DATA_CONFIG_PATH": "mlops/named_entity_recognition/configs/data_config.json",
+            "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json"           
         },
         {
             "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
@@ -29,10 +29,10 @@
             "WORKSPACE_NAME": "sbaydachmlwrksp",
             "CONNECTION_NAME": "aoai",
             "DEPLOYMENT_NAME": "gpt-35-turbo",
-            "STANDARD_FLOW_PATH": "flows/named_entity_recognition/flows/standard",
-            "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/flows/evaluation",
-            "DATA_CONFIG_PATH": "flows/named_entity_recognition/configs/data_config.json",
-            "REALTIME_DEPLOYMENT_CONFIG": "flows/named_entity_recognition/configs/deployment_config.json"           
+            "STANDARD_FLOW_PATH": "flows/named_entity_recognition/standard",
+            "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/evaluation",
+            "DATA_CONFIG_PATH": "mlops/named_entity_recognition/configs/data_config.json",
+            "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json"           
         }
 
     ]
