@@ -2,7 +2,7 @@
 parameters:
  - name: exec_environment
    displayName: "Execution Environment"
-   default: "dev"
+   default: "pr"
  - name: model_type
    displayName: "type of model to execute"
 
@@ -44,20 +44,18 @@ stages:
         - template: templates/execute_mlops_pipeline.yml
           parameters:
             script_parameter: |
-              python -m mlops.${{ parameters.model_type }}.src.mlops_pipeline \
-                --subscription_id $(SUBSCRIPTION_ID) \
+              python -m mlops.${{ parameters.model_type }}.azure_prompt_pipeline \
+                --subscription_id "$(SUBSCRIPTION_ID)" \
                 --resource_group_name $(RESOURCE_GROUP_NAME) \
                 --workspace_name $(WORKSPACE_NAME) \
-                --cluster_name $(CLUSTER_NAME) \
-                --cluster_size $(CLUSTER_SIZE) \
-                --cluster_region $(CLUSTER_REGION) \
-                --build_reference $(BUILD.BUILDID) \
-                --deploy_environment ${{parameters.exec_environment}} \
+                --runtime_name $(RUNTIME_NAME) \
+                --connection_name $(CONNECTION_NAME) \
+                --deployment_name $(DEPLOYMENT_NAME) \
+                --build_id $(BUILD.BUILDID) \
+                --stage ${{parameters.exec_environment}} \
                 --experiment_name $(EXPERIMENT_NAME) \
-                --display_name $(DISPLAY_NAME) \
-                --wait_for_completion True \
-                --environment_name $(ENVIRONMENT_NAME) \
-                --env_base_image_name $(ENV_BASE_IMAGE_NAME) \
+                --standard_flow_path $(STANDARD_FLOW_PATH) \
                 --model_name $(MODEL_NAME) \
                 --data_config_path "$(DATA_CONFIG_PATH)" \
-                --conda_path $(CONDA_PATH)
+                --data_purpose "pr_data" \
+                --output_file run_id.txt
