@@ -1,6 +1,6 @@
 import unittest
 
-from flows.named_entity_recognition.flows.evaluation.match import is_match
+from flows.named_entity_recognition.evaluation.match import is_match
 
 
 class TestIsMatch(unittest.TestCase):

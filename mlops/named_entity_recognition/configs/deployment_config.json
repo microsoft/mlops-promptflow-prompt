@@ -3,7 +3,6 @@
         {
             "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
-            "AZURE_RM_SVC_CONNECTION": "azure_connection",
             "ENDPOINT_NAME": "named-entity",
             "ENDPOINT_DESC": "An online endpoint serving an MLflow model for online taxi",
             "DEPLOYMENT_DESC": "prompt flow deployment",
