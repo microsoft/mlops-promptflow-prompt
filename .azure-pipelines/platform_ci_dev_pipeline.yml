@@ -106,21 +106,30 @@ stages:
       - name: run_id_from_submit_job
         value: $[ stageDependencies.execute_prompt_experiment.Execute_ml_Job_Pipeline.outputs['read_run_id.RUN_NAME'] ]
       jobs:
-      - job: ApproveDeployment
-        displayName: Approve for prompt deployment 
-        pool: server    
-        timeoutInMinutes: 60 
-        steps:   
-        - task: ManualValidation@0
-          timeoutInMinutes: 60 
-          inputs:
-            notifyUsers: |
-              rimod@microsoft.com
-            instructions: "$(run_id_from_submit_job)"
-            onTimeout: 'reject'
+
+      #=====================================
+      # Manual Approval: uncomment if needed
+      #=====================================
+      #- job: ApproveDeployment
+      #  displayName: Approve for prompt deployment 
+      #  pool: server    
+      #  timeoutInMinutes: 60 
+      #  steps:   
+      #  - task: ManualValidation@0
+      #    timeoutInMinutes: 60 
+      #    inputs:
+      #      notifyUsers: |
+      #        aaaaaaa@your_email.com
+      #      instructions: "$(run_id_from_submit_job)"
+      #      onTimeout: 'reject'
       - job: deploy_flow
-        dependsOn: 
-        - ApproveDeployment
+
+        #==================================================
+        # These two lines are important for manual approval
+        #==================================================
+        #dependsOn: 
+        #- ApproveDeployment
+
         steps:
         - template: templates/get_connection_details.yml
         - template: templates/configure_azureml_agent.yml
