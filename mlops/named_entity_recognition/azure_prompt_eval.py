@@ -30,7 +30,7 @@ def prepare_and_execute(subscription_id,
 
     ml_client = MLClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
 
-    pf = PFClient(ml_client)
+    pf = PFClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
     
     flow = eval_flow_path
     standard_flow = standard_flow_path

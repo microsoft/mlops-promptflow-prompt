@@ -38,7 +38,7 @@ def prepare_and_execute(
 
     ml_client = MLClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
 
-    pf = PFClient(ml_client)
+    pf = PFClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
 
     flow = standard_flow_path
     dataset_name = None
