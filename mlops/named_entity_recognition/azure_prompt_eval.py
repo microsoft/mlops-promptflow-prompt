@@ -1,16 +1,13 @@
 import json
-import time
 import yaml
 import datetime
 import ast
-import os
+import argparse
+import pandas as pd
 from promptflow.entities import Run
 from azure.identity import DefaultAzureCredential
-from azure.ai.ml import MLClient
 from promptflow.azure import PFClient
-import argparse
-from promptflow.entities import AzureOpenAIConnection
-import pandas as pd
+
 
 def prepare_and_execute(subscription_id,
         resource_group_name,
@@ -28,8 +25,6 @@ def prepare_and_execute(subscription_id,
         data_purpose
     ):
 
-    ml_client = MLClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
-
     pf = PFClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
     
     flow = eval_flow_path
@@ -42,7 +37,7 @@ def prepare_and_execute(subscription_id,
             if stage == elem['ENV_NAME'] and data_purpose == elem['DATA_PURPOSE']:
                 dataset_name = elem["DATASET_NAME"]
 
-    data = ml_client.data.get(name=dataset_name,label='latest')
+    data = pf.ml_client.data.get(name=dataset_name,label='latest')
 
     data_id = f"azureml:{data.name}:{data.version}" # added
     print(data_id) # added
@@ -66,7 +61,7 @@ def prepare_and_execute(subscription_id,
         my_run = pf.runs.get(flow_run)
 
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        pipeline_job = pf.run(
+        run = Run( 
             flow=flow,
             data=data_id, 
             run=my_run, 
@@ -77,10 +72,13 @@ def prepare_and_execute(subscription_id,
             runtime=runtime,
             name=f"{experiment_name}_eval_{timestamp}",
             display_name=f"{experiment_name}_eval_{timestamp}",
-            tags={"build_id": build_id},
-            stream=True
+            tags={"build_id": build_id}
 
         )
+        run._experiment_name=f"{experiment_name}_eval"
+
+        pipeline_job = pf.runs.create_or_update(run, stream=True)
+
         df_result = None
         
         if pipeline_job.status == "Completed" or pipeline_job.status == "Finished": # 4
