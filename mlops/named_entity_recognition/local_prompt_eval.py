@@ -1,7 +1,7 @@
 import json
+import os
 from dotenv import load_dotenv
 from promptflow import PFClient
-from promptflow.entities import Run
 
 def main():
     load_dotenv()
@@ -12,7 +12,15 @@ def main():
     base_run = pf.run( 
         flow="./flows/named_entity_recognition/flows/standard",
         # run flow against local data or existing run, only one of data & run can be specified. 
-        data="./flows/named_entity_recognition/data/data.jsonl"
+        data="./flows/named_entity_recognition/data/data.jsonl",
+        connections=
+            {"NER_LLM": 
+                {
+                    "connection": os.environ.get("AOAI_CONNECTION_NAME"),
+                    # this line is doing nothing due to a bug
+                    "deployment_name": os.environ.get("AOAI_DEPLOYMENT_NAME")
+                }
+            }
     )
 
     # run the flow with exisiting run
