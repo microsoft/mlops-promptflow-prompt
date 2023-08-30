@@ -9,10 +9,10 @@ pr:
       - mlops/common/*
       - mlops/named_entity_recognition/*
       - flows/named_entity_recognition/*
+      - tests
 
 pool:
   vmImage: ubuntu-latest
-
 
 variables:
 - group: mlops_platform_dev_vg

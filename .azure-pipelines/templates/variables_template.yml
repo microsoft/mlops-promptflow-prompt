@@ -11,7 +11,7 @@ stages:
     steps:
     - powershell: |
         $json = Get-Content -Raw -Path '$(System.DefaultWorkingDirectory)/config/model_config.json' | ConvertFrom-Json
-        $firstElement = $json.models | Where-Object {($_.ML_MODEL_CONFIG_NAME -eq "${{ parameters.model_type }}") -and ($_.ENV_NAME -eq "${{ parameters.env_name }}")} | Select-Object -First 1
+        $firstElement = $json.flows | Where-Object {($_.PROMPT_FLOW_CONFIG_NAME -eq "${{ parameters.model_type }}") -and ($_.ENV_NAME -eq "${{ parameters.env_name }}")} | Select-Object -First 1
         
         Write-Output $firstElement.KEYVAULT_NAME
         
@@ -34,8 +34,8 @@ stages:
   - job: validate_assign_variables
     dependsOn: load_config_variables
     variables:
-    - name:  ML_MODEL_CONFIG_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.ML_MODEL_CONFIG_NAME'] ]
+    - name:  PROMPT_FLOW_CONFIG_NAME
+      value: $[ dependencies.load_config_variables.outputs['loading_model_config.PROMPT_FLOW_CONFIG_NAME'] ]
     - name:  KEYVAULT_NAME
       value: $[ dependencies.load_config_variables.outputs['loading_model_config.KEYVAULT_NAME'] ]       
     - name:  RUNTIME_NAME
@@ -65,7 +65,7 @@ stages:
 
     steps:
     - script: |
-        if [ -z "$(ML_MODEL_CONFIG_NAME)" ]
+        if [ -z "$(PROMPT_FLOW_CONFIG_NAME)" ]
         then
           echo "variables are not available. Check parameter values or config json file for valid values.."
           exit 1

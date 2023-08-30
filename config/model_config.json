@@ -1,7 +1,7 @@
 {
-    "models":[     
+    "flows":[     
         {
-            "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
+            "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "pr",
             "RUNTIME_NAME": "oobruntime",
             "EXPERIMENT_BASE_NAME": "mlops",
@@ -17,7 +17,7 @@
             "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json"           
         },
         {
-            "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
+            "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
             "RUNTIME_NAME": "oobruntime",
             "EXPERIMENT_BASE_NAME": "mlops",
