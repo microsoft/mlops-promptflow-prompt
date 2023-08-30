@@ -8,7 +8,7 @@ from azure.ai.ml.entities import (
 from azure.identity import DefaultAzureCredential
 
 
-def provision_enpoint(
+def provision_endpoint(
          subscription_id,
          resource_group_name,
          workspace_name,
@@ -48,7 +48,7 @@ def main():
     parser.add_argument("--environment_name",type=str,help="environment name (e.g. dev, test, prod)", required=True)
     args = parser.parse_args()
 
-    provision_enpoint(
+    provision_endpoint(
          args.subscription_id,
          args.resource_group_name,
          args.workspace_name,
