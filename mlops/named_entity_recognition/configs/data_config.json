@@ -1,7 +1,7 @@
 {
     "datasets":[
         {
-            "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
+            "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "pr",
             "DATA_PURPOSE": "pr_data",
             "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
@@ -9,7 +9,7 @@
             "DATASET_DESC":"this dataset is for pr validation only"
         },
         {
-            "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
+            "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
             "DATA_PURPOSE": "test_data",
             "DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
@@ -17,7 +17,7 @@
             "DATASET_DESC":"this dataset is for testing batch deployments"
         },
         {
-            "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
+            "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
             "DATA_PURPOSE": "training_data",
             "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",

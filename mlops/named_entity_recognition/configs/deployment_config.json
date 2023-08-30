@@ -1,7 +1,7 @@
 {
     "real_time":[
         {
-            "ML_MODEL_CONFIG_NAME": "named_entity_recognition",
+            "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
             "ENDPOINT_NAME": "named-entity",
             "ENDPOINT_DESC": "An online endpoint serving a PromptFlow model",

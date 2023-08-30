@@ -5,10 +5,7 @@ import argparse
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import (
     ManagedOnlineDeployment,
-    Environment,
-    CodeConfiguration,
-    Model,
-    OnlineRequestSettings
+    Environment
 )
 from azure.identity import DefaultAzureCredential
 
@@ -21,7 +18,6 @@ parser.add_argument("--workspace_name", type=str, help="Azure Machine learning W
 parser.add_argument("--model_name", type=str, help="registered model name to be deployed", required=True)
 parser.add_argument("--model_version", type=str, help="registered model version to be deployed", required=True)
 parser.add_argument("--build_id", type=str, help="Azure DevOps build id for deployment", required=True)
-#parser.add_argument("--run_id", type=str, help="AML run id for model generation", required=True)
 parser.add_argument("--env_type", type=str, help="env name (dev, test, prod) for deployment", required=True)
 parser.add_argument("--realtime_deployment_config", type=str, help="file path of realtime config")
 

@@ -1,6 +1,6 @@
 variables:
-- name:  ML_MODEL_CONFIG_NAME
-  value: $[ stageDependencies.variable_generation.load_config_variables.outputs['loading_model_config.ML_MODEL_CONFIG_NAME'] ]
+- name:  PROMPT_FLOW_CONFIG_NAME
+  value: $[ stageDependencies.variable_generation.load_config_variables.outputs['loading_model_config.PROMPT_FLOW_CONFIG_NAME'] ]
 - name:  KEYVAULT_NAME
   value: $[ stageDependencies.variable_generation.load_config_variables.outputs['loading_model_config.KEYVAULT_NAME'] ]       
 - name:  RUNTIME_NAME
