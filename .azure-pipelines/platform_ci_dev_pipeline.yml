@@ -119,7 +119,7 @@ stages:
       #    timeoutInMinutes: 60 
       #    inputs:
       #      notifyUsers: |
-      #        aaaaaaa@your_email.com
+      #        replace_with_actual_email@your_email.com
       #      instructions: "$(run_id_from_submit_job)"
       #      onTimeout: 'reject'
       - job: deploy_flow
@@ -145,8 +145,7 @@ stages:
                 --model_path $(STANDARD_FLOW_PATH) \
                 --model_type ${{ parameters.model_type }} \
                 --output_file "model_version.txt" \
-                --build_id $(Build.Buildid) \
-                --env_type ${{parameters.exec_environment}}
+                --build_id $(Build.Buildid) 
         - task: AzureCLI@2
           displayName: Read model version
           name: read_model_version
