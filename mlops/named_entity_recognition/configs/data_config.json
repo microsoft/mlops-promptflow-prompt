@@ -5,8 +5,8 @@
             "ENV_NAME": "pr",
             "DATA_PURPOSE": "pr_data",
             "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
-            "DATASET_NAME":"temp_dataset",
-            "DATASET_DESC":"this dataset is for pr validation only"
+            "DATASET_NAME":"pr_dataset",
+            "DATASET_DESC":"this dataset is for pr validation"
         },
         {
             "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
@@ -14,7 +14,7 @@
             "DATA_PURPOSE": "test_data",
             "DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
             "DATASET_NAME":"named_entity_recognition_test",
-            "DATASET_DESC":"this dataset is for testing batch deployments"
+            "DATASET_DESC":"this dataset is for testing experiments"
         },
         {
             "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
@@ -22,7 +22,7 @@
             "DATA_PURPOSE": "training_data",
             "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
             "DATASET_NAME":"named_entity_recognition_train",
-            "DATASET_DESC":"this dataset is for training models"
+            "DATASET_DESC":"this dataset is for flow experiments"
         }
     ]
 }

@@ -4,7 +4,7 @@
             "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
             "ENDPOINT_NAME": "named-entity",
-            "ENDPOINT_DESC": "An online endpoint serving a PromptFlow model",
+            "ENDPOINT_DESC": "An online endpoint serving a PromptFlow flow",
             "DEPLOYMENT_DESC": "prompt flow deployment",
             "DEPLOYMENT_NAME": "green",
             "DEPLOYMENT_TRAFFIC_ALLOCATION": 100,

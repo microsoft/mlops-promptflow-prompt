@@ -4,7 +4,8 @@ import argparse
 from azure.ai.ml.entities import Data
 from azure.ai.ml.constants import AssetTypes
 import json
-import csv
+
+
 parser = argparse.ArgumentParser("register data assets")
 parser.add_argument("--subscription_id", type=str, help="Azure subscription id", required=True)
 parser.add_argument("--resource_group_name", type=str, help="Azure Machine learning resource group", required=True)
@@ -33,7 +34,6 @@ for elem in data_config['datasets']:
             dataset_desc = elem["DATASET_DESC"]
             dataset_name = elem["DATASET_NAME"]
 
-            
             aml_dataset = Data(
                 path=data_path,
                 type=AssetTypes.URI_FILE,

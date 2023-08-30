@@ -13,16 +13,11 @@ parser.add_argument("--subscription_id", type=str, help="Azure subscription id",
 parser.add_argument("--resource_group_name", type=str, help="Azure Machine learning resource group", required=True)
 parser.add_argument("--workspace_name", type=str, help="Azure Machine learning Workspace name", required=True)
 parser.add_argument("--realtime_deployment_config", type=str, help="file path of realtime config")
-#parser.add_argument("--run_id", type=str, help="AML run id for model generation", required=True)
 parser.add_argument("--build_id", type=str, help="Azure DevOps build id for deployment", required=True)
 parser.add_argument("--environment_name",type=str,help="environment name (e.g. dev, test, prod)", required=True)
 args = parser.parse_args()
 
-
-
-
 build_id = args.build_id
-
 
 real_config = args.realtime_deployment_config
 environment_name = args.environment_name

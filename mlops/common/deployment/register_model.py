@@ -1,19 +1,16 @@
 
-import json
+
 import argparse
-import shutil
-import os
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import Model
 from azure.identity import DefaultAzureCredential
 
-parser = argparse.ArgumentParser("register Model")
+parser = argparse.ArgumentParser("register model")
 parser.add_argument("--subscription_id", type=str, help="Azure subscription id", required=True)
 parser.add_argument("--resource_group_name", type=str, help="Azure Machine learning resource group", required=True)
 parser.add_argument("--workspace_name", type=str, help="Azure Machine learning Workspace name", required=True)
 parser.add_argument("--model_name", type=str, help="registered model name to be deployed", required=True)
 parser.add_argument("--build_id", type=str, help="Azure DevOps build id for deployment", required=True)
-#parser.add_argument("--run_id", type=str, help="AML run id for model generation", required=True)
 parser.add_argument("--env_type", type=str, help="env name (dev, test, prod) for deployment", required=True)
 parser.add_argument("--model_path", type=str, help="file path of model files")
 parser.add_argument("--model_type", type=str, help="model type")

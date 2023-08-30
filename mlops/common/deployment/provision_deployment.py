@@ -9,8 +9,6 @@ from azure.ai.ml.entities import (
 )
 from azure.identity import DefaultAzureCredential
 
-
-
 parser = argparse.ArgumentParser("provision_deployment")
 parser.add_argument("--subscription_id", type=str, help="Azure subscription id", required=True)
 parser.add_argument("--resource_group_name", type=str, help="Azure Machine learning resource group", required=True)
