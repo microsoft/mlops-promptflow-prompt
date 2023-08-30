@@ -75,6 +75,18 @@ At least three parameters must be modified in `config/model_config.json`:
 - **RESOURCE_GROUP_NAME**: Azure ML Resource Group name.
 - **WORKSPACE_NAME**: Azure ML Workspace name.
 
+### Service Connection
+
+Create a service connection in Azure DevOps. You can use [this document](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml) as a reference. Use Azure Resource Manager as a type of the service connection.
+
+### Variable Group
+
+Create a new variable group `mlops_platform_dev_vg` with the following variables:
+
+- AZURE_RM_SVC_CONNECTION: the service connection name from the previous step.
+
+Information about variable groups in Azure DevOps can be found in [this document](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops&tabs=classic).
+
 ### Create Builds
 
 Create two Azure Pipelines. Both Azure Pipelines should be created based on existing YAML files. The first one is based on the [named_entity_recognition_pr_dev_pipeline.yml], and it helps to maintain code quality for all PRs. The second Azure Pipeline is based on [named_entity_recognition_ci_dev_pipeline.yml](../devops/pipeline/ci_dev_pipeline.yml) that should be executed automatically once new PR has been merged into the **development** branch. The main idea of this pipeline is to execute training on the full dataset, evaluate results and publish the PromptFlow model as a service into the development environment. The second pipeline can be replicated to make deployment into qa and production environments later.
