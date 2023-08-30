@@ -1,13 +1,10 @@
 import json
-import time
-import yaml
 import datetime
+import argparse
 from promptflow.entities import Run
 from azure.identity import DefaultAzureCredential
-from azure.ai.ml import MLClient
 from promptflow.azure import PFClient
-import argparse
-from promptflow.entities import AzureOpenAIConnection
+
 
 
 def are_dictionaries_similar(dict1, old_runs):
@@ -36,8 +33,6 @@ def prepare_and_execute(
         data_purpose
     ):
 
-    ml_client = MLClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
-
     pf = PFClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
 
     flow = standard_flow_path
@@ -49,9 +44,9 @@ def prepare_and_execute(
             if stage == elem['ENV_NAME'] and data_purpose == elem['DATA_PURPOSE']:
                 dataset_name = elem["DATASET_NAME"]
 
-    data = ml_client.data.get(name=dataset_name,label='latest')
+    data = pf.ml_client.data.get(name=dataset_name,label='latest')
 
-    data_id = f"azureml:{data.name}:{data.version}" # added
+    data_id = f"azureml:{data.name}:{data.version}"
     print(data_id) # added
 
     run_ids = []
@@ -68,7 +63,16 @@ def prepare_and_execute(
         },
         column_mapping={"text": "${data.text}", "entity_type": "${data.entity_type}"},
         tags={"build_id": build_id},
+        connections=
+            {"NER_LLM": 
+                {
+                    "connection": connection_name,
+                    # this line is doing nothing due to a bug
+                    "deployment_name": deployment_name
+                }
+            }
     )
+    run._experiment_name=experiment_name
 
     pipeline_job = pf.runs.create_or_update(run, stream=True)
     run_ids.append(pipeline_job.name)

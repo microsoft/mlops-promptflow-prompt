@@ -1,9 +1,9 @@
 import unittest
 
-from cleansing import cleansing
+from  flows.named_entity_recognition.standard.cleansing import cleansing
 
 
-class CleansingTest(unittest.TestCase):
+class TestCleansing(unittest.TestCase):
     def test_normal(self):
         self.assertEqual(cleansing("a, b, c"), ["a", "b", "c"])
         self.assertEqual(cleansing("a, b, (425)137-98-25, "), ["a", "b", "(425)137-98-25"])

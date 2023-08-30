@@ -5,8 +5,6 @@ variables:
   value: $[ stageDependencies.variable_generation.load_config_variables.outputs['loading_model_config.KEYVAULT_NAME'] ]       
 - name:  RUNTIME_NAME
   value: $[ stageDependencies.variable_generation.load_config_variables.outputs['loading_model_config.RUNTIME_NAME'] ] 
-- name:  AZURE_RM_SVC_CONNECTION
-  value: $[ stageDependencies.variable_generation.load_config_variables.outputs['loading_model_config.AZURE_RM_SVC_CONNECTION'] ] 
 - name:  MODEL_BASE_NAME
   value: $[ dependencies.variable_generation.load_config_variables.outputs['loading_model_config.MODEL_BASE_NAME'] ]
 - name:  RESOURCE_GROUP_NAME

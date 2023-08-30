@@ -10,7 +10,7 @@ def main():
     pf = PFClient()
 
     base_run = pf.run( 
-        flow="./flows/named_entity_recognition/flows/standard",
+        flow="./flows/named_entity_recognition/standard",
         # run flow against local data or existing run, only one of data & run can be specified. 
         data="./flows/named_entity_recognition/data/data.jsonl",
         connections=
@@ -25,7 +25,7 @@ def main():
 
     # run the flow with exisiting run
     eval_run = pf.run(
-        flow="./flows/named_entity_recognition/flows/evaluation",
+        flow="./flows/named_entity_recognition/evaluation",
         data="./flows/named_entity_recognition/data/eval_data.jsonl",
         run=base_run,
         column_mapping={
