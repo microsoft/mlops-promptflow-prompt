@@ -2,9 +2,6 @@ FROM mcr.microsoft.com/azureml/promptflow/promptflow-runtime:latest
 
 # Initialize arguments
 ARG USERNAME=vscode
-# WORKSPACE is the name of the root directory your project is housed in.
-# Update this value if your project is housed in a different directory.
-ARG WORKSPACE=mlops-promptflow-prompt
 
 ENV CONDA_ENVIRONMENT_PATH=/opt/miniconda/envs/promptflow-env
 ENV CONDA_DEFAULT_ENVIRONMENT=$CONDA_ENVIRONMENT_PATH
