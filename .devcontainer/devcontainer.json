@@ -1,0 +1,40 @@
+{
+  "name": "Promptflow",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Activate promptflow-env conda environment
+        "python.terminal.activateEnvironment": false,
+        "python.condaPath": "/opt/miniconda/envs/promptflow-env",
+        "python.defaultInterpreterPath": "/opt/miniconda/envs/promptflow-env/bin/python"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.vscode-ai",
+        "GitHub.copilot",
+        "streetsidesoftware.code-spell-checker",
+        "ms-python.flake8",
+        "Cameron.vscode-pytest",
+        "ms-python.isort",
+        "ms-toolsai.jupyter",
+        "prompt-flow.prompt-flow"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "features": {
+    "git": "os-provided",
+    "azure-cli": "latest",
+    "ghcr.io/devcontainers/features/python:1": {
+      // avoid python install
+      "version": "none",
+      "installTools": false
+    }
+  }
+}
