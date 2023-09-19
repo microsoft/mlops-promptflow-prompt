@@ -11,3 +11,5 @@ azure-identity==1.14.0
 python-dotenv>=0.10.3
 mlflow>=2.7.1
 azureml-mlflow>=1.51
+promptflow
+promptflow-tools
