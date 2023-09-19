@@ -118,6 +118,5 @@ stages:
           MODEL_TYPE: ${{ parameters.model_type }}
           MODEL_NAME: $(MODEL_NAME)
           DEPLOY_ENVIRONMENT: ${{parameters.exec_environment}} 
-          DATA_CONFIG_PATH:  $(DATA_CONFIG_PATH)
           REALTIME_DEPLOYMENT_CONFIG: $(REALTIME_DEPLOYMENT_CONFIG)
           MODEL_VERSION: $(read_model_version.MODEL_VERSION)

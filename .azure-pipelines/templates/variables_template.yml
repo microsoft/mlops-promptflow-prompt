@@ -28,31 +28,6 @@ stages:
     variables:
     - name:  PROMPT_FLOW_CONFIG_NAME
       value: $[ dependencies.load_config_variables.outputs['loading_model_config.PROMPT_FLOW_CONFIG_NAME'] ]    
-    - name:  RUNTIME_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.RUNTIME_NAME'] ] 
-    - name:  MODEL_BASE_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.MODEL_BASE_NAME'] ]
-    - name:  RESOURCE_GROUP_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.RESOURCE_GROUP_NAME'] ]
-    - name:  WORKSPACE_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.WORKSPACE_NAME'] ]
-    - name: EXPERIMENT_BASE_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.EXPERIMENT_BASE_NAME'] ]
-    - name: MODEL_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.MODEL_NAME'] ]  
-    - name: CONNECTION_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.CONNECTION_NAME'] ] 
-    - name: DEPLOYMENT_NAME
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.DEPLOYMENT_NAME'] ]
-    - name: STANDARD_FLOW_PATH
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.STANDARD_FLOW_PATH'] ] 
-    - name: EVALUATION_FLOW_PATH
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.EVALUATION_FLOW_PATH'] ]  
-    - name: DATA_PATH
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.DATA_CONFIG_PATH'] ]
-    - name: REALTIME_DEPLOYMENT_CONFIG
-      value: $[ dependencies.load_config_variables.outputs['loading_model_config.REALTIME_DEPLOYMENT_CONFIG'] ]
-
     steps:
     - script: |
         if [ -z "$(PROMPT_FLOW_CONFIG_NAME)" ]

@@ -13,8 +13,6 @@ parameters:
   type: string
 - name: DEPLOY_ENVIRONMENT
   type: string
-- name: DATA_CONFIG_PATH
-  type: string
 - name: REALTIME_DEPLOYMENT_CONFIG
   type: string
 

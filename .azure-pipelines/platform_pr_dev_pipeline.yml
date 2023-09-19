@@ -10,17 +10,12 @@ parameters:
 stages:
   - stage: build_validation
     displayName: build_validation
-    dependsOn: 
-    - variable_generation
     jobs:
       - template: build_validation_pipeline.yml
   - stage: execute_training_job
     displayName: execute_training_job
     dependsOn: 
-    - variable_generation
     - build_validation
-    variables:
-    - template: templates/experiment_variables.yml
     jobs:
     - job: Execute_ml_Job_Pipeline
       steps:
