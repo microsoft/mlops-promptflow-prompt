@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from promptflow import PFClient
 from azure.ai.ml import MLClient
 from azure.identity import DefaultAzureCredential
-from mlops.common.generate_mlflow_names import generate_experiment_name, generate_run_name
+from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name, set_mlflow_uri
 
 
 def main():
@@ -39,17 +39,7 @@ def main():
 
     subscription_id = os.environ.get("SUBSCRIPTION_ID")
 
-    # If Azure ML parameters are not provided, use a local instance
-    if (subscription_id is not None) and (resource_group is not None) and (workspace_name is not None):
-        ml_client = MLClient(credential=DefaultAzureCredential(),
-                             subscription_id=subscription_id, 
-                             resource_group_name=resource_group,
-                             workspace_name=workspace_name)
-
-        mlflow_tracking_uri = ml_client.workspaces.get(ml_client.workspace_name).mlflow_tracking_uri
-        print(mlflow_tracking_uri)
-
-        mlflow.set_tracking_uri(mlflow_tracking_uri)
+    set_mlflow_uri(subscription_id, resource_group, workspace_name)
 
     experiment_name = generate_experiment_name(experiment_type)
     mlflow.set_experiment(experiment_name)

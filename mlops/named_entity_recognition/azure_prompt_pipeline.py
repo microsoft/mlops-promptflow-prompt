@@ -6,16 +6,6 @@ from azure.identity import DefaultAzureCredential
 from promptflow.azure import PFClient
 
 
-
-def are_dictionaries_similar(dict1, old_runs):
-    for old_run in old_runs:
-        set1 = {frozenset(dict(old_run).items()) }
-        set2 = {frozenset(dict1.items()) }
-        if set1 == set2:
-            return True
-    
-    return False
-
 def prepare_and_execute(
         subscription_id,
         resource_group_name,
@@ -27,7 +17,6 @@ def prepare_and_execute(
         standard_flow_path,
         stage,
         experiment_name,
-        model_name,
         output_file,
         data_config_path,
         data_purpose
@@ -58,9 +47,6 @@ def prepare_and_execute(
         runtime=runtime,
         name=f"{experiment_name}_{timestamp}",
         display_name=f"{experiment_name}_{timestamp}",
-        environment_variables={
-            "key1": "value1"
-        },
         column_mapping={"text": "${data.text}", "entity_type": "${data.entity_type}"},
         tags={"build_id": build_id},
         connections=
@@ -152,7 +138,6 @@ def main():
         args.standard_flow_path,
         args.stage,
         args.experiment_name,
-        args.model_name,
         args.output_file,
         args.data_config_path,
         args.data_purpose

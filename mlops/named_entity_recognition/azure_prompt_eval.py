@@ -1,5 +1,4 @@
 import json
-import yaml
 import datetime
 import ast
 import argparse
@@ -14,12 +13,9 @@ def prepare_and_execute(subscription_id,
         workspace_name,
         runtime,
         build_id,
-        standard_flow_path,
         eval_flow_path,
         stage,
         experiment_name,
-        model_name,
-        output_file,
         data_config_path,
         run_id,
         data_purpose
@@ -28,7 +24,6 @@ def prepare_and_execute(subscription_id,
     pf = PFClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
     
     flow = eval_flow_path
-    standard_flow = standard_flow_path
     dataset_name = None
     config_file = open(data_config_path)
     data_config = json.load(config_file)
@@ -41,17 +36,6 @@ def prepare_and_execute(subscription_id,
 
     data_id = f"azureml:{data.name}:{data.version}" # added
     print(data_id) # added
-    standard_flow_file = f"{standard_flow}/flow.dag.yaml"
-
-    with open(standard_flow_file, "r") as yaml_file:
-        yaml_data = yaml.safe_load(yaml_file)
-
-    default_variants = []
-    for node_name, node_data in yaml_data.get("node_variants", {}).items():
-        node_variant_mapping = {}
-        default_variant = node_data['default_variant_id']
-        node_variant_mapping[node_name] = default_variant
-        default_variants.append(node_variant_mapping)
 
     dataframes = []
     metrics = []
@@ -163,12 +147,9 @@ def main():
         args.workspace_name,
         args.runtime_name,
         args.build_id,
-        args.standard_flow_path,
         args.eval_flow_path,
         args.stage,
         args.experiment_name,
-        args.model_name,
-        args.output_file,
         args.data_config_path,
         args.run_id,
         args.data_purpose
