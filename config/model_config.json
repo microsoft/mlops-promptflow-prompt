@@ -13,6 +13,8 @@
             "DEPLOYMENT_NAME": "gpt-35-turbo",
             "STANDARD_FLOW_PATH": "flows/named_entity_recognition/standard",
             "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/evaluation",
+            "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
+            "EVAL_DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
             "DATA_CONFIG_PATH": "mlops/named_entity_recognition/configs/data_config.json",
             "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json"           
         },
@@ -29,6 +31,8 @@
             "DEPLOYMENT_NAME": "gpt-35-turbo",
             "STANDARD_FLOW_PATH": "flows/named_entity_recognition/standard",
             "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/evaluation",
+            "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
+            "EVAL_DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
             "DATA_CONFIG_PATH": "mlops/named_entity_recognition/configs/data_config.json",
             "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json"           
         }

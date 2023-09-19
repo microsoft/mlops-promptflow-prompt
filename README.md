@@ -56,7 +56,7 @@ python -m mlops.local_prompt_test --config_name named_entity_recognition --envir
 Run the flow  using a data file, and display results in the browser:
 
 ```bash
-python -m mlops.named_entity_recognition.local_prompt_pipeline
+python -m mlops.local_prompt_pipeline --config_name named_entity_recognition --environment_name pr
 ```
 
 Run the flow alongside with evaluation:
