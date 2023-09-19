@@ -4,8 +4,6 @@ import argparse
 import json
 from dotenv import load_dotenv
 from promptflow import PFClient
-from azure.ai.ml import MLClient
-from azure.identity import DefaultAzureCredential
 from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name, set_mlflow_uri
 
 def main():

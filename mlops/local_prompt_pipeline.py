@@ -4,8 +4,6 @@ import argparse
 import json
 from dotenv import load_dotenv
 from promptflow import PFClient
-from azure.ai.ml import MLClient
-from azure.identity import DefaultAzureCredential
 from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name, set_mlflow_uri
 
 def main():
@@ -54,8 +52,6 @@ def main():
     # Start the experiment
     with mlflow.start_run(run_name=generate_run_name()) as run:
 
-        run_ids = []
-
         # Get a pf client to manage runs
         pf = PFClient()
 
@@ -66,10 +62,6 @@ def main():
         )
 
         pf.stream(run_instance)
-
-        run_ids.append(run_instance.name)
-
-        df_result = None
         
         if run_instance.status == "Completed" or run_instance.status == "Finished":
             mlflow.log_table(data=pf.get_details(run_instance), artifact_file="details.json")
@@ -80,9 +72,9 @@ def main():
 
         if args.output_file is not None:
             with open(args.output_file, "w") as out_file:
-                out_file.write(str(run_ids))
+                out_file.write(run_instance.name)
 
-        print(str(run_ids))
+        print(run_instance.name)
         if args.visualize is True:
             pf.runs.visualize(run_instance)
 

@@ -7,7 +7,7 @@ pr:
     include:
       - .azure-pipelines/*
       - mlops/common/*
-      - mlops/named_entity_recognition/*
+      - mlops/*
       - flows/named_entity_recognition/*
       - tests
 

@@ -62,7 +62,7 @@ python -m mlops.local_prompt_pipeline --config_name named_entity_recognition --e
 Run the flow alongside with evaluation:
 
 ```bash
-python -m mlops.named_entity_recognition.local_prompt_eval
+python -m mlops.local_prompt_eval --config_name named_entity_recognition --environment_name pr --run_id <run_id>
 ```
 
 ## Azure DevOps Setup

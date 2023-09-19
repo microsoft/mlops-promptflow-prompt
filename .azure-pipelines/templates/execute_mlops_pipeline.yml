@@ -6,7 +6,6 @@ steps:
   - task: AzureCLI@2
     displayName: Execute prompt job
     continueOnError: false
-    env: {APPLICATIONINSIGHTS_CONNECTION_STRING: "$(APPLICATIONINSIGHTS-CONNECTION-STRING)"}
     inputs: 
       azureSubscription: $(AZURE_RM_SVC_CONNECTION)
       scriptType: bash

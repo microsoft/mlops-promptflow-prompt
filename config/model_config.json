@@ -5,7 +5,6 @@
             "ENV_NAME": "pr",
             "RUNTIME_NAME": "oobruntime",
             "EXPERIMENT_BASE_NAME": "named_entity_recognition",
-            "KEYVAULT_NAME": "researchmlops5963078644",
             "MODEL_BASE_NAME": "regr",
             "RESOURCE_GROUP_NAME": "sbaydachairg",
             "WORKSPACE_NAME": "sbaydachmlwrksp",
@@ -15,7 +14,6 @@
             "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/evaluation",
             "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
             "EVAL_DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
-            "DATA_CONFIG_PATH": "mlops/named_entity_recognition/configs/data_config.json",
             "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json", 
             "COLUMN_MAPPING": {"text": "${data.text}", "entity_type": "${data.entity_type}"},
             "EVAL_COLUMN_MAPPING": {"ground_truth": "${data.results}","entities": "${run.outputs.entities}"}
@@ -25,7 +23,6 @@
             "ENV_NAME": "dev",
             "RUNTIME_NAME": "oobruntime",
             "EXPERIMENT_BASE_NAME": "named_entity_recognition",
-            "KEYVAULT_NAME": "researchmlops5963078644",
             "MODEL_BASE_NAME": "regr",
             "RESOURCE_GROUP_NAME": "sbaydachairg",
             "WORKSPACE_NAME": "sbaydachmlwrksp",
@@ -35,7 +32,6 @@
             "EVALUATION_FLOW_PATH": "flows/named_entity_recognition/evaluation",
             "DATA_PATH":"flows/named_entity_recognition/data/data.jsonl",
             "EVAL_DATA_PATH":"flows/named_entity_recognition/data/eval_data.jsonl",
-            "DATA_CONFIG_PATH": "mlops/named_entity_recognition/configs/data_config.json",
             "REALTIME_DEPLOYMENT_CONFIG": "mlops/named_entity_recognition/configs/deployment_config.json",
             "COLUMN_MAPPING": {"text": "${data.text}", "entity_type": "${data.entity_type}"},
             "EVAL_COLUMN_MAPPING": {"ground_truth": "${data.results}","entities": "${run.outputs.entities}"}        
