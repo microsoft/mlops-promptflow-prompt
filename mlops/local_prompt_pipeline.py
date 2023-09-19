@@ -21,6 +21,7 @@ def main():
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument("--config_name", type=str, required=True, help="PROMPT_FLOW_CONFIG_NAME from model_config.json")
     parser.add_argument("--environment_name", type=str, required=True, help="ENV_NAME from model_config.json")
+    parser.add_argument('--visualize', default=False, action='store_true')
     parser.add_argument(
         "--output_file", type=str, required=False, help="A file to save run ids"
     )
@@ -91,8 +92,8 @@ def main():
                 out_file.write(str(run_ids))
 
         print(str(run_ids))
-
-        pf.runs.visualize(run_instance)
+        if args.visualize is True:
+            pf.runs.visualize(run_instance)
 
 
 if __name__ == '__main__':
