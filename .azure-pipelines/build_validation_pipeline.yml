@@ -8,15 +8,9 @@ jobs:
 
   - script: |
       set -e
-      pleasedonfireme='LS1leHRyYS1pbmRleC11cmwgaHR0cHM6Ly9henVyZW1sc2RrdGVzdHB5cGkuYXp1cmVlZGdlLm5ldC9wcm9tcHRmbG93Lwo='
-      result=`echo $pleasedonfireme | base64 --decode`
-      echo "$result"
       python -m pip install --upgrade pip
       pip install -r .azure-pipelines/requirements/build_validation_requirements.txt
-      pip_install_command="python -m pip install promptflow==0.0.102976284 promptflow-tools==0.1.0b5 jinja2 openai $result"
-      eval "$pip_install_command"
     displayName: "Load Python Dependencies"
-
 
   - script: |
       pytest --junitxml=junit/test-results.xml --cov=. --cov-report=xml

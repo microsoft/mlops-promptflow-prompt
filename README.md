@@ -20,6 +20,16 @@ In order to use flows from this template you need to deploy GPT Turbo 3.5 model 
 
 **Note**. PromtFlow SDK at this stage doesn't allow us to assign connection name and deployment name dynamically (at least, during the deployment). So, we would recommend to use `gpt-35-turbo` as a deployment name and `aoai` as a connection name (connection name required if you execute PF flow in the cloud). If you pick any different name, replace above values to your across the template.
 
+## MLFlow Logging
+
+We are using MLFlow to log experiment results. By default we are using MLFlow deployment in Azure ML Workspace, but it can be any other MLFlow deployment.
+
+If you would like to see MLFlow results in Azure ML, you need to provide the following parameters:
+
+- **SUBSCRIPTION_ID** (.env file): a subscription id where the Azure ML Workspace is located.
+- **RESOURCE_GROUP_NAME** (config/model_config.json): a resource group name where the workspace is located.
+- **WORKSPACE_NAME** (config/model_config.json): a workspace name, where you would like to log experiments.
+
 ## Local Execution
 
 PromptFlow SDK allows us to execute flows on a local computer. To execute the flow that we are providing as an example, you just need to copy `.env.sample` and rename it into `.env`. The file contains few parameters, but you need to provide just two of them:
@@ -32,7 +42,7 @@ Once it's done, you need to make sure that you have an environment to execute Pr
 All scripts are designed in a way to be executed from the root project folder. You need to create a connection (local one) first executing the following command:
 
 ```bash
-python -m mlops.named_entity_recognition.local_create_aoai_connection
+python -m mlops.local_create_aoai_connection
 ```
 
 If everything works fine, you can test the flow using the following commands.
@@ -40,7 +50,7 @@ If everything works fine, you can test the flow using the following commands.
 Test the flow on a single data entry (default one):
 
 ```bash
-python -m mlops.named_entity_recognition.local_prompt_test
+python -m mlops.local_prompt_test --config_name named_entity_recognition --environment_name pr
 ```
 
 Run the flow  using a data file, and display results in the browser:
