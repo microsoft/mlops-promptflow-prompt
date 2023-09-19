@@ -108,7 +108,7 @@ stages:
           inlineScript: |
             readarray arr <"model_version.txt"
             model_version=${arr[0]}
-              cho $model_version
+            echo $model_version
             echo "##vso[task.setvariable variable=MODEL_VERSION;isOutput=true;]$model_version" 
       - template: templates/aml_real_deployment.yml 
         parameters:
