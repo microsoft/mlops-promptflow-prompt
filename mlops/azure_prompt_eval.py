@@ -33,8 +33,8 @@ def prepare_and_execute(
         run=my_run, 
         column_mapping=eval_column_mapping,  
         runtime=runtime,
-        name=generate_run_name(),
-        display_name=generate_run_name(),
+        name=f"{generate_run_name()}_eval",
+        display_name=f"{generate_run_name()}_eval",
         tags={"build_id": build_id}
     )
     run._experiment_name=f"{generate_experiment_name(experiment_name)}_eval"
