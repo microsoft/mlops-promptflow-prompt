@@ -18,5 +18,5 @@ conda install jupyter
 Install required packages:
 
 ```cli
-pip install --upgrade -r requirements.txt --extra-index-url https://azuremlsdktestpypi.azureedge.net/promptflow/
+pip install --upgrade -r requirements.txt
 ```
