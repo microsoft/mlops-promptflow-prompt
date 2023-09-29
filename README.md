@@ -32,17 +32,12 @@ If you would like to see MLFlow results in Azure ML, you need to provide the fol
 
 ## Local Execution
 
-PromptFlow SDK allows us to execute flows on a local computer. To execute the flow that we are providing as an example, you just need to copy `.env.sample` and rename it into `.env`. The file contains few parameters, but you need to provide just two of them:
-
-- **AOAI_API_KEY**: Azure Open AI key to get access.
-- **AOAI_API_BASE**: a base uri for your Azure Open AI endpoint (`https://<your service name>.openai.azure.com/`).
-
-Once it's done, you need to make sure that you have an environment to execute PromptFlow locally. In [the following document](conda_environment.md) we are explaining how to create a local `conda` environment.
+In [the following document](conda_environment.md) we are explaining how to create a local `conda` environment.
 
 All scripts are designed in a way to be executed from the root project folder. You need to create a connection (local one) first executing the following command:
 
 ```bash
-python -m mlops.local_create_aoai_connection
+python -m mlops.connections.local_create_aoai_connection --aoai-connection-name aoai --aoai-api-key <key> --aoai-api-base <base uri>
 ```
 
 If everything works fine, you can test the flow using the following commands.
