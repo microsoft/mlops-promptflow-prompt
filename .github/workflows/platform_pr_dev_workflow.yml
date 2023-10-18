@@ -48,7 +48,7 @@ jobs:
           script_parameter: |
             python -m mlops.local_create_aoai_connection \
             --aoai-api-key "${{ secrets.aoai_api_key }}" \
-            --aoai-api-base "https://copilot-poc-oai.openai.azure.com/" \
+            --aoai-api-base "REPLACE_WITH_CORRECT_VALUE" \
             --aoai-api-version "2023-07-01-preview" \
             --aoai-api-type "azure" \
             --aoai-connection-name "azure_open_ai_connection"
