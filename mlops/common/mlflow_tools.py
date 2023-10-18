@@ -15,6 +15,7 @@ def generate_experiment_name(experiment_type: str):
             shell=True,
             universal_newlines=True).strip()
         
+    git_branch = git_branch.split("/")[-1]
     return f"{experiment_type}_{git_branch}"
 
 def generate_run_name():

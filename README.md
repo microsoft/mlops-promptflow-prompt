@@ -20,16 +20,6 @@ In order to use flows from this template you need to deploy GPT Turbo 3.5 model 
 
 **Note**. PromtFlow SDK at this stage doesn't allow us to assign connection name and deployment name dynamically (at least, during the deployment). So, we would recommend to use `gpt-35-turbo` as a deployment name and `aoai` as a connection name (connection name required if you execute PF flow in the cloud). If you pick any different name, replace above values to your across the template.
 
-## MLFlow Logging
-
-We are using MLFlow to log experiment results. By default we are using MLFlow deployment in Azure ML Workspace, but it can be any other MLFlow deployment.
-
-If you would like to see MLFlow results in Azure ML, you need to provide the following parameters:
-
-- **SUBSCRIPTION_ID** (.env file): a subscription id where the Azure ML Workspace is located.
-- **RESOURCE_GROUP_NAME** (config/model_config.json): a resource group name where the workspace is located.
-- **WORKSPACE_NAME** (config/model_config.json): a workspace name, where you would like to log experiments.
-
 ## Local Execution
 
 In [the following document](conda_environment.md) we are explaining how to create a local `conda` environment.
@@ -59,6 +49,14 @@ Run the flow alongside with evaluation:
 ```bash
 python -m mlops.local_prompt_eval --config_name named_entity_recognition --environment_name pr --run_id <run_id>
 ```
+
+We are using MLFlow to log local experiment results. By default we are using MLFlow deployment in Azure ML Workspace, but it can be any other MLFlow deployment.
+
+If you would like to see MLFlow results in Azure ML, you need to provide the following parameters:
+
+- **SUBSCRIPTION_ID** (an optional parameter to scripts from above): a subscription id where the Azure ML Workspace is located.
+- **RESOURCE_GROUP_NAME** (config/model_config.json): a resource group name where the workspace is located.
+- **WORKSPACE_NAME** (config/model_config.json): a workspace name, where you would like to log experiments.
 
 ## Azure DevOps Setup
 

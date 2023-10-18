@@ -27,4 +27,5 @@ stages:
             python -m mlops.azure_prompt_pipeline \
               --config_name ${{ parameters.model_type }} \
               --environment_name ${{ parameters.exec_environment }} \
+              --subscription_id $(SUBSCRIPTION_ID) \
               --output_file run_id.txt

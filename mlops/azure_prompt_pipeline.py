@@ -41,10 +41,6 @@ def prepare_and_execute(
         
     if pipeline_job.status == "Completed" or pipeline_job.status == "Finished": # 4
         print("job completed")
-        df_result = pf.get_details(pipeline_job)
-        run_details = pf.runs.get_metrics(pipeline_job.name)
-        print(df_result.head(10))
-        print("done")
     else:
         raise Exception("Sorry, exiting job with failure..")
 
@@ -67,6 +63,7 @@ def main():
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument("--config_name", type=str, required=True, help="PROMPT_FLOW_CONFIG_NAME from model_config.json")
     parser.add_argument("--environment_name", type=str, required=True, help="ENV_NAME from model_config.json")
+    parser.add_argument("--subscription_id", type=str, required=True, help="Subscription id where Azure ML is located")
     parser.add_argument(
         "--output_file", type=str, required=False, help="A file to save run ids"
     )
@@ -88,7 +85,7 @@ def main():
 
     load_dotenv()
 
-    subscription_id = os.environ.get("SUBSCRIPTION_ID")
+    subscription_id = args.subscription_id
 
     build_id = os.environ.get("BUILD_BUILDID")
 
