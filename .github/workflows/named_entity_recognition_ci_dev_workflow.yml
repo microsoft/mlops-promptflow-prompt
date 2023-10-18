@@ -28,4 +28,3 @@ jobs:
       subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
       aoai_api_key: ${{ secrets.AOAI_API_KEY }}
-      application_insights_connection_string: ${{ secrets.APPLICATION_INSIGHTS_CONNECTION_STRING }}

@@ -24,10 +24,6 @@ on:
       aoai_api_key:
         description: "the API key to use to authenticate with AOAI."
         required: true
-      application_insights_connection_string:
-        description: "the connection string to use to authenticate with Application Insights."
-        required: true
-
 jobs:
   build-validation:
     name: Build Validation
@@ -49,7 +45,6 @@ jobs:
         uses: ./.github/actions/execute_shell_code
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
-          application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
           script_parameter: |
             python -m mlops.local_create_aoai_connection \
             --aoai-api-key "${{ secrets.aoai_api_key }}" \
@@ -65,7 +60,6 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
-          application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
           script_parameter: |
             python -m mlops.local_prompt_pipeline \
               --config_name "${{inputs.model_type}}" \

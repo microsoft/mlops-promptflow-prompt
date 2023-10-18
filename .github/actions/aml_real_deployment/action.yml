@@ -48,7 +48,6 @@ runs:
       uses: ./.github/actions/execute_shell_code
       with:
         azure_credentials: ${{ inputs.azure_credentials }}
-        application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
         script_parameter: |
           python -m mlops.common.deployment.provision_endpoint \
             --subscription_id ${{ inputs.subscription_id }} \
@@ -60,8 +59,7 @@ runs:
       uses: ./.github/actions/execute_shell_code
       with:
         azure_credentials: ${{ inputs.azure_credentials }}
-        application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
-        script_parameter: |
+         script_parameter: |
           python -m mlops.common.deployment.provision_deployment \
             --subscription_id ${{ inputs.subscription_id }} \
             --resource_group_name ${{ inputs.resource_group_name }} \

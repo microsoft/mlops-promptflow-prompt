@@ -24,9 +24,6 @@ on:
       aoai_api_key:
         description: "the API key to use to authenticate with AOAI."
         required: true
-      application_insights_connection_string:
-        description: "the connection string to use to authenticate with Application Insights."
-        required: true
 
 jobs:
   execute-prompt-experiment:
@@ -50,7 +47,6 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
-          application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
           script_parameter: |
             python -m mlops.azure_prompt_pipeline \
               --config_name ${{ inputs.model_type }} \
@@ -68,7 +64,6 @@ jobs:
         uses: ./.github/actions/execute_shell_code
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
-          application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
           script_parameter: |
             python -m mlops.azure_prompt_eval \
               --config_name ${{ inputs.model_type }} \
@@ -97,7 +92,6 @@ jobs:
           SUBSCRIPTION_ID: "${{ secrets.subscription_id }}"
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
-          application_insights_connection_string: ${{ inputs.application_insights_connection_string }}
           script_parameter: |
             python -m mlops.common.deployment.register_model \
               --subscription_id ${{ secrets.subscription_id }} \
