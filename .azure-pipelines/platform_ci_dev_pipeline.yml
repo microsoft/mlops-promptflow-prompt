@@ -25,6 +25,7 @@ stages:
             python -m mlops.azure_prompt_pipeline \
               --config_name ${{ parameters.model_type }} \
               --environment_name ${{ parameters.exec_environment }} \
+              --subscription_id $(SUBSCRIPTION_ID) \
               --output_file run_id.txt
       - task: AzureCLI@2
         displayName: Read prompt runs
@@ -45,6 +46,7 @@ stages:
             python -m mlops.azure_prompt_eval \
               --config_name ${{ parameters.model_type }} \
               --environment_name ${{ parameters.exec_environment }} \
+              --subscription_id $(SUBSCRIPTION_ID) \
               --run_id "$(read_run_id.RUN_NAME)"
 
   - stage: deploy_prompts

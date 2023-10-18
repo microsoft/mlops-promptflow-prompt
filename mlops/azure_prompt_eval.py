@@ -41,11 +41,8 @@ def prepare_and_execute(
 
     pipeline_job = pf.runs.create_or_update(run, stream=True)
         
-    if pipeline_job.status == "Completed" or pipeline_job.status == "Finished": # 4
+    if pipeline_job.status == "Completed" or pipeline_job.status == "Finished":
         print(pipeline_job.status)
-        df_result = pf.get_details(pipeline_job)
-        metric_variant = pf.get_metrics(pipeline_job)
-        print(df_result.head(10))
     else:
         raise Exception("Sorry, exiting job with failure..")
 
@@ -63,6 +60,7 @@ def main():
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument("--config_name", type=str, required=True, help="PROMPT_FLOW_CONFIG_NAME from model_config.json")
     parser.add_argument("--environment_name", type=str, required=True, help="ENV_NAME from model_config.json")
+    parser.add_argument("--subscription_id", type=str, required=True, help="Subscription id where Azure ML is located")
     parser.add_argument("--run_id", type=str, required=True, help="Rund ID of a run to evaluate")
     args = parser.parse_args()
 
@@ -83,7 +81,7 @@ def main():
     # Setup MLFLOW Experiment
     load_dotenv()
 
-    subscription_id = os.environ.get("SUBSCRIPTION_ID")
+    subscription_id = args.subscription_id
 
     build_id = os.environ.get("BUILD_BUILDID")
 
