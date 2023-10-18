@@ -40,6 +40,19 @@ jobs:
           model_type: ${{ inputs.model_type }}
       - name: Configure Azure ML Agent
         uses: ./.github/actions/configure_azureml_agent
+
+      - name: Create AOAI Connection
+        uses: ./.github/actions/execute_shell_code
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.local_create_aoai_connection \
+            --aoai-api-key "${{ secrets.aoai_api_key }}" \
+            --aoai-api-base "REPLACE_WITH_CORRECT_VALUE" \
+            --aoai-api-version "2023-07-01-preview" \
+            --aoai-api-type "azure" \
+            --aoai-connection-name "azure_open_ai_connection"
+
       - name: Execute MLOps Standard Pipeline
         uses: ./.github/actions/execute_shell_code
         env:
@@ -48,7 +61,7 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m mlops.azure_prompt_pipeline \
+            python -m mlops.local_prompt_pipeline \
               --config_name ${{ inputs.model_type }} \
               --environment_name ${{ inputs.exec_environment }} \
               --output_file run_id.txt
@@ -65,7 +78,7 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m mlops.azure_prompt_eval \
+            python -m mlops.local_prompt_eval \
               --config_name ${{ inputs.model_type }} \
               --environment_name ${{ inputs.exec_environment }} \
               --run_id $RUN_NAME
