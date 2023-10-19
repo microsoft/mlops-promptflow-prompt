@@ -23,7 +23,7 @@ jobs:
         run: |
           set -e
           python -m pip install --upgrade pip
-          pip install -r .github/requirements/build_validation_requirements.txt
+          python -m pip install --upgrade -r .github/requirements/build_validation_requirements.txt
 
       - name: Run Unit Tests
         shell: bash
