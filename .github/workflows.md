@@ -30,7 +30,7 @@ It runs the flow and then creates and then creates a new version of the model fo
 The following secrets are required in order to run the Workflows successfully:
 
 - `SUBSCRIPTION_ID` : The ID of the Azure subscription resources should be deployed to.
-- `AZURE_CREDENTIALS` : The Service Principal credentials to authenticate with the Azure subscription. Follow this [documentation](<https://learn.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create-for-rbac()>) to create the expected JSON object (`az ad sp create-for-rbac --name promptgithubprincipal --role Contributor --scopes /subscriptions/<id>/resourceGroups/<rg name>`).
+- `AZURE_CREDENTIALS` : The Service Principal credentials to authenticate with the Azure subscription. Follow this [documentation](<https://learn.microsoft.com/en-us/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-create-for-rbac()>) to create the expected JSON object (`az ad sp create-for-rbac --name promptgithubprincipal --role Contributor --scopes /subscriptions/<id>/resourceGroups/<rg name> --sdk-auth`).
 - `AOAI_API_KEY` : The API Key to authenticate wit the Azure Open AI instance used in the workflows.
 - `AOAI_BASE_ENDPOINT`: base endpoint uri for Azure Open AI.
 

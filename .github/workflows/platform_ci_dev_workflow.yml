@@ -49,7 +49,7 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m mlops.local_create_aoai_connection \
+            python -m mlops.connections.local_create_aoai_connection \
             --aoai-api-key "${{ secrets.aoai_api_key }}" \
             --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
             --aoai-api-version "2023-07-01-preview" \
