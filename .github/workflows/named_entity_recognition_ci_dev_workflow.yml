@@ -8,13 +8,13 @@ on:
         type: string
         description: "The environment to run the workflow in"
         required: true
-        default: "dev"
+        default: "ci"
       model_type:
         type: string
         description: "The type of model to run the workflow for"
         required: true
         default: "named_entity_recognition"
-  push:
+  pull_request:
     branches:
       - "development"
 
