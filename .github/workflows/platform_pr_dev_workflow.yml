@@ -54,7 +54,7 @@ jobs:
             --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
             --aoai-api-version "2023-07-01-preview" \
             --aoai-api-type "azure" \
-            --aoai-connection-name "azure_open_ai_connection"
+            --aoai-connection-name "aoai"
 
       - name: Execute MLOps Pipeline
         uses: ./.github/actions/execute_shell_code
