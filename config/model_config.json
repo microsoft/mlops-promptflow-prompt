@@ -3,7 +3,6 @@
         {
             "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "pr",
-            "RUNTIME_NAME": "oobcomputeruntime",
             "EXPERIMENT_BASE_NAME": "named_entity_recognition",
             "MODEL_BASE_NAME": "regr",
             "RESOURCE_GROUP_NAME": "sbaydachairg",
@@ -21,7 +20,6 @@
         {
             "PROMPT_FLOW_CONFIG_NAME": "named_entity_recognition",
             "ENV_NAME": "dev",
-            "RUNTIME_NAME": "oobcomputeruntime",
             "EXPERIMENT_BASE_NAME": "named_entity_recognition",
             "MODEL_BASE_NAME": "regr",
             "RESOURCE_GROUP_NAME": "sbaydachairg",

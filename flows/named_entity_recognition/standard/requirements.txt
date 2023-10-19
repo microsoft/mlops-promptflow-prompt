@@ -1,1 +1,2 @@
-promptflow-sdk[builtins]
+promptflow>=0.1.0b7.post1
+promptflow-tools

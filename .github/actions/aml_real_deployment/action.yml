@@ -1,0 +1,70 @@
+name: aml_real_deployment
+
+description: deploy a model to azureml
+
+inputs:
+  azure_credentials:
+    description: "Azure credentials"
+    required: true
+  subscription_id:
+    description: "Azure subscription id"
+    required: true
+    default: ""
+  resource_group_name:
+    description: "Azure resource group name"
+    required: true
+    default: ""
+  workspace_name:
+    description: "Azure workspace name"
+    required: true
+    default: ""
+  model_type:
+    description: "Model type"
+    required: true
+    default: ""
+  model_name:
+    description: "Model name"
+    required: true
+    default: ""
+  model_version:
+    description: "Model version"
+    required: true
+    default: ""
+  deploy_environment:
+    description: "Deploy environment"
+    required: true
+    default: ""
+  realtime_deployment_config:
+    description: "Realtime deployment config"
+    required: true
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: execute code to provision azureml endpoint
+      uses: ./.github/actions/execute_shell_code
+      with:
+        azure_credentials: ${{ inputs.azure_credentials }}
+        script_parameter: |
+          python -m mlops.common.deployment.provision_endpoint \
+            --subscription_id ${{ inputs.subscription_id }} \
+            --resource_group_name ${{ inputs.resource_group_name }} \
+            --workspace_name ${{ inputs.workspace_name }} \
+            --realtime_deployment_config ${{ inputs.realtime_deployment_config }} \
+            --environment_name ${{ inputs.deploy_environment }}
+    - name: execute code to provision azureml deployment
+      uses: ./.github/actions/execute_shell_code
+      with:
+        azure_credentials: ${{ inputs.azure_credentials }}
+         script_parameter: |
+          python -m mlops.common.deployment.provision_deployment \
+            --subscription_id ${{ inputs.subscription_id }} \
+            --resource_group_name ${{ inputs.resource_group_name }} \
+            --workspace_name ${{ inputs.workspace_name }} \
+            --model_name ${{ inputs.model_name }} \
+            --model_version ${{ inputs.model_version }} \
+            --env_type ${{ inputs.deploy_environment }} \
+            --realtime_deployment_config ${{ inputs.realtime_deployment_config }}

@@ -14,7 +14,7 @@ def prepare_and_execute(
         subscription_id,
         resource_group_name,
         workspace_name,
-        runtime,
+        # runtime,
         build_id,
         eval_flow_path,
         experiment_name,
@@ -32,7 +32,7 @@ def prepare_and_execute(
         data=data_config_path, 
         run=my_run, 
         column_mapping=eval_column_mapping,  
-        runtime=runtime,
+        # runtime=runtime,
         name=f"{generate_run_name()}_eval",
         display_name=f"{generate_run_name()}_eval",
         tags={"build_id": build_id}
@@ -52,7 +52,7 @@ def main():
     flow_eval_path = ""
     data_eval_path = ""
     eval_column_mapping = ""
-    runtime_name = ""
+    # runtime_name = ""
     subscription_id = None
     resource_group = None
     workspace_name = None
@@ -76,7 +76,7 @@ def main():
                 resource_group = el["RESOURCE_GROUP_NAME"]
                 workspace_name = el["WORKSPACE_NAME"]
                 eval_column_mapping = el["EVAL_COLUMN_MAPPING"]
-                runtime_name = el["RUNTIME_NAME"]
+                # runtime_name = el["RUNTIME_NAME"]
 
     # Setup MLFLOW Experiment
     load_dotenv()
@@ -92,7 +92,7 @@ def main():
         subscription_id,
         resource_group,
         workspace_name,
-        runtime_name,
+        # runtime_name,
         build_id,
         flow_eval_path,
         experiment_type,

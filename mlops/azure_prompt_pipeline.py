@@ -12,7 +12,7 @@ def prepare_and_execute(
         subscription_id,
         resource_group_name,
         workspace_name,
-        runtime,
+        # runtime,
         column_mapping,
         build_id,
         standard_flow_path,
@@ -26,7 +26,7 @@ def prepare_and_execute(
     run = Run( 
         flow=standard_flow_path,
         data=standard_data_path,
-        runtime=runtime,
+        # runtime=runtime,
         name=generate_run_name(),
         display_name=generate_run_name(),
         column_mapping=column_mapping,
@@ -55,7 +55,7 @@ def main():
     flow_standard_path = ""
     data_standard_path = ""
     column_mapping = ""
-    runtime_name = ""
+    # runtime_name = ""
     subscription_id = None
     resource_group = None
     workspace_name = None
@@ -81,7 +81,7 @@ def main():
                 resource_group = el["RESOURCE_GROUP_NAME"]
                 workspace_name = el["WORKSPACE_NAME"]
                 column_mapping = el["COLUMN_MAPPING"]
-                runtime_name = el["RUNTIME_NAME"]
+                # runtime_name = el["RUNTIME_NAME"]
 
     load_dotenv()
 
@@ -96,7 +96,7 @@ def main():
         subscription_id,
         resource_group,
         workspace_name,
-        runtime_name,
+        # runtime_name,
         column_mapping,
         build_id,
         flow_standard_path,

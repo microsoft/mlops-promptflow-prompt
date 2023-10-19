@@ -1,4 +1,5 @@
-promptflow
+
+promptflow>=0.1.0b7.post1
 promptflow-tools
 python-dotenv>=0.10.3
 jinja2

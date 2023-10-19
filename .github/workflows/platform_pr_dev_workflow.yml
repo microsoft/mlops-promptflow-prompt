@@ -1,0 +1,70 @@
+---
+name: Platform PR Dev Workflow
+
+on:
+  workflow_call:
+    inputs:
+      exec_environment:
+        type: string
+        description: "Execution Environment"
+        required: true
+        default: "pr"
+      model_type:
+        type: string
+        description: "type of model to execute"
+        required: true
+        default: "named_entity_recognition"
+    secrets:
+      subscription_id:
+        description: "the subscription ID hosting the AML instance."
+        required: true
+      azure_credentials:
+        description: "the credentials to use to authenticate with Azure."
+        required: true
+      aoai_api_key:
+        description: "the API key to use to authenticate with AOAI."
+        required: true
+      aoai_base_endpoint:
+        required: true
+        description: "Azure OpenAI base endpoint."
+jobs:
+  build-validation:
+    name: Build Validation
+    uses: ./.github/workflows/build_validation_workflow.yml
+  execute-ml-job-pipeline:
+    name: Execute ML Job Pipeline
+    runs-on: ubuntu-latest
+    needs: build-validation
+    defaults:
+      run:
+        working-directory: "./.github"
+    steps:
+      - name: Checkout Actions
+        uses: actions/checkout@v1
+      - name: Configure Azure ML Agent
+        uses: ./.github/actions/configure_azureml_agent
+
+      - name: Create AOAI Connection
+        uses: ./.github/actions/execute_shell_code
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.connections.local_create_aoai_connection \
+            --aoai-api-key "${{ secrets.aoai_api_key }}" \
+            --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
+            --aoai-api-version "2023-07-01-preview" \
+            --aoai-api-type "azure" \
+            --aoai-connection-name "aoai"
+
+      - name: Execute MLOps Pipeline
+        uses: ./.github/actions/execute_shell_code
+        env:
+          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.local_prompt_pipeline \
+              --config_name "${{inputs.model_type}}" \
+              --environment_name "${{inputs.exec_environment}}" \
+              --subscription_id "${{ secrets.subscription_id }}" \
+              --output_file run_id.txt
