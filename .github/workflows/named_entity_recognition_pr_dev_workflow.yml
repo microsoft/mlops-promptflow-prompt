@@ -16,13 +16,13 @@ on:
         default: "named_entity_recognition"
   pull_request:
     branches:
-      - "development"
+      - 'development'
     paths:
-      - .github/*
-      - mlops/common/*
-      - mlops/*
-      - flows/named_entity_recognition/*
-      - tests
+      - '.github/**'
+      - 'mlops/common/**'
+      - 'mlops/**'
+      - 'flows/named_entity_recognition/**'
+      - 'tests/**'
 
 jobs:
   run-pr-workflow:
