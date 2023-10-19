@@ -43,7 +43,7 @@ def provision_deployment(
                 environment_variables["PRT_CONFIG_OVERRIDE"] = f"deployment.subscription_id={subscription_id},deployment.resource_group={resource_group_name},deployment.workspace_name={workspace_name},deployment.endpoint_name={endpoint_name},deployment.deployment_name={deployment_name}"
 
                 environment = Environment(
-                    build=BuildContext(path=deployment_docker_file_path, dockerfile_path="Dockerfile"),
+                    build=BuildContext(path=deployment_docker_file_path, dockerfile_path="docker/Dockerfile"),
                     name="pfenvironment",
                     inference_config = {
                         "liveness_route": {
