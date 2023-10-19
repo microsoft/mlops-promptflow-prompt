@@ -44,6 +44,7 @@ def provision_deployment(
 
                 environment = Environment(
                     build=BuildContext(path=deployment_docker_file_path, dockerfile_path="Dockerfile"),
+                    name="pfenvironment",
                     inference_config = {
                         "liveness_route": {
                             "path" : "/health",
@@ -59,6 +60,8 @@ def provision_deployment(
                         },
                     }
                 )
+
+                ml_client.environments.create_or_update(environment)
 
                 blue_deployment = ManagedOnlineDeployment(
                     name=deployment_name,
