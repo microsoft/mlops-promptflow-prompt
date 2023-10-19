@@ -9,8 +9,8 @@
             "DEPLOYMENT_NAME": "green",
             "DEPLOYMENT_TRAFFIC_ALLOCATION": 100,
             "DEPLOYMENT_VM_SIZE": "Standard_F4s_v2",
-            "DEPLOYMENT_BASE_IMAGE_NAME": "mcr.microsoft.com/azureml/promptflow/promptflow-runtime:20230808.v1",
             "DEPLOYMENT_INSTANCE_COUNT": 1,
+            "DEPLOYMENT_DOCKER_FILE_PATH": "flows/named_entity_recognition/standard",
             "ENVIRONMENT_VARIABLES": {
                 "PROMPTFLOW_RUN_MODE": "serving"
             }
