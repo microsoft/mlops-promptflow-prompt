@@ -13,3 +13,4 @@ mlflow>=2.7.1
 azureml-mlflow>=1.51
 promptflow
 promptflow-tools
+keyrings.alt
