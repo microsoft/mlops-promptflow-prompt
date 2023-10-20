@@ -5,7 +5,7 @@ import argparse
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import (
     ManagedOnlineDeployment,
-    Environment
+    Environment, BuildContext
 )
 from azure.identity import DefaultAzureCredential
 
@@ -35,7 +35,7 @@ def provision_deployment(
             if env_type == elem['ENV_NAME']:
                 endpoint_name = elem["ENDPOINT_NAME"]
                 deployment_name = elem["DEPLOYMENT_NAME"]
-                deployment_base_image = elem["DEPLOYMENT_BASE_IMAGE_NAME"]
+                deployment_docker_file_path = elem["DEPLOYMENT_DOCKER_FILE_PATH"]
                 deployment_vm_size = elem["DEPLOYMENT_VM_SIZE"]
                 deployment_instance_count = elem["DEPLOYMENT_INSTANCE_COUNT"]
                 deployment_desc = elem["DEPLOYMENT_DESC"]
@@ -43,7 +43,8 @@ def provision_deployment(
                 environment_variables["PRT_CONFIG_OVERRIDE"] = f"deployment.subscription_id={subscription_id},deployment.resource_group={resource_group_name},deployment.workspace_name={workspace_name},deployment.endpoint_name={endpoint_name},deployment.deployment_name={deployment_name}"
 
                 environment = Environment(
-                    image=deployment_base_image,
+                    build=BuildContext(path=deployment_docker_file_path, dockerfile_path="docker/Dockerfile"),
+                    name="pfenvironment",
                     inference_config = {
                         "liveness_route": {
                             "path" : "/health",
@@ -59,6 +60,8 @@ def provision_deployment(
                         },
                     }
                 )
+
+                ml_client.environments.create_or_update(environment)
 
                 blue_deployment = ManagedOnlineDeployment(
                     name=deployment_name,
