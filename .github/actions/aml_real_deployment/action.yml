@@ -59,7 +59,7 @@ runs:
       uses: ./.github/actions/execute_shell_code
       with:
         azure_credentials: ${{ inputs.azure_credentials }}
-         script_parameter: |
+        script_parameter: |
           python -m mlops.common.deployment.provision_deployment \
             --subscription_id ${{ inputs.subscription_id }} \
             --resource_group_name ${{ inputs.resource_group_name }} \
@@ -67,4 +67,5 @@ runs:
             --model_name ${{ inputs.model_name }} \
             --model_version ${{ inputs.model_version }} \
             --env_type ${{ inputs.deploy_environment }} \
+            --build_id ${{ github.run_id }} \
             --realtime_deployment_config ${{ inputs.realtime_deployment_config }}
