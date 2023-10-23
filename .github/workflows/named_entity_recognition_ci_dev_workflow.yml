@@ -14,7 +14,7 @@ on:
         description: "The type of model to run the workflow for"
         required: true
         default: "named_entity_recognition"
-  pull_request:
+  push:
     branches:
       - "development"
 
