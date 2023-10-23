@@ -54,6 +54,7 @@ runs:
             --resource_group_name ${{ inputs.resource_group_name }} \
             --workspace_name ${{ inputs.workspace_name }} \
             --realtime_deployment_config ${{ inputs.realtime_deployment_config }} \
+            --build_id ${{ github.run_id }} \
             --environment_name ${{ inputs.deploy_environment }}
     - name: execute code to provision azureml deployment
       uses: ./.github/actions/execute_shell_code
