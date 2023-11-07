@@ -9,37 +9,38 @@ from mlops.common.mlflow_tools import generate_experiment_name, generate_run_nam
 
 
 def prepare_and_execute(
-        subscription_id,
-        resource_group_name,
-        workspace_name,
-        # runtime,
-        column_mapping,
-        build_id,
-        standard_flow_path,
-        experiment_name,
-        output_file,
-        standard_data_path
-    ):
+    subscription_id,
+    resource_group_name,
+    workspace_name,
+    # runtime,
+    column_mapping,
+    build_id,
+    standard_flow_path,
+    experiment_name,
+    output_file,
+    standard_data_path,
+):
+    pf = PFClient(
+        DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
+    )
 
-    pf = PFClient(DefaultAzureCredential(),subscription_id,resource_group_name,workspace_name)
-
-    run = Run( 
+    run = Run(
         flow=standard_flow_path,
         data=standard_data_path,
         # runtime=runtime,
         name=generate_run_name(),
         display_name=generate_run_name(),
         column_mapping=column_mapping,
-        tags={"build_id": build_id}
+        tags={"build_id": build_id},
     )
 
-    run._experiment_name=generate_experiment_name(experiment_name)
+    run._experiment_name = generate_experiment_name(experiment_name)
 
     pipeline_job = pf.runs.create_or_update(run, stream=True)
 
     df_result = None
-        
-    if pipeline_job.status == "Completed" or pipeline_job.status == "Finished": # 4
+
+    if pipeline_job.status == "Completed" or pipeline_job.status == "Finished":  # 4
         print("job completed")
     else:
         raise Exception("Sorry, exiting job with failure..")
@@ -49,8 +50,8 @@ def prepare_and_execute(
             out_file.write(pipeline_job.name)
     print(pipeline_job.name)
 
-def main():
 
+def main():
     experiment_type = ""
     flow_standard_path = ""
     data_standard_path = ""
@@ -61,9 +62,24 @@ def main():
     workspace_name = None
 
     parser = argparse.ArgumentParser("config_parameters")
-    parser.add_argument("--config_name", type=str, required=True, help="PROMPT_FLOW_CONFIG_NAME from model_config.json")
-    parser.add_argument("--environment_name", type=str, required=True, help="ENV_NAME from model_config.json")
-    parser.add_argument("--subscription_id", type=str, required=True, help="Subscription id where Azure ML is located")
+    parser.add_argument(
+        "--config_name",
+        type=str,
+        required=True,
+        help="PROMPT_FLOW_CONFIG_NAME from model_config.json",
+    )
+    parser.add_argument(
+        "--environment_name",
+        type=str,
+        required=True,
+        help="ENV_NAME from model_config.json",
+    )
+    parser.add_argument(
+        "--subscription_id",
+        type=str,
+        required=True,
+        help="Subscription id where Azure ML is located",
+    )
     parser.add_argument(
         "--output_file", type=str, required=False, help="A file to save run ids"
     )
@@ -74,7 +90,10 @@ def main():
 
     for el in config_data["flows"]:
         if "PROMPT_FLOW_CONFIG_NAME" in el and "ENV_NAME" in el:
-            if el["PROMPT_FLOW_CONFIG_NAME"]==args.config_name and el["ENV_NAME"]==args.environment_name:
+            if (
+                el["PROMPT_FLOW_CONFIG_NAME"] == args.config_name
+                and el["ENV_NAME"] == args.environment_name
+            ):
                 experiment_type = el["EXPERIMENT_BASE_NAME"]
                 flow_standard_path = el["STANDARD_FLOW_PATH"]
                 data_standard_path = el["DATA_PATH"]
@@ -102,9 +121,9 @@ def main():
         flow_standard_path,
         experiment_type,
         args.output_file,
-        data_standard_path
+        data_standard_path,
     )
 
 
-if __name__ ==  '__main__':
-      main()
+if __name__ == "__main__":
+    main()

@@ -7,14 +7,13 @@ import json
 
 
 def register_data_asset(
-        subscription_id,
-        resource_group_name,
-        workspace_name,
-        data_purpose,
-        data_config_path,
-        environment_name
+    subscription_id,
+    resource_group_name,
+    workspace_name,
+    data_purpose,
+    data_config_path,
+    environment_name,
 ):
-
     ml_client = MLClient(
         DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
     )
@@ -22,9 +21,12 @@ def register_data_asset(
     config_file = open(data_config_path)
     data_config = json.load(config_file)
 
-    for elem in data_config['datasets']:
-        if 'DATA_PURPOSE' in elem and 'ENV_NAME' in elem:
-            if data_purpose == elem["DATA_PURPOSE"] and environment_name == elem['ENV_NAME']:
+    for elem in data_config["datasets"]:
+        if "DATA_PURPOSE" in elem and "ENV_NAME" in elem:
+            if (
+                data_purpose == elem["DATA_PURPOSE"]
+                and environment_name == elem["ENV_NAME"]
+            ):
                 data_path = elem["DATA_PATH"]
                 dataset_desc = elem["DATASET_DESC"]
                 dataset_name = elem["DATASET_NAME"]
@@ -38,31 +40,58 @@ def register_data_asset(
 
                 ml_client.data.create_or_update(aml_dataset)
 
-                aml_dataset_unlabeled = ml_client.data.get(name=dataset_name, label="latest")
+                aml_dataset_unlabeled = ml_client.data.get(
+                    name=dataset_name, label="latest"
+                )
 
                 print(aml_dataset_unlabeled.latest_version)
                 print(aml_dataset_unlabeled.id)
 
+
 def main():
     parser = argparse.ArgumentParser("register data assets")
-    parser.add_argument("--subscription_id", type=str, help="Azure subscription id", required=True)
-    parser.add_argument("--resource_group_name", type=str, help="Azure Machine learning resource group", required=True)
-    parser.add_argument("--workspace_name", type=str, help="Azure Machine learning Workspace name", required=True)
-    parser.add_argument("--data_purpose", type=str, help="data to be registered identified by purpose", required=True)
-    parser.add_argument("--data_config_path", type=str, help="data config file path", required=True)
-    parser.add_argument("--environment_name",type=str,help="environment name (e.g. dev, test, prod)", required=True)
-    
+    parser.add_argument(
+        "--subscription_id", type=str, help="Azure subscription id", required=True
+    )
+    parser.add_argument(
+        "--resource_group_name",
+        type=str,
+        help="Azure Machine learning resource group",
+        required=True,
+    )
+    parser.add_argument(
+        "--workspace_name",
+        type=str,
+        help="Azure Machine learning Workspace name",
+        required=True,
+    )
+    parser.add_argument(
+        "--data_purpose",
+        type=str,
+        help="data to be registered identified by purpose",
+        required=True,
+    )
+    parser.add_argument(
+        "--data_config_path", type=str, help="data config file path", required=True
+    )
+    parser.add_argument(
+        "--environment_name",
+        type=str,
+        help="environment name (e.g. dev, test, prod)",
+        required=True,
+    )
+
     args = parser.parse_args()
 
     register_data_asset(
-         args.subscription_id,
-         args.resource_group_name,
-         args.workspace_name,
-         args.data_purpose,
-         args.data_config_path,
-         args.environment_name
+        args.subscription_id,
+        args.resource_group_name,
+        args.workspace_name,
+        args.data_purpose,
+        args.data_config_path,
+        args.environment_name,
     )
 
-if __name__ ==  '__main__':
-      main()
 
+if __name__ == "__main__":
+    main()
