@@ -1,6 +1,5 @@
 import unittest
-
-from  flows.named_entity_recognition.standard.cleansing import cleansing
+from flows.named_entity_recognition.standard.cleansing import cleansing
 
 
 class TestCleansing(unittest.TestCase):
