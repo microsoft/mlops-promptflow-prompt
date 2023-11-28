@@ -38,7 +38,11 @@ def provision_deployment(
                 environment_variables = dict(elem["ENVIRONMENT_VARIABLES"])
                 environment_variables[
                     "PRT_CONFIG_OVERRIDE"
-                ] = f"deployment.subscription_id={subscription_id},deployment.resource_group={resource_group_name},deployment.workspace_name={workspace_name},deployment.endpoint_name={endpoint_name},deployment.deployment_name={deployment_name}"
+                ] = f"deployment.subscription_id={subscription_id}," \
+                    f"deployment.resource_group={resource_group_name}," \
+                    f"deployment.workspace_name={workspace_name}," \
+                    f"deployment.endpoint_name={endpoint_name}," \
+                    f"deployment.deployment_name={deployment_name}"
 
                 environment = Environment(
                     build=BuildContext(

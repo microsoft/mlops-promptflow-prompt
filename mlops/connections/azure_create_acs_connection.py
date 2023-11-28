@@ -3,6 +3,7 @@ import requests
 import json
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
+from promptflow.azure._restclient.flow_service_caller import FlowRequestException
 
 
 def main():
@@ -54,8 +55,11 @@ def main():
         conn_name = args.aoai_connection_name
         pf._connections.get(name=conn_name)
         print("using existing connection")
-    except:
-        url = f"https://management.azure.com/subscriptions/{args.subscription_id}/resourcegroups/{args.resource_group}/providers/Microsoft.MachineLearningServices/workspaces/{args.workspace_name}/connections/{args.acs_connection_name}?api-version=2023-04-01-preview"
+    except FlowRequestException:
+        url = f"https://management.azure.com/subscriptions/{args.subscription_id}/" \
+            f"resourcegroups/{args.resource_group}/providers/Microsoft.MachineLearningServices/" \
+            f"workspaces/{args.workspace_name}/connections/{args.acs_connection_name}?" \
+            f"api-version=2023-04-01-preview"
         token = (
             DefaultAzureCredential()
             .get_token("https://management.azure.com/.default")

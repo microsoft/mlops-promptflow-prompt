@@ -4,8 +4,6 @@ import argparse
 import json
 from dotenv import load_dotenv
 from promptflow import PFClient
-from azure.ai.ml import MLClient
-from azure.identity import DefaultAzureCredential
 from mlops.common.mlflow_tools import (
     generate_experiment_name,
     generate_run_name,
@@ -61,7 +59,7 @@ def main():
     mlflow.set_experiment(experiment_name)
 
     # Start the experiment
-    with mlflow.start_run(run_name=generate_run_name()) as run:
+    with mlflow.start_run(run_name=generate_run_name()):
         pf_client = PFClient()
 
         # Using default input

@@ -1,7 +1,7 @@
-import os
 import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection
+from promptflow._sdk._errors import ConnectionNotFoundError
 
 
 def main():
@@ -34,9 +34,9 @@ def main():
 
     try:
         conn_name = args.aoai_connection_name
-        conn = pf.connections.get(name=conn_name)
+        pf.connections.get(name=conn_name)
         print("using existing connection")
-    except:
+    except ConnectionNotFoundError:
         connection = AzureOpenAIConnection(
             name=conn_name,
             api_key=args.aoai_api_key,
@@ -45,7 +45,7 @@ def main():
             api_version=args.aoai_api_version,
         )
 
-        conn = pf.connections.create_or_update(connection)
+        pf.connections.create_or_update(connection)
         print("successfully created connection")
 
 

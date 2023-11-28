@@ -1,5 +1,4 @@
 import mlflow
-import os
 import argparse
 import json
 from dotenv import load_dotenv
@@ -71,7 +70,7 @@ def main():
     mlflow.set_experiment(experiment_name)
 
     # Start the experiment
-    with mlflow.start_run(run_name=generate_run_name()) as run:
+    with mlflow.start_run(run_name=generate_run_name()):
         # Get a pf client to manage runs
         pf = PFClient()
 

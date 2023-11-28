@@ -38,8 +38,6 @@ def prepare_and_execute(
 
     pipeline_job = pf.runs.create_or_update(run, stream=True)
 
-    df_result = None
-
     if pipeline_job.status == "Completed" or pipeline_job.status == "Finished":  # 4
         print("job completed")
     else:
