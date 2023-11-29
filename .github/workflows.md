@@ -23,7 +23,7 @@ It builds and executes the flow locally on a Github build machine. After executi
 ### Continuous Integration
 
 `*_ci_dev_workflow` runs for each push into the `development` branch
-It runs the flow and then creates and then creates a new version of the model for that flow in AML. The model can be viewed in the **Models** section of AML. It then takes that model and deploys it to a real-time endpoint that can be used for testing. That endpoint and the logs associated to it can be viewed in the **Endpoints** section of AML.
+It runs the flow and then creates a new version of the model for that flow in AML. The model can be viewed in the **Models** section of AML. It then takes that model and deploys it to a real-time endpoint that can be used for testing. That endpoint and the logs associated to it can be viewed in the **Endpoints** section of AML.
 
 ## GitHub Secrets
 
