@@ -6,6 +6,7 @@ from promptflow._sdk._errors import ConnectionNotFoundError
 
 
 def main():
+    """Create a local connection to Azure Cognitive Service using command line parameters."""
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
         "--acs-connection-name",

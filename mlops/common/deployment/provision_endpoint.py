@@ -38,6 +38,7 @@ def provision_endpoint(
 
 
 def main():
+    """Read command line arguments and invoke provision_endpoint to create Azure ML online endpoint."""
     parser = argparse.ArgumentParser("provision_endpoints")
     parser.add_argument(
         "--subscription_id", type=str, help="Azure subscription id", required=True

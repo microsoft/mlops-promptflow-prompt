@@ -15,6 +15,19 @@ def register_model(
     model_type,
     output_file,
 ):
+    """
+    Register a flow folder as a model in Azure ML model repository.
+
+    Parameters:
+      subscription_id (string): a subsription id where Azure ML workspace is located
+      resource_group (string): a resource group name where Azure ML workspace is located
+      workspace_name (string): Azure ML workspace name
+      model_name (string): a model name to register
+      build_id (string): a build id to assign as a tag
+      model_path (string): a path to the flow folder
+      model_type (string): a type of the model to assign
+      output_file (string): an optional output file to store the model version
+    """
     print(f"Model name: {model_name}")
 
     ml_client = MLClient(
@@ -38,6 +51,7 @@ def register_model(
 
 
 def main():
+    """Collect command string parameters and pass them to the register_model method."""
     parser = argparse.ArgumentParser("register model")
     parser.add_argument(
         "--subscription_id", type=str, help="Azure subscription id", required=True

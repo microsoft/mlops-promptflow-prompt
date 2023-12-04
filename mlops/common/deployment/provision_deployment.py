@@ -77,6 +77,7 @@ def provision_deployment(
 
 
 def main():
+    """Read command line arguments and invoke provision_deployment to make Azure ML online endpoint deployment."""
     parser = argparse.ArgumentParser("provision_deployment")
     parser.add_argument(
         "--subscription_id", type=str, help="Azure subscription id", required=True
