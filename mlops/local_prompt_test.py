@@ -13,6 +13,8 @@ from mlops.common.mlflow_tools import (
 
 
 def main():
+    """Collect command line arguments and configuration file parameters to invoke \
+        a given standard flow locally on a single line of data."""
     experiment_type = ""
     flow_standard_path = ""
     subscription_id = None

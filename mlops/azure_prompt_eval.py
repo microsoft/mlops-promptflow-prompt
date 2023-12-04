@@ -48,6 +48,8 @@ def prepare_and_execute(
 
 
 def main():
+    """Collect command line arguments and configuration file parameters to invoke \
+        a given evaluation flow in Azure ML."""
     experiment_type = ""
     flow_eval_path = ""
     data_eval_path = ""
