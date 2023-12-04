@@ -1,3 +1,4 @@
+"""This module helps to create a local connection to Azure Open AI service."""
 import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection

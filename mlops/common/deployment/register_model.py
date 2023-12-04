@@ -1,3 +1,4 @@
+"""This module implements Prompt flow folder registration as a model in Azure ML model repository."""
 import argparse
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import Model

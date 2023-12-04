@@ -1,6 +1,6 @@
+"""This module implements deployment into Azure ML online endpoint."""
 import json
 import argparse
-
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import ManagedOnlineDeployment, Environment, BuildContext
 from azure.identity import DefaultAzureCredential

@@ -1,3 +1,4 @@
+"""This module implements provisioning of Azure ML online endpoint."""
 import json
 import argparse
 from azure.ai.ml import MLClient

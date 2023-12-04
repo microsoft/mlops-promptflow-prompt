@@ -1,3 +1,4 @@
+"""The tool implements a step that allows to compare ground truth to an answer."""
 from promptflow import tool
 from typing import List
 

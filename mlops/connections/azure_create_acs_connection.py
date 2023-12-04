@@ -1,3 +1,4 @@
+"""This module helps to create a connection in Azure ML to Azure Cognitive Search service."""
 import argparse
 import requests
 import json

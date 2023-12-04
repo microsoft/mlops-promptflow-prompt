@@ -1,3 +1,5 @@
+"""This module contains a few utility methods that allows us to initialize MLFlow and generate names for \
+    for experiments and runs."""
 import subprocess
 import os
 import uuid

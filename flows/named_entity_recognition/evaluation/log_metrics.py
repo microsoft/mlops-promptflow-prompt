@@ -1,10 +1,7 @@
+"""The module contains a tool that evaluation flow is using as a logging step."""
 from promptflow import tool
 from typing import List
 from promptflow import log_metric
-
-# The inputs section will change based on the arguments of the tool function, after you save the code
-# Adding type to arguments and return value will help the system show the types properly
-# Please update the function name/signature per need
 
 
 @tool

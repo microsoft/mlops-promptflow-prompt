@@ -1,3 +1,4 @@
+"""This is MLOps utility module to execute evaluation flow in Azure ML using automatic cluster."""
 import json
 import argparse
 import os

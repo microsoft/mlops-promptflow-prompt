@@ -1,3 +1,4 @@
+"""This is MLOps utility module to execute evaluation flow locally using a single line of data."""
 import mlflow
 import os
 import argparse
