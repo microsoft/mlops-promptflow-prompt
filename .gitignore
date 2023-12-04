@@ -161,3 +161,6 @@ cython_debug/
 
 # MLFlow sandbox
 mlruns/
+
+# Promt flow folders
+.promptflow

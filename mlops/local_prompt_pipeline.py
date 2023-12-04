@@ -1,3 +1,4 @@
+"""This is MLOps utility module to execute standard flow locally."""
 import mlflow
 import argparse
 import json
@@ -11,6 +12,8 @@ from mlops.common.mlflow_tools import (
 
 
 def main():
+    """Collect command line arguments and configuration file parameters to invoke \
+        a given standard flow locally."""
     experiment_type = ""
     flow_standard_path = ""
     data_standard_path = ""

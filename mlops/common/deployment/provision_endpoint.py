@@ -1,3 +1,4 @@
+"""This module implements provisioning of Azure ML online endpoint."""
 import json
 import argparse
 from azure.ai.ml import MLClient
@@ -13,6 +14,17 @@ def provision_endpoint(
     build_id,
     environment_name,
 ):
+    """
+    Create a managed Azure ML online endpoint.
+
+    Parameters:
+      subscription_id (string): a subsription id where Azure ML workspace is located
+      resource_group (string): a resource group name where Azure ML workspace is located
+      workspace_name (string): Azure ML workspace name
+      real_config (string): a path to deployment config file
+      build_id (string): a build id
+      environment_name (string): an environment name to pick the right section from the config file
+    """
     ml_client = MLClient(
         DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
     )
@@ -37,6 +49,7 @@ def provision_endpoint(
 
 
 def main():
+    """Read command line arguments and invoke provision_endpoint to create Azure ML online endpoint."""
     parser = argparse.ArgumentParser("provision_endpoints")
     parser.add_argument(
         "--subscription_id", type=str, help="Azure subscription id", required=True

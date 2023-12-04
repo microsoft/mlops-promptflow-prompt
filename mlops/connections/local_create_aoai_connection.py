@@ -1,3 +1,4 @@
+"""This module helps to create a local connection to Azure Open AI service."""
 import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection
@@ -5,6 +6,7 @@ from promptflow._sdk._errors import ConnectionNotFoundError
 
 
 def main():
+    """Create a local connection to Azure Open AI using command line parameters."""
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
         "--aoai-connection-name",

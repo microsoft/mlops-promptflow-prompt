@@ -1,3 +1,4 @@
+"""This is MLOps utility module to execute evaluation flow in Azure ML using automatic cluster."""
 import json
 import argparse
 import os
@@ -20,6 +21,20 @@ def prepare_and_execute(
     run_id,
     eval_column_mapping,
 ):
+    """
+    Execute an evaluation flow in Azure ML.
+
+    Parameters:
+      subscription_id (string): a subsription id where Azure ML workspace is located
+      resource_group (string): a resource group name where Azure ML workspace is located
+      workspace_name (string): Azure ML workspace name
+      build_id (string): a build id
+      eval_flow_path (string): an evaluation flow folder path
+      experiment_name (string): an experiment name
+      data_config_path (string): a path to data file in Azure ML notation
+      run_id (string): a run id of the standard flow run to evaluate
+      eval_column_mapping (string): a mapping between columns in the ground truth and results from standard run
+    """
     pf = PFClient(
         DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
     )
@@ -47,6 +62,8 @@ def prepare_and_execute(
 
 
 def main():
+    """Collect command line arguments and configuration file parameters to invoke \
+        a given evaluation flow in Azure ML."""
     experiment_type = ""
     flow_eval_path = ""
     data_eval_path = ""

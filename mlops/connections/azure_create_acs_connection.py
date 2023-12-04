@@ -1,3 +1,4 @@
+"""This module helps to create a connection in Azure ML to Azure Cognitive Search service."""
 import argparse
 import requests
 import json
@@ -7,6 +8,7 @@ from promptflow.azure._restclient.flow_service_caller import FlowRequestExceptio
 
 
 def main():
+    """Create an Azure ML connection to Azure Cognitive Service using command line parameters."""
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
         "--acs-connection-name",

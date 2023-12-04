@@ -1,6 +1,6 @@
+"""This module implements deployment into Azure ML online endpoint."""
 import json
 import argparse
-
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import ManagedOnlineDeployment, Environment, BuildContext
 from azure.identity import DefaultAzureCredential
@@ -16,6 +16,19 @@ def provision_deployment(
     env_type,
     real_config,
 ):
+    """
+    Create a deployment into managed Azure ML online endpoint.
+
+    Parameters:
+      subscription_id (string): a subsription id where Azure ML workspace is located
+      resource_group (string): a resource group name where Azure ML workspace is located
+      workspace_name (string): Azure ML workspace name
+      model_name (string): a name of the model to deploy
+      model_version (string): a version of the model to deploy
+      build_id (string): a build id
+      env_type (string): an environment name to pick the right section from the config file
+      real_config (string): a path to deployment config file
+    """
     print(f"Model name: {model_name}")
 
     ml_client = MLClient(
@@ -77,6 +90,7 @@ def provision_deployment(
 
 
 def main():
+    """Read command line arguments and invoke provision_deployment to make Azure ML online endpoint deployment."""
     parser = argparse.ArgumentParser("provision_deployment")
     parser.add_argument(
         "--subscription_id", type=str, help="Azure subscription id", required=True
