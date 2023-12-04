@@ -21,6 +21,20 @@ def prepare_and_execute(
     output_file,
     standard_data_path,
 ):
+    """
+    Execute a standard flow in Azure ML.
+
+    Parameters:
+      subscription_id (string): a subsription id where Azure ML workspace is located
+      resource_group (string): a resource group name where Azure ML workspace is located
+      workspace_name (string): Azure ML workspace name
+      column_mapping (string): mapping rules
+      build_id (string): a build id
+      standard_flow_path (string): a standard flow folder path
+      experiment_name (string): an experiment name
+      output_file (string): an optional file name to store run id
+      standard_data_path (string): a path to data file in Azure ML notation
+    """
     pf = PFClient(
         DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
     )

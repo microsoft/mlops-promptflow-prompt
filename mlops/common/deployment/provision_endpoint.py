@@ -14,6 +14,17 @@ def provision_endpoint(
     build_id,
     environment_name,
 ):
+    """
+    Create a managed Azure ML online endpoint.
+
+    Parameters:
+      subscription_id (string): a subsription id where Azure ML workspace is located
+      resource_group (string): a resource group name where Azure ML workspace is located
+      workspace_name (string): Azure ML workspace name
+      real_config (string): a path to deployment config file
+      build_id (string): a build id
+      environment_name (string): an environment name to pick the right section from the config file
+    """
     ml_client = MLClient(
         DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
     )

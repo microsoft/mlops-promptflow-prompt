@@ -32,19 +32,19 @@ python -m mlops.connections.local_create_aoai_connection --aoai-connection-name 
 
 If everything works fine, you can test the flow using the following commands.
 
-Test the flow on a single data entry (default one):
+Test the flow on a single data entry (default one, this command cannot be used in a chain with the evaluation flow):
 
 ```bash
 python -m mlops.local_prompt_test --config_name named_entity_recognition --environment_name pr
 ```
 
-Run the flow  using a data file, and display results in the browser:
+Run the flow  using a data file, and display results in the browser (a run id from here can be used in a chain with the evaluation flow):
 
 ```bash
 python -m mlops.local_prompt_pipeline --config_name named_entity_recognition --environment_name pr
 ```
 
-Run the flow alongside with evaluation:
+Run the flow alongside with evaluation (use run id as an output from previous command - can be stored in a file if needed):
 
 ```bash
 python -m mlops.local_prompt_eval --config_name named_entity_recognition --environment_name pr --run_id <run_id>
