@@ -6,6 +6,15 @@ from promptflow import log_metric
 
 @tool
 def log_metrics(match_counts: List[dict]):
+    """
+    Log exact match and partial match numbers.
+
+    Parameters:
+      match_count (list<dict>): a list of matching details for each pair answer-ground truth
+
+    Returns:
+        Dictionary: returns exact_match_rate and partial_match_rate
+    """
     exact_match_rate = sum([m["exact_match"] for m in match_counts]) / len(match_counts)
     partial_match_rate = sum([m["partial_match"] for m in match_counts]) / len(
         match_counts
