@@ -23,6 +23,7 @@ on:
       - 'mlops/**'
       - 'flows/named_entity_recognition/**'
       - 'tests/**'
+  workflow_dispatch:
 
 jobs:
   run-pr-workflow:
