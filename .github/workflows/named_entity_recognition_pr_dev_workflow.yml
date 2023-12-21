@@ -2,6 +2,7 @@
 name: Named Entity Recognition PR Workflow
 
 on:
+  workflow_dispatch:
   workflow_call:
     inputs:
       exec_environment:
@@ -23,7 +24,6 @@ on:
       - 'mlops/**'
       - 'flows/named_entity_recognition/**'
       - 'tests/**'
-  workflow_dispatch:
 
 jobs:
   run-pr-workflow:
