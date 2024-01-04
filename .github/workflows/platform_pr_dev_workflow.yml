@@ -85,7 +85,7 @@ jobs:
       - name: Execute Integration Test
         uses: ./.github/actions/execute_shell_code
         env:
-          BUILD_BUILDID: "${{ github.run_id }}"
+          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
