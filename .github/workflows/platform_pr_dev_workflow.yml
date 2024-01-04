@@ -89,7 +89,7 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m mlops.integration_test_script \
+            python -m tests.integration_end_to_end_test_script \
               --config_name "${{inputs.model_type}}" \
               --environment_name "${{inputs.exec_environment}}" \
               --subscription_id "${{ secrets.subscription_id }}" \
