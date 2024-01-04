@@ -24,12 +24,3 @@ def run_integration_test(config_name, environment_name, subscription_id, output_
     except subprocess.CalledProcessError as e:
         print(f"Integration test failed with error: {e}")
         sys.exit(1)
-
-if __name__ == "__main__":
-    # Example usage
-    run_integration_test(
-        config_name="named_entity_recognition",
-        environment_name="pr",
-        subscription_id="your_subscription_id",
-        output_file="run_id.txt"
-    )
