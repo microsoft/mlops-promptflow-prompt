@@ -68,3 +68,29 @@ jobs:
               --environment_name "${{inputs.exec_environment}}" \
               --subscription_id "${{ secrets.subscription_id }}" \
               --output_file run_id.txt
+
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    needs: build-validation
+    steps:
+      - name: Checkout Actions
+        uses: actions/checkout@v1
+
+      - name: Configure Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Execute Integration Test
+        uses: ./.github/actions/execute_shell_code
+        env:
+          BUILD_BUILDID: "${{ github.run_id }}"
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.integration_test_script \
+              --config_name "${{inputs.model_type}}" \
+              --environment_name "${{inputs.exec_environment}}" \
+              --subscription_id "${{ secrets.subscription_id }}" \
+              --output_file run_id.txt
