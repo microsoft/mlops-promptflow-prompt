@@ -84,7 +84,7 @@ def main():
             data=data_standard_path,
             column_mapping=column_mapping,
         )
-
+        print(f"PromptFlow run instance created: {run_instance}")
         pf.stream(run_instance)
 
         if run_instance.status == "Completed" or run_instance.status == "Finished":
