@@ -74,7 +74,7 @@ jobs:
         run: |
           pwd
           ls -la
-          content=$(cat ${{ needs.execute-mlops.outputs.output-file }})
+          content=$(cat ${{ needs.execute-mlops.outputs.run_id.txt }})
           echo "Content of run_id.txt: $content"
           
       - name: Execute MLOps Evaluation Pipeline
