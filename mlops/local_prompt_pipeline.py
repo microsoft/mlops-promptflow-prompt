@@ -2,6 +2,7 @@
 import mlflow
 import argparse
 import json
+import os
 from dotenv import load_dotenv
 from promptflow import PFClient
 from mlops.common.mlflow_tools import (
@@ -99,7 +100,7 @@ def main():
         if args.output_file is not None:
             print(f"Current Working Directory: {os.getcwd()}")
             abs_output_file_path = os.path.abspath(args.output_file)
-            print(f"Output file specified: {abs_output_file_path}")
+            print(f"Output abs_output_file_path specified: {abs_output_file_path}")
             with open(args.output_file, "w") as out_file:
                 out_file.write(run_instance.name)
 
