@@ -97,6 +97,7 @@ def main():
             raise Exception("Sorry, exiting job with failure..")
 
         if args.output_file is not None:
+            print(f"Output file specified: {args.output_file}")
             with open(args.output_file, "w") as out_file:
                 out_file.write(run_instance.name)
 
