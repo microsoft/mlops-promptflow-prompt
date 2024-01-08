@@ -96,7 +96,7 @@ def main():
         else:
             mlflow.set_tag("LOG_STATUS", "FAILED")
             raise Exception("Sorry, exiting job with failure..")
-        
+
         if args.output_file is not None:
             print(f"Current Working Directory: {os.getcwd()}")
             abs_output_file_path = os.path.abspath(args.output_file)
