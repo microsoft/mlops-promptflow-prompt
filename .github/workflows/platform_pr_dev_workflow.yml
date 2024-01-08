@@ -72,6 +72,7 @@ jobs:
       - name: Read PromptFlow Runs
         shell: bash
         run: |
+          echo $PWD
           readarray arr <"run_id.txt"
           run_name=${arr[0]}
           echo $run_name
