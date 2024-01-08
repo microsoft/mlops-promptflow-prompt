@@ -72,7 +72,8 @@ jobs:
       - name: Read PromptFlow Runs
         shell: bash
         run: |
-          echo $PWD
+          echo "Current Directory: $PWD"
+          ls -la
           readarray arr <"run_id.txt"
           run_name=${arr[0]}
           echo $run_name
