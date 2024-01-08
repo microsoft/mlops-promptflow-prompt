@@ -69,7 +69,12 @@ jobs:
               --environment_name "${{inputs.exec_environment}}" \
               --subscription_id "${{ secrets.subscription_id }}" \
               --output_file run_id.txt
-                  
+              
+      - name: Debugging Step
+        run: |
+          ls -la
+          cat run_id.txt
+          
       - name: Execute MLOps Evaluation Pipeline
         uses: ./.github/actions/execute_shell_code
         env:
