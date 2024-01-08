@@ -72,8 +72,10 @@ jobs:
               
       - name: Debugging Step
         run: |
+          pwd
           ls -la
-          cat run_id.txt
+          content=$(cat ${{ needs.execute-mlops.outputs.output-file }})
+          echo "Content of run_id.txt: $content"
           
       - name: Execute MLOps Evaluation Pipeline
         uses: ./.github/actions/execute_shell_code
