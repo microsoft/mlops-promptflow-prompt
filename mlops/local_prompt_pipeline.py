@@ -101,7 +101,6 @@ def main():
             print(f"Current Working Directory: {os.getcwd()}")
             subdirectory = "output_directory"
             os.makedirs(subdirectory, exist_ok=True)
-            
             abs_output_file_path = os.path.abspath(os.path.join(subdirectory, args.output_file))
             print(f"Output abs_output_file_path specified: {abs_output_file_path}")
             with open(os.path.join(subdirectory, args.output_file), "w") as out_file:
