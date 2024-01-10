@@ -2,7 +2,6 @@
 import mlflow
 import argparse
 import json
-import os
 from dotenv import load_dotenv
 from promptflow import PFClient
 from mlops.common.mlflow_tools import (
