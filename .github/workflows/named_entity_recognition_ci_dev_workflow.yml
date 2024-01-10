@@ -2,6 +2,9 @@
 name: Named Entity Recognition CI Workflow
 
 on:
+  push:
+    branches:
+      - "agromova/features/config_update"
   workflow_dispatch:
   #workflow_call:
     inputs:
@@ -15,10 +18,6 @@ on:
         description: "The type of model to run the workflow for"
         required: true
         default: "named_entity_recognition"
-  # TODO: remove
-  # push:
-  #   branches:
-  #     - "development"
 
 jobs:
   run-ci-workflow:
