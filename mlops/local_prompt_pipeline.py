@@ -96,19 +96,9 @@ def main():
         else:
             mlflow.set_tag("LOG_STATUS", "FAILED")
             raise Exception("Sorry, exiting job with failure..")
-
         if args.output_file is not None:
-            print(f"Current Working Directory: {os.getcwd()}")
-            subdirectory = "output_directory"
-            os.makedirs(subdirectory, exist_ok=True)
-            abs_output_file_path = os.path.abspath(os.path.join(subdirectory, args.output_file))
-            print(f"Output abs_output_file_path specified: {abs_output_file_path}")
-            with open(os.path.join(subdirectory, args.output_file), "w") as out_file:
+            with open(args.output_file, "w") as out_file:
                 out_file.write(run_instance.name)
-            # TODO: Remove for debug
-            with open(os.path.join(subdirectory, args.output_file), "r") as in_file:
-                file_contents = in_file.read()
-                print(f"Contents of the file: {file_contents}")
 
         print(run_instance.name)
         if args.visualize is True:
