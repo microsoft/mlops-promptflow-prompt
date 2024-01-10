@@ -69,3 +69,28 @@ jobs:
               --environment_name "${{inputs.exec_environment}}" \
               --subscription_id "${{ secrets.subscription_id }}" \
               --output_file run_id.txt
+              
+      - name: Read PromptFlow Runs
+        shell: bash
+        run: |
+          echo "Current Directory: $PWD"
+          ls -la
+          readarray arr <"run_id.txt"
+          run_name=${arr[0]}
+          echo $run_name
+          echo "RUN_NAME=${run_name}"  >> "$GITHUB_ENV"
+          echo $PWD
+          
+      - name: Execute MLOps Evaluation Pipeline
+        uses: ./.github/actions/execute_shell_code
+        env:
+          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.local_prompt_eval \
+              --config_name ${{ inputs.model_type }} \
+              --environment_name ${{ inputs.exec_environment }} \
+              --subscription_id "${{ secrets.subscription_id }}" \
+              --run_id $RUN_NAME
+            
