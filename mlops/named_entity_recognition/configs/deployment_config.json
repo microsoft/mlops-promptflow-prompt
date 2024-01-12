@@ -8,7 +8,7 @@
             "DEPLOYMENT_DESC": "prompt flow deployment",
             "DEPLOYMENT_NAME": "green",
             "DEPLOYMENT_TRAFFIC_ALLOCATION": 100,
-            "DEPLOYMENT_VM_SIZE": "Standard_DS3_v2",
+            "DEPLOYMENT_VM_SIZE": "Standard_DS2_v2",
             "DEPLOYMENT_INSTANCE_COUNT": 1,
             "DEPLOYMENT_DOCKER_FILE_PATH": "flows/named_entity_recognition/standard",
             "ENVIRONMENT_VARIABLES": {
