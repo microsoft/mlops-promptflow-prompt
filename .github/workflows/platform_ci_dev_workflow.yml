@@ -118,7 +118,8 @@ jobs:
               --model_path $STANDARD_FLOW_PATH \
               --model_type ${{ inputs.model_type }} \
               --output_file "model_version.txt" \
-              --build_id ${{ github.run_id }}
+              --build_id ${{ github.run_id }} \
+              --vm_size "Standard_DS3_v2" 
       - name: Read Model Version
         shell: bash
         run: |
