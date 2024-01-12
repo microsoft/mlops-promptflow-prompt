@@ -91,6 +91,9 @@ def main():
         required=False,
         help="A file to save run model version",
     )
+    parser.add_argument(
+        "--vm_size", type=str, default="Standard_DS3_v2", help="VM size for deployment"
+    )
 
     args = parser.parse_args()
 
