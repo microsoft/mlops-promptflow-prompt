@@ -14,6 +14,7 @@ def register_model(
     model_path,
     model_type,
     output_file,
+    vm_size="Standard_DS3_v2",
 ):
     """
     Register a flow folder as a model in Azure ML model repository.
@@ -27,6 +28,7 @@ def register_model(
       model_path (string): a path to the flow folder
       model_type (string): a type of the model to assign
       output_file (string): an optional output file to store the model version
+      vm_size (string): the desired VM size for deployment
     """
     print(f"Model name: {model_name}")
 
@@ -41,6 +43,7 @@ def register_model(
         description=f"{model_type} model registered for prompt flow deployment",
         properties={"azureml.promptflow.source_flow_id": model_type},
         tags={"build_id": build_id},
+        compute=vm_size,
     )
 
     model_info = ml_client.models.create_or_update(model)
@@ -100,6 +103,7 @@ def main():
         args.model_path,
         args.model_type,
         args.output_file,
+        vm_size="Standard_DS3_v2",
     )
 
 
