@@ -138,3 +138,12 @@ jobs:
           DEPLOY_ENVIRONMENT: ${{ inputs.exec_environment }}
           REALTIME_DEPLOYMENT_CONFIG: $REALTIME_DEPLOYMENT_CONFIG
           MODEL_VERSION: $MODEL_VERSION
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [execute-prompt-experiment]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: pf flow build --source ../../../flows/named_entity_recognition/standard/docker --output dist --format docker
