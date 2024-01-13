@@ -151,8 +151,7 @@ jobs:
           python-version: 3.9
       - name: Install dependencies
         run: |
-          pip install promptflow-sdk
-          pip install promptflow-cli
+         pip install promptflow
       - name: Create AOAI Connection
         uses: ./.github/actions/execute_shell_code
         with:
