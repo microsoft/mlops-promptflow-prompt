@@ -152,17 +152,6 @@ jobs:
       - name: Install dependencies
         run: |
          pip install promptflow
-      - name: Create AOAI Connection
-        uses: ./.github/actions/execute_shell_code
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m mlops.connections.local_create_aoai_connection \
-            --aoai-api-key "${{ secrets.aoai_api_key }}" \
-            --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
-            --aoai-api-version "2023-07-01-preview" \
-            --aoai-api-type "azure" \
-            --aoai-connection-name "aoai"
       - name: Build Docker Image
         run: |
           python -m pf flow build --source ../../../flows/named_entity_recognition/standard/docker --output dist --format docker
