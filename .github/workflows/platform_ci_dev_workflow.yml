@@ -152,8 +152,7 @@ jobs:
       - name: Install dependencies
         run: |
          pip install promptflow
-      - name: Build Docker Image
-        run: |
+         echo "PATH: $PATH"
       - name: Build Docker Image
         run: |
           promptflow flow build --source ../../../flows/named_entity_recognition/standard/docker --output dist --format docker
