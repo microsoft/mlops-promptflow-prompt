@@ -149,4 +149,5 @@ jobs:
         uses: actions/setup-python@v2
       - name: Run pf flow build
         run: |
+          chmod +x build_flow.sh
           ./build_flow.sh
