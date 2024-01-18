@@ -154,7 +154,7 @@ jobs:
       - name: Create AOAI Connection
         run: |
           echo "Current Working Directory: $PWD"
-          pf connection create --file ./mlops/connections/azure_openai.yml --set api_key=${{ secrets.aoai_api_key }} api_base=${{ secrets.aoai_base_endpoint }} --name open_ai_connection
+          pf connection create --file ./mlops-promptflow-prompt/mlops/connections/azure_openai.yml --set api_key=${{ secrets.aoai_api_key }} api_base=${{ secrets.aoai_base_endpoint }} --name open_ai_connection
       - name: Run pf flow build
         run: |
           chmod +x build_flow.sh
