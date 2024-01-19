@@ -153,7 +153,7 @@ jobs:
         run: pip install promptflow promptflow-tools
       - name: Run pf flow build
         run: |
-          python -m mlops.common.deployment.deploy_promptflow_app.py \
+          python -m mlops.common.deployment.deploy_promptflow_app \
             --source ./flows/named_entity_recognition/standard \
             --output ./mlops/common/deployment/output \
             --format docker \
