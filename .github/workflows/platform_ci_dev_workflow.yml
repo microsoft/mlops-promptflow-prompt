@@ -158,4 +158,3 @@ jobs:
             --output ./mlops/common/deployment/output \
             --format docker \
             --variant "2023-07-01-preview" \
-            --verbose "azure"
