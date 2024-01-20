@@ -150,11 +150,18 @@ jobs:
         with:
           python-version: 3.9
       - name: Install PromptFlow
-        run: pip install promptflow promptflow-tools
-      - name: Run pf flow build
         run: |
-          python -m mlops.common.deployment.deploy_promptflow_app \
-            --source ./flows/named_entity_recognition/standard \
-            --output ./mlops/common/deployment/output \
-            --format docker \
-            --variant "2023-07-01-preview" \
+          pip install promptflow promptflow-tools
+          pf -v
+      - name: List PromptFlow Connections
+        run: |
+            pf connection list
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+      # - name: Run pf flow build
+      #   run: |
+      #     python -m mlops.common.deployment.deploy_promptflow_app \
+      #       --source ./flows/named_entity_recognition/standard \
+      #       --output ./mlops/common/deployment/output \
+      #       --format docker \
+      #       --variant "2023-07-01-preview" \
