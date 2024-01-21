@@ -155,10 +155,13 @@ jobs:
           pf -v
       - name: Build PromptFlow Flow
         run: |
-          echo "name: aoai" > connection.yaml
-          echo "type: AzureOpenAI" >> connection.yaml
-          echo "api_key: ${{ secrets.azure_credentials }}" >> connection.yaml
-          echo "api_base: ${{ secrets.azure_api }}" >> connection.yaml
+          cat <<EOF > connection.yaml
+          name: aoai
+          type: azure_open_ai
+          api_key: ${{ secrets.azure_credentials }}
+          api_base: ${{ secrets.azure_api }}
+          EOF
+
           pf connection create -f connection.yaml
           pf connection list
           pf flow build --source ../../flows/named_entity_recognition/standard --output dist --format docker
