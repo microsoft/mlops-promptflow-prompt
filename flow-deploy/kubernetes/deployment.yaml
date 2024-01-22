@@ -1,0 +1,56 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: named-entity-recognition
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: open-ai-connection-api-key
+  namespace: named-entity-recognition
+type: Opaque
+data:
+  open-ai-connection-api-key: <base64 encoded api key>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: named-entity-recognition-service
+  namespace: named-entity-recognition
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    nodePort: 30124
+  selector:
+    app: named-entity-recognition-serve-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: named-entity-recognition-serve-app
+  namespace: named-entity-recognition
+spec:
+  selector:
+    matchLabels:
+      app: named-entity-recognition-serve-app
+  template:
+    metadata:
+      labels:
+        app: named-entity-recognition-serve-app
+    spec:
+      containers:
+      - name: named-entity-recognition-serve-container
+        image: mlopspromptflowacr.azurecr.io/named-entity-recognition-serve
+        # imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: OPEN_AI_CONNECTION_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: open-ai-connection-api-key
+              key: open-ai-connection-api-key

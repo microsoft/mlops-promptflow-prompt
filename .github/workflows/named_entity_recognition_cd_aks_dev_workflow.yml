@@ -1,0 +1,31 @@
+---
+name: Named Entity Recognition CD AKS Workflow
+
+on:
+  workflow_call:
+    inputs:
+      exec_environment:
+        type: string
+        description: "The environment to run the workflow in"
+        required: true
+        default: "dev"
+      model_type:
+        type: string
+        description: "The type of model to run the workflow for"
+        required: true
+        default: "named_entity_recognition"
+  push:
+    branches:
+      - "development"
+
+jobs:
+  run-ci-workflow:
+    uses: ./.github/workflows/platform_cd_aks_dev_workflow.yml
+    with:
+      exec_environment: ${{ inputs.exec_environment || 'dev' }}
+      model_type: ${{ inputs.model_type || 'named_entity_recognition' }}
+    secrets:
+      subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      aoai_api_key: ${{ secrets.AOAI_API_KEY }}
+      aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}

@@ -1,0 +1,92 @@
+---
+name: Platform CD AKS Dev Workflow
+
+on:
+  workflow_call:
+    inputs:
+      exec_environment:
+        type: string
+        description: "Execution Environment"
+        required: true
+        default: "dev"
+      model_type:
+        type: string
+        description: "type of model to execute"
+        required: true
+        default: "named_entity_recognition"
+    secrets:
+      subscription_id:
+        description: "the subscription ID hosting the AML instance."
+        required: true
+      azure_credentials:
+        description: "the credentials to use to authenticate with Azure."
+        required: true
+      aoai_api_key:
+        description: "the API key to use to authenticate with AOAI."
+        required: true
+      aoai_base_endpoint:
+        required: true
+        description: "Azure OpenAI base endpoint."
+
+env:
+  AKS_CLUSTER_NAME: mlopspromptflowaks
+  AKS_RESOURCE_GROUP: mlops-promptflow-template
+
+jobs:
+  build-and-deploy-aks:
+    name: build and deploy AKS
+    runs-on: ubuntu-latest
+    needs: [execute-prompt-experiment, deploy-prompts]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install PromptFlow
+        run: |
+          pip install promptflow promptflow-tools keyrings.alt
+          pf -v
+      - name: Build PromptFlow Flow
+        run: |
+          pf connection create -f AzureOpenAIConnection.yaml \
+            --set api_key="${{ secrets.aoai_api_key }}" api_base="https://${{ secrets.aoai_base_endpoint }}.openai.azure.com/"
+            --name aoai
+          pf connection list
+          pf flow build --source flows/${{ inputs.model_type }}/standard --output dist --format docker
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: mlopspromptflowacr.azurecr.io
+          creds: ${{ secrets.azure_credentials }}
+      - name: Build Docker Image
+        run: |
+          docker build -t mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest -f Dockerfile .
+          docker push mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+      - name: Connect to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+          resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Update flow-deploy/kubernetes/deployment.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'flow-deploy/kubernetes/deployment.yaml'
+          propertyPath: data['open-ai-connection-api-key']
+          value: ${{ secrets.aoai_api_key }}
+          commitChange: false         
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f flow-deploy/kubernetes/deployment.yaml
+          kubectl rollout status deployment/${{ inputs.model_type }}-serve
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+       
