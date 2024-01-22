@@ -156,7 +156,10 @@ jobs:
       - name: Build PromptFlow Flow
         run: |
           pf connection create -f AzureOpenAIConnection.yaml \
-          --set api_key=${{ secrets.azure_api }} \
-          --set api_base="https://${{ secrets.azure_credentials }}.openai.azure.com/"
+            --set api_key="${{ secrets.azure_api }}" \
+            --set api_base="https://${{ secrets.azure_credentials }}.openai.azure.com/"
           pf connection list
           pf flow build --source ../../flows/named_entity_recognition/standard --output dist --format docker
+        env:
+          AZURE_API_KEY: ${{ secrets.azure_api }}
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
