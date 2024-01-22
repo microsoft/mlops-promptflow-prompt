@@ -151,7 +151,7 @@ jobs:
           python-version: 3.9
       - name: Install PromptFlow
         run: |
-          pip install promptflow promptflow-tools
+          pip install promptflow promptflow-tools keyrings.alt
           pf -v
       - name: Build PromptFlow Flow
         run: |
