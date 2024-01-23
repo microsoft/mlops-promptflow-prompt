@@ -29,6 +29,7 @@ on:
         description: "Azure OpenAI base endpoint."
 
 env:
+  ACR_NAME: mlopspromptflowacr
   AKS_CLUSTER_NAME: mlopspromptflowaks
   AKS_RESOURCE_GROUP: mlops-promptflow-template
 
@@ -36,7 +37,6 @@ jobs:
   build-and-deploy-aks:
     name: build and deploy AKS
     runs-on: ubuntu-latest
-    needs: [execute-prompt-experiment, deploy-prompts]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -60,12 +60,12 @@ jobs:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: mlopspromptflowacr.azurecr.io
+          login-server: ${{ env.ACR_NAME }}.azurecr.io
           creds: ${{ secrets.azure_credentials }}
       - name: Build Docker Image
         run: |
-          docker build -t mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest -f Dockerfile .
-          docker push mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest
+          docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest -f Dockerfile .
+          docker push ${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
       - name: Connect to AKS
