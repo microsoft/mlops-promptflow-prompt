@@ -48,12 +48,20 @@ jobs:
         run: |
           pip install promptflow promptflow-tools keyrings.alt
           pf -v
+      - name: Create AOAI Connection
+        uses: ./.github/actions/execute_shell_code
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.connections.local_create_aoai_connection \
+            --aoai-api-key "${{ secrets.aoai_api_key }}" \
+            --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
+            --aoai-api-version "2023-07-01-preview" \
+            --aoai-api-type "azure" \
+            --aoai-connection-name "aoai"
+            pf connection list
       - name: Build PromptFlow Flow
         run: |
-          pf connection create -f AzureOpenAIConnection.yaml \
-            --set api_key="${{ secrets.aoai_api_key }}" api_base="https://${{ secrets.aoai_base_endpoint }}.openai.azure.com/"
-            --name aoai
-          pf connection list
           pf flow build --source flows/${{ inputs.model_type }}/standard --output dist --format docker
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
