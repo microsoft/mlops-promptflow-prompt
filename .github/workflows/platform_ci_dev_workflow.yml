@@ -162,4 +162,18 @@ jobs:
           pf flow build --source flows/${{ inputs.model_type }}/standard --output dist --format docker
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: mlopspromptflowacr.azurecr.io
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+      - name: Build Docker Image
+        run: |
+          docker build -t mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest -f Dockerfile .
+          docker push mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+      # TODO Web-app, kuberenetes, AML deployments
+      # + flags 
 
