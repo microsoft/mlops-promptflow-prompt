@@ -2,7 +2,11 @@
 name: Named Entity Recognition CI Workflow
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - "agromova/features/github_ci"
+  workflow_dispatch:
+  # workflow_call:
     inputs:
       exec_environment:
         type: string
