@@ -25,6 +25,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r .github/requirements/build_validation_requirements.txt
 
+      - name: Lint Code
+        run: flake8
+
       - name: Run Unit Tests
         shell: bash
         run: |
