@@ -1,8 +1,9 @@
 """This is MLOps utility module to execute evaluation flow in Azure ML using automatic cluster."""
 import argparse
 import os
-from shared.config_utils import(load_yaml_config, get_flow_config)
+from shared.config_utils import (load_yaml_config, get_flow_config)
 from shared.flow_utils import prepare_and_execute_eval_flow
+
 
 def main():
     """Collect command line arguments and configuration file parameters to invoke \

@@ -22,7 +22,6 @@ def main():
     acs_config = config['acs_config']
     aml_config = config['aml_config']
 
-
     # PFClient can help manage your runs and connections.
     pf = PFClient(
         DefaultAzureCredential(),

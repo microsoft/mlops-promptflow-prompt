@@ -1,4 +1,4 @@
-""" Flow shared utilities """
+"""Flow shared utilities."""
 from promptflow.entities import Run
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential, AzureCliCredential
@@ -60,6 +60,7 @@ def prepare_and_execute_std_flow(
             out_file.write(pipeline_job.name)
     print(pipeline_job.name)
 
+
 def prepare_and_execute_eval_flow(
     subscription_id,
     resource_group_name,
@@ -112,11 +113,8 @@ def prepare_and_execute_eval_flow(
         raise Exception("Sorry, exiting job with failure..")
 
 
-
 def get_credentials():
-    """
-        Get Azure CLI tokem.
-    """
+    """Get Azure CLI tokem."""
     credential = AzureCliCredential()
 
     token = credential.get_token("https://management.azure.com/.default")
@@ -124,11 +122,12 @@ def get_credentials():
 
     return credential
 
+
 def get_flow_status(pf: PFClient, run_name: str) -> str:
     """
-        Get flow status for a given run.
+    Get flow status for a given run.
 
-        Parameters:
+    Parameters:
         pf (PFClient): Promptflow client
         run_name (string): run name
     """
@@ -153,26 +152,28 @@ def get_flow_status(pf: PFClient, run_name: str) -> str:
         print(f"Run {run_name} failed with status {status}.")
         return "REJECTED"
 
+
 def save_run_data(pf: PFClient, run_name: str, filename: str):
     """
-        Save run data for a given run to a file.
+    Save run data for a given run to a file.
 
-        Parameters:
+    Parameters:
         pf (PFClient): Promptflow client
         run_name (string): run name
         filename (string): filename to store the run data
     """
-    result = pf.get_details(run_name, all_results = True)
+    result = pf.get_details(run_name, all_results=True)
     line_number_column = "inputs.line_number"
     if line_number_column in result.columns:
         result.sort_values(by=line_number_column, ascending=True, inplace=True)
-    result.to_csv(filename, index = False)
+    result.to_csv(filename, index=False)
+
 
 def get_run_metrics(pf: PFClient, run_name: str) -> dict:
     """
-        Run metrics for a given run, returned as dict.
+    Run metrics for a given run, returned as dict.
 
-        Parameters:
+    Parameters:
         pf (PFClient): Promptflow client
         run_name (string): run name
     """

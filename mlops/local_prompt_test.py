@@ -62,5 +62,6 @@ def main():
         print(f"Flow outputs: {flow_result}")
         mlflow.log_dict(flow_result, "output.json")
 
+
 if __name__ == "__main__":
     main()

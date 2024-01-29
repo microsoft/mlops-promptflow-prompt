@@ -9,6 +9,7 @@ from mlops.common.mlflow_tools import (
 )
 from shared.config_utils import (load_yaml_config, get_flow_config)
 
+
 def main():
     """Collect command line arguments and configuration file parameters to invoke \
         a given standard flow locally."""
@@ -58,7 +59,6 @@ def main():
     column_mapping = flow_config['column_mapping']
     subscription_id = aml_config['subscription_id']
 
-
     # Setup MLFLOW Experiment
     if args.subscription_id:
         subscription_id = args.subscription_id
@@ -97,6 +97,7 @@ def main():
         print(run_instance.name)
         if args.visualize is True:
             pf.runs.visualize(run_instance)
+
 
 if __name__ == "__main__":
     main()

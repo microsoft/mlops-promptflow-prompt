@@ -1,4 +1,4 @@
-"""Configuration utils to load config from yaml/json"""
+"""Configuration utils to load config from yaml/json."""
 import os
 from typing import Dict
 from pathlib import Path
@@ -7,9 +7,7 @@ import yaml
 
 
 def load_yaml_config(config_path: Path) -> Dict:
-    """
-    Read configuration from yaml file
-    """
+    """Read configuration from yaml file."""
     load_dotenv()
     config = {}
     with open(config_path, 'r', encoding='utf-8') as stream:
@@ -19,20 +17,23 @@ def load_yaml_config(config_path: Path) -> Dict:
             print(err)
     return config
 
+
 def get_aoai_config(raw_config: Dict) -> Dict:
-    """ get the Azure OpenAI configuration from config map"""
+    """Get the Azure OpenAI configuration from config map."""
     return raw_config['aoai_config']
 
+
 def get_acs_config(raw_config: Dict) -> Dict:
-    """ get the Azure Cognitive configuration from config map"""    
+    """get the Azure Cognitive configuration from config map."""    
     return raw_config['acs_config']
 
 def get_aml_config(raw_config: Dict) -> Dict:
-    """ get the Azure ML workspace configuration from config map"""    
+    """Get the Azure ML workspace configuration from config map"""    
     return raw_config['aml_config']
 
+
 def get_flow_config(env: str, flow_name: str, raw_config: Dict) -> Dict:
-    """ get the flow configuration for given flow name and environment"""    
+    """Get the flow configuration for given flow name and environment."""
     flow_config = {}
     config_name = f'{flow_name}_{env}'
     flow_configs = raw_config['flow_configs']

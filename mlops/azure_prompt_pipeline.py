@@ -53,7 +53,6 @@ def main():
     column_mapping = flow_config['column_mapping']
     subscription_id = aml_config['subscription_id']
 
-
     # override subscription id from args
     if args.subscription_id:
         subscription_id = args.subscription_id
@@ -75,6 +74,7 @@ def main():
         args.output_file,
         data_standard_path,
     )
+
 
 if __name__ == "__main__":
     main()
