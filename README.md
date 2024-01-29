@@ -24,10 +24,16 @@ In order to use flows from this template you need to deploy GPT Turbo 3.5 model 
 
 In [the following document](conda_environment.md) we are explaining how to create a local `conda` environment.
 
+Export environment variables for Azure OpenAI
+```bash
+export AOAI_API_BASEURL=<>
+export AOAI_API_KEY=<>
+```
+
 All scripts are designed in a way to be executed from the root project folder. You need to create a connection (local one) first executing the following command:
 
 ```bash
-python -m mlops.connections.local_create_aoai_connection --aoai-connection-name aoai --aoai-api-key <key> --aoai-api-base <base uri>
+python -m mlops.connections.local_create_aoai_connection --aoai-connection-name aoai 
 ```
 
 If everything works fine, you can test the flow using the following commands.
@@ -52,11 +58,17 @@ python -m mlops.local_prompt_eval --config_name named_entity_recognition --envir
 
 We are using MLFlow to log local experiment results. By default we are using MLFlow deployment in Azure ML Workspace, but it can be any other MLFlow deployment.
 
-If you would like to see MLFlow results in Azure ML, you need to provide the following parameters:
-
+If you would like to see MLFlow results in Azure ML, either you need to provide the following parameters:
 - **SUBSCRIPTION_ID** (an optional parameter to scripts from above): a subscription id where the Azure ML Workspace is located.
-- **RESOURCE_GROUP_NAME** (config/model_config.json): a resource group name where the workspace is located.
-- **WORKSPACE_NAME** (config/model_config.json): a workspace name, where you would like to log experiments.
+- **RESOURCE_GROUP_NAME** (config/config.yaml): a resource group name where the workspace is located.
+- **WORKSPACE_NAME** (config/config.yaml): a workspace name, where you would like to log experiments.
+
+or export as environment variables 
+```bash
+export SUBSCRIPTION_ID=<>
+export RESOURCE_GROUP_NAME=<>
+export WORKSPACE_NAME=<>
+```
 
 ## Azure DevOps Setup
 
@@ -72,7 +84,7 @@ We would recommend to use **development** branch as the primary branch to do dev
 
 ### Modify configuration
 
-At least three parameters must be modified in `config/model_config.json`:
+At least three parameters must be modified in `config/config.yaml`:
 
 - **RUNTIME_NAME**: Managed Online Endpoint Runtime name from the previous step.
 - **RESOURCE_GROUP_NAME**: Azure ML Resource Group name.

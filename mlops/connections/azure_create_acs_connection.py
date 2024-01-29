@@ -5,7 +5,7 @@ import json
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
 from promptflow.azure._restclient.flow_service_caller import FlowRequestException
-
+from shared.config_utils import(load_yaml_config, get_aoai_config, get_aml_config)
 
 def main():
     """Create an Azure ML connection to Azure Cognitive Service using command line parameters."""
@@ -16,41 +16,18 @@ def main():
         required=True,
         help="connection name in the flow",
     )
-    parser.add_argument(
-        "--acs-api-key",
-        type=str,
-        required=True,
-        help="api key to get access to the service",
-    )
-    parser.add_argument(
-        "--acs-api-base", type=str, required=True, help="base api url of the service"
-    )
-    parser.add_argument(
-        "--acs-api-version", type=str, default="2023-07-01-preview", help="api version"
-    )
-    parser.add_argument(
-        "--subscription-id",
-        type=str,
-        required=True,
-        help="subscription id where Azure ML workspace is located",
-    )
-    parser.add_argument(
-        "--resource-group",
-        type=str,
-        required=True,
-        help="resource group name where Azure ML workspace is located",
-    )
-    parser.add_argument(
-        "--workspace-name", type=str, required=True, help="Azure ML Workspace name"
-    )
     args = parser.parse_args()
+    config = load_yaml_config("./config/config.yaml")
+    acs_config = config['acs_config']
+    aml_config = config['aml_config']
+
 
     # PFClient can help manage your runs and connections.
     pf = PFClient(
         DefaultAzureCredential(),
-        args.subscription_id,
-        args.resource_group,
-        args.workspace_name,
+        aml_config['subscription_id'],
+        aml_config['resource_group'],
+        aml_config['workspace_name'],
     )
 
     try:
@@ -58,9 +35,9 @@ def main():
         pf._connections.get(name=conn_name)
         print("using existing connection")
     except FlowRequestException:
-        url = f"https://management.azure.com/subscriptions/{args.subscription_id}/" \
-            f"resourcegroups/{args.resource_group}/providers/Microsoft.MachineLearningServices/" \
-            f"workspaces/{args.workspace_name}/connections/{args.acs_connection_name}?" \
+        url = f"https://management.azure.com/subscriptions/{aml_config['subscription_id']}/" \
+            f"resourcegroups/{aml_config['workspace_name']}/providers/Microsoft.MachineLearningServices/" \
+            f"workspaces/{aml_config['workspace_name']}/connections/{args.acs_connection_name}?" \
             f"api-version=2023-04-01-preview"
         token = (
             DefaultAzureCredential()
@@ -76,12 +53,12 @@ def main():
             {
                 "properties": {
                     "category": "CognitiveSearch",
-                    "target": args.acs_api_base,
+                    "target": acs_config['acs_api_base'],
                     "authType": "ApiKey",
                     "credentials": {
-                        "key": args.acs_api_key,
+                        "key": acs_config['acs_api_key'],
                     },
-                    "metadata": {"ApiVersion": args.acs_api_version},
+                    "metadata": {"ApiVersion": acs_config['acs_api_version']},
                 }
             }
         )

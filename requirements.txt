@@ -7,3 +7,4 @@ azure-ai-ml>=1.11.0
 azure-identity>=1.15.0
 azureml-mlflow>=1.51
 keyrings.alt
+pyyaml

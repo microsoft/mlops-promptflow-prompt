@@ -3,6 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import CognitiveSearchConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
+from shared.config_utils import(load_yaml_config, get_aoai_config, get_aml_config)
 
 
 def main():
@@ -14,19 +15,11 @@ def main():
         required=True,
         help="connection name in the flow",
     )
-    parser.add_argument(
-        "--acs-api-key",
-        type=str,
-        required=True,
-        help="api key to get access to the service",
-    )
-    parser.add_argument(
-        "--acs-api-base", type=str, required=True, help="base uri of the service"
-    )
-    parser.add_argument(
-        "--acs-api-version", type=str, default="2023-07-01-preview", help="api version"
-    )
     args = parser.parse_args()
+
+    # Read configuration
+    config = load_yaml_config("./config/config.yaml")
+    acs_config = config['acs_config']
 
     # PFClient can help manage your runs and connections.
     pf = PFClient()
@@ -38,9 +31,9 @@ def main():
     except ConnectionNotFoundError:
         connection = CognitiveSearchConnection(
             name=conn_name,
-            api_key=args.acs_api_key,
-            api_base=args.acs_api_base,
-            api_version=args.acs_api_version,
+            api_key=acs_config['acs_api_key'],
+            api_base=acs_config['acs_api_base'],
+            api_version=acs_config['acs_api_version'],
         )
 
         pf.connections.create_or_update(connection)

@@ -9,7 +9,7 @@ from mlops.common.mlflow_tools import (
     generate_run_name,
     set_mlflow_uri,
 )
-
+from shared.config_utils import(load_yaml_config, get_flow_config)
 
 def main():
     """Collect command line arguments and configuration file parameters to invoke \
@@ -28,13 +28,13 @@ def main():
         "--config_name",
         type=str,
         required=True,
-        help="PROMPT_FLOW_CONFIG_NAME from model_config.json",
+        help="prompt_flow_config_name from config.yaml",
     )
     parser.add_argument(
         "--environment_name",
         type=str,
         required=True,
-        help="ENV_NAME from model_config.json",
+        help="env_name from config.yaml",
     )
     parser.add_argument(
         "--subscription_id",
@@ -48,26 +48,22 @@ def main():
     )
     args = parser.parse_args()
 
-    config_file = open("./config/model_config.json")
-    config_data = json.load(config_file)
+    config_data = load_yaml_config("./config/config.yaml")
+    aml_config = config_data['aml_config']
+    flow_config = get_flow_config(args.config_name, args.environment_name)
 
-    for el in config_data["flows"]:
-        if "PROMPT_FLOW_CONFIG_NAME" in el and "ENV_NAME" in el:
-            if (
-                el["PROMPT_FLOW_CONFIG_NAME"] == args.config_name
-                and el["ENV_NAME"] == args.environment_name
-            ):
-                experiment_type = el["EXPERIMENT_BASE_NAME"]
-                flow_standard_path = el["STANDARD_FLOW_PATH"]
-                data_standard_path = el["DATA_PATH"]
-                resource_group = el["RESOURCE_GROUP_NAME"]
-                workspace_name = el["WORKSPACE_NAME"]
-                column_mapping = el["COLUMN_MAPPING"]
+    experiment_type = flow_config['experiment_base_name']
+    flow_standard_path = flow_config['stadard_flow_path']
+    data_standard_path = flow_config['data_path']
+    resource_group = flow_config['resource_group_name']
+    workspace_name = flow_config['workspace_name']
+    column_mapping = flow_config['column_mapping']
+    subscription_id = aml_config['subscription_id']
+
 
     # Setup MLFLOW Experiment
-    load_dotenv()
-
-    subscription_id = args.subscription_id
+    if args.subscription_id:
+        subscription_id = args.subscription_id
 
     set_mlflow_uri(subscription_id, resource_group, workspace_name)
 

@@ -7,62 +7,8 @@ from promptflow.entities import Run
 from azure.identity import DefaultAzureCredential
 from promptflow.azure import PFClient
 from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name
-
-
-def prepare_and_execute(
-    subscription_id,
-    resource_group_name,
-    workspace_name,
-    # runtime,
-    column_mapping,
-    build_id,
-    standard_flow_path,
-    experiment_name,
-    output_file,
-    standard_data_path,
-):
-    """
-    Execute a standard flow in Azure ML.
-
-    Parameters:
-      subscription_id (string): a subsription id where Azure ML workspace is located
-      resource_group (string): a resource group name where Azure ML workspace is located
-      workspace_name (string): Azure ML workspace name
-      column_mapping (string): mapping rules
-      build_id (string): a build id
-      standard_flow_path (string): a standard flow folder path
-      experiment_name (string): an experiment name
-      output_file (string): an optional file name to store run id
-      standard_data_path (string): a path to data file in Azure ML notation
-    """
-    pf = PFClient(
-        DefaultAzureCredential(), subscription_id, resource_group_name, workspace_name
-    )
-
-    run = Run(
-        flow=standard_flow_path,
-        data=standard_data_path,
-        # runtime=runtime,
-        name=generate_run_name(),
-        display_name=generate_run_name(),
-        column_mapping=column_mapping,
-        tags={"build_id": build_id},
-    )
-
-    run._experiment_name = generate_experiment_name(experiment_name)
-
-    pipeline_job = pf.runs.create_or_update(run, stream=True)
-
-    if pipeline_job.status == "Completed" or pipeline_job.status == "Finished":  # 4
-        print("job completed")
-    else:
-        raise Exception("Sorry, exiting job with failure..")
-
-    if output_file is not None:
-        with open(output_file, "w") as out_file:
-            out_file.write(pipeline_job.name)
-    print(pipeline_job.name)
-
+from shared.config_utils import(load_yaml_config, get_flow_config)
+from shared.flow_utils import prepare_and_execute_std_flow
 
 def main():
     """Collect command line arguments and configuration file parameters to invoke \
@@ -81,13 +27,13 @@ def main():
         "--config_name",
         type=str,
         required=True,
-        help="PROMPT_FLOW_CONFIG_NAME from model_config.json",
+        help="prompt_flow_config_name from config.yaml",
     )
     parser.add_argument(
         "--environment_name",
         type=str,
         required=True,
-        help="ENV_NAME from model_config.json",
+        help="env_name from config.yaml",
     )
     parser.add_argument(
         "--subscription_id",
@@ -100,33 +46,29 @@ def main():
     )
     args = parser.parse_args()
 
-    config_file = open("./config/model_config.json")
-    config_data = json.load(config_file)
+    config_data = load_yaml_config("./config/config.yaml")
+    aml_config = config_data['aml_config']
+    flow_config = get_flow_config(args.config_name, args.environment_name)
 
-    for el in config_data["flows"]:
-        if "PROMPT_FLOW_CONFIG_NAME" in el and "ENV_NAME" in el:
-            if (
-                el["PROMPT_FLOW_CONFIG_NAME"] == args.config_name
-                and el["ENV_NAME"] == args.environment_name
-            ):
-                experiment_type = el["EXPERIMENT_BASE_NAME"]
-                flow_standard_path = el["STANDARD_FLOW_PATH"]
-                data_standard_path = el["DATA_PATH"]
-                resource_group = el["RESOURCE_GROUP_NAME"]
-                workspace_name = el["WORKSPACE_NAME"]
-                column_mapping = el["COLUMN_MAPPING"]
-                # runtime_name = el["RUNTIME_NAME"]
+    experiment_type = flow_config['experiment_base_name']
+    flow_standard_path = flow_config['stadard_flow_path']
+    data_standard_path = flow_config['data_path']
+    resource_group = flow_config['resource_group_name']
+    workspace_name = flow_config['workspace_name']
+    column_mapping = flow_config['column_mapping']
+    subscription_id = aml_config['subscription_id']
 
-    load_dotenv()
 
-    subscription_id = args.subscription_id
+    # override subscription id from args
+    if args.subscription_id:
+        subscription_id = args.subscription_id
 
     build_id = os.environ.get("BUILD_BUILDID")
 
     if build_id is None:
         build_id = "local"
 
-    prepare_and_execute(
+    prepare_and_execute_std_flow(
         subscription_id,
         resource_group,
         workspace_name,

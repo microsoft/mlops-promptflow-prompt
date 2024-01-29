@@ -3,6 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
+from shared.config_utils import(load_yaml_config, get_aoai_config, get_aml_config)
 
 
 def main():
@@ -14,22 +15,12 @@ def main():
         required=True,
         help="connection name in the flow",
     )
-    parser.add_argument(
-        "--aoai-api-key",
-        type=str,
-        required=True,
-        help="api key to get access to the service",
-    )
-    parser.add_argument(
-        "--aoai-api-base", type=str, required=True, help="base api url of the service"
-    )
-    parser.add_argument(
-        "--aoai-api-type", type=str, default="azure", help="api type (azure as for now)"
-    )
-    parser.add_argument(
-        "--aoai-api-version", type=str, default="2023-07-01-preview", help="api version"
-    )
+
     args = parser.parse_args()
+
+    # Read configuration
+    config = load_yaml_config("./config/config.yaml")
+    aoai_config = config['aoai_config']
 
     # PFClient can help manage your runs and connections.
     pf = PFClient()
@@ -41,10 +32,10 @@ def main():
     except ConnectionNotFoundError:
         connection = AzureOpenAIConnection(
             name=conn_name,
-            api_key=args.aoai_api_key,
-            api_base=args.aoai_api_base,
-            api_type=args.aoai_api_type,
-            api_version=args.aoai_api_version,
+            api_key=aoai_config['aoai_api_key'],
+            api_base=aoai_config['aoai_api_base'],
+            api_type=aoai_config['aoai_api_type'],
+            api_version=aoai_config['aoai_api_version'],
         )
 
         pf.connections.create_or_update(connection)
