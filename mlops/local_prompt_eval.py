@@ -57,7 +57,6 @@ def main():
     eval_column_mapping = flow_config['eval_column_mapping']
     subscription_id = aml_config['subscription_id']
 
-
     # Setup MLFLOW Experiment
     if args.subscription_id:
         subscription_id = args.subscription_id
@@ -93,6 +92,7 @@ def main():
         else:
             mlflow.set_tag("LOG_STATUS", "FAILED")
             raise Exception("Sorry, exiting job with failure..")
+
 
 if __name__ == "__main__":
     main()
