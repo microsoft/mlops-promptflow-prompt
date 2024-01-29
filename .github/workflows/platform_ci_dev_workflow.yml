@@ -27,6 +27,8 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
+env:
+  ACR_NAME: mlopspromptflowacr
 
 jobs:
   execute-prompt-experiment:
@@ -88,6 +90,7 @@ jobs:
               --environment_name ${{ inputs.exec_environment }} \
               --subscription_id "${{ secrets.subscription_id }}" \
               --run_id $RUN_NAME
+
   deploy-prompts:
     name: Deploy Prompts
     runs-on: ubuntu-latest
@@ -138,6 +141,7 @@ jobs:
           DEPLOY_ENVIRONMENT: ${{ inputs.exec_environment }}
           REALTIME_DEPLOYMENT_CONFIG: $REALTIME_DEPLOYMENT_CONFIG
           MODEL_VERSION: $MODEL_VERSION
+
   build-promptflow-flow-app-deploy:
     name: Build Promptflow flow and docker
     runs-on: ubuntu-latest
@@ -154,12 +158,21 @@ jobs:
           pip install promptflow promptflow-tools keyrings.alt
           pf -v
 
+      - name: Create AOAI Connection
+        uses: ./.github/actions/execute_shell_code
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.connections.local_create_aoai_connection \
+            --aoai-api-key "${{ secrets.aoai_api_key }}" \
+            --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
+            --aoai-api-version "2023-07-01-preview" \
+            --aoai-api-type "azure" \
+            --aoai-connection-name "aoai"
+            pf connection list
+
       - name: Build PromptFlow Flow
         run: |
-          pf connection create -f AzureOpenAIConnection.yaml \
-            --set api_key="${{ secrets.aoai_api_key }}" \
-            --set api_base="https://${{ secrets.aoai_base_endpoint }}.openai.azure.com/"
-          pf connection list
           pf flow build --source flows/${{ inputs.model_type }}/standard --output dist --format docker
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
@@ -167,14 +180,14 @@ jobs:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: mlopspromptflowacr.azurecr.io
+          login-server: ${{ env.ACR_NAME }}.azurecr.io
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
 
       - name: Build Docker Image
         run: |
-          docker build -t mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest -f dist/Dockerfile .
-          docker push mlopspromptflowacr.azurecr.io/${{ inputs.model_type }}-serve:latest
+          docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest -f Dockerfile .
+          docker push ${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
 
@@ -182,5 +195,6 @@ jobs:
       #   run: bash deploy.sh --path dist -i latest --name my_app_23d8m -r mlopspromptflowacr.azurecr.io -g your_resource_group
       #   env:
       #     DEPLOY_WEBAPP: 'true'
-      # TODO Web-app, Kuberenetes deployment, AML deployment
-      # + flags 
+      # TODO Web-app, Kuberenetes deployment, AML deployment, 
+      #      ADD Signature verifciation of docker images
+      #      ADD flags  
