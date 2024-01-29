@@ -3,7 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import CognitiveSearchConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
-from shared.config_utils import(load_yaml_config, get_aoai_config, get_aml_config)
+from shared.config_utils import load_yaml_config
 
 
 def main():

@@ -1,15 +1,13 @@
 """This is MLOps utility module to execute evaluation flow locally."""
-import mlflow
 import argparse
-import json
-from dotenv import load_dotenv
+import mlflow
 from promptflow import PFClient
 from mlops.common.mlflow_tools import (
     generate_experiment_name,
     generate_run_name,
     set_mlflow_uri,
 )
-from shared.config_utils import(load_yaml_config, get_flow_config)
+from shared.config_utils import (load_yaml_config, get_flow_config)
 
 
 def main():
@@ -49,7 +47,7 @@ def main():
 
     config_data = load_yaml_config("./config/config.yaml")
     aml_config = config_data['aml_config']
-    flow_config = get_flow_config(args.config_name, args.environment_name)
+    flow_config = get_flow_config(flow_name=args.config_name, env=args.environment_name, raw_config=config_data)
 
     experiment_type = flow_config['experiment_base_name']
     flow_eval_path = flow_config['evaluation_flow_path']
@@ -95,7 +93,6 @@ def main():
         else:
             mlflow.set_tag("LOG_STATUS", "FAILED")
             raise Exception("Sorry, exiting job with failure..")
-
 
 if __name__ == "__main__":
     main()

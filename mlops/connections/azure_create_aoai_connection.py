@@ -1,11 +1,11 @@
 """This module helps to create a connection in Azure ML to Azure Open AI service."""
 import argparse
-import requests
 import json
+import requests
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
 from promptflow.azure._restclient.flow_service_caller import FlowRequestException
-from shared.config_utils import(load_yaml_config, get_aoai_config, get_aml_config)
+from shared.config_utils import load_yaml_config
 
 
 def main():

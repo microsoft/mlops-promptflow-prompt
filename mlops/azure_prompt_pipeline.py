@@ -1,14 +1,9 @@
 """This is MLOps utility module to execute standard flow in Azure ML using automatic cluster."""
-import json
 import argparse
 import os
-from dotenv import load_dotenv
-from promptflow.entities import Run
-from azure.identity import DefaultAzureCredential
-from promptflow.azure import PFClient
-from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name
-from shared.config_utils import(load_yaml_config, get_flow_config)
+from shared.config_utils import (load_yaml_config, get_flow_config)
 from shared.flow_utils import prepare_and_execute_std_flow
+
 
 def main():
     """Collect command line arguments and configuration file parameters to invoke \
@@ -48,7 +43,7 @@ def main():
 
     config_data = load_yaml_config("./config/config.yaml")
     aml_config = config_data['aml_config']
-    flow_config = get_flow_config(args.config_name, args.environment_name)
+    flow_config = get_flow_config(flow_name=args.config_name, env=args.environment_name, raw_config=config_data)
 
     experiment_type = flow_config['experiment_base_name']
     flow_standard_path = flow_config['stadard_flow_path']
@@ -80,7 +75,6 @@ def main():
         args.output_file,
         data_standard_path,
     )
-
 
 if __name__ == "__main__":
     main()

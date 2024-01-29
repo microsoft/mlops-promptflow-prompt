@@ -1,10 +1,10 @@
-
+""" Flow shared utilities """
 from promptflow.entities import Run
-from azure.identity import DefaultAzureCredential
 from promptflow.azure import PFClient
-from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name
 from azure.identity import DefaultAzureCredential, AzureCliCredential
 from promptflow._sdk._constants import RunStatus
+from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name
+
 
 def prepare_and_execute_std_flow(
     subscription_id,
@@ -114,6 +114,9 @@ def prepare_and_execute_eval_flow(
 
 
 def get_credentials():
+    """
+        Get Azure CLI tokem.
+    """
     credential = AzureCliCredential()
 
     token = credential.get_token("https://management.azure.com/.default")
@@ -121,16 +124,14 @@ def get_credentials():
 
     return credential
 
-def get_workspace_handle(credential: TokenCredential, workspace_config: Dict) -> PFClient:
-    pf = PFClient(
-        credential=credential,
-        subscription_id=workspace_config['subscription_id'],
-        resource_group_name=workspace_config['resource_group_name'],
-        workspace_name=workspace_config['workspace_name']
-    )
-    return pf
-
 def get_flow_status(pf: PFClient, run_name: str) -> str:
+    """
+        Get flow status for a given run.
+
+        Parameters:
+        pf (PFClient): Promptflow client
+        run_name (string): run name
+    """
     result = pf.runs.get(run_name)
     status = result.status
 
@@ -153,14 +154,28 @@ def get_flow_status(pf: PFClient, run_name: str) -> str:
         return "REJECTED"
 
 def save_run_data(pf: PFClient, run_name: str, filename: str):
+    """
+        Save run data for a given run to a file.
+
+        Parameters:
+        pf (PFClient): Promptflow client
+        run_name (string): run name
+        filename (string): filename to store the run data
+    """
     result = pf.get_details(run_name, all_results = True)
     line_number_column = "inputs.line_number"
     if line_number_column in result.columns:
-        result.sort_values(by=line_number_column, ascending=True, inplace=True)    
+        result.sort_values(by=line_number_column, ascending=True, inplace=True)
     result.to_csv(filename, index = False)
 
-
 def get_run_metrics(pf: PFClient, run_name: str) -> dict:
+    """
+        Run metrics for a given run, returned as dict.
+
+        Parameters:
+        pf (PFClient): Promptflow client
+        run_name (string): run name
+    """
     evaluation_run = pf.runs.get(run_name)
     metrics = pf.get_metrics(evaluation_run)
     metrics["Run"] = evaluation_run.run
