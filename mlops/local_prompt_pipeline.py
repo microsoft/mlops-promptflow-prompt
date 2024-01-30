@@ -49,7 +49,7 @@ def main():
 
     config_data = load_yaml_config("./config/config.yaml")
     aml_config = config_data['aml_config']
-    flow_config = get_flow_config(flow_name=args.config_name, env=args.environment_name, raw_config=config_data)
+    flow_config = get_flow_config(env=args.environment_name, flow_name=args.config_name, raw_config=config_data)
 
     experiment_type = flow_config['experiment_base_name']
     flow_standard_path = flow_config['stadard_flow_path']
@@ -72,7 +72,9 @@ def main():
     with mlflow.start_run(run_name=generate_run_name()):
         # Get a pf client to manage runs
         pf = PFClient()
-
+        print(flow_standard_path)
+        print(data_standard_path)
+        print(column_mapping)
         run_instance = pf.run(
             flow=flow_standard_path,
             data=data_standard_path,
