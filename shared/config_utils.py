@@ -42,4 +42,3 @@ def get_flow_config(env: str, flow_name: str, raw_config: Dict) -> Dict:
         flow_config = flow_configs[config_name]
 
     return flow_config
-

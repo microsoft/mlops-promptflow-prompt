@@ -72,7 +72,7 @@ def main():
     with mlflow.start_run(run_name=generate_run_name()):
         # Get a pf client to manage runs
         pf = PFClient()
-        
+
         run_instance = pf.run(
             flow=flow_standard_path,
             data=data_standard_path,
