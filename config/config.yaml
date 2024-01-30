@@ -7,7 +7,7 @@ aml_config:
 
 # Azure OpenAI configuration. 
 aoai_config:
-  aoai_api_base: ${AOAI_API_BASEURL}
+  aoai_api_base: ${AOAI_BASE_ENDPOINT}
   aoai_api_type: azure
   aoai_api_version: 2023-07-01-preview
   aoai_api_key: ${AOAI_API_KEY}

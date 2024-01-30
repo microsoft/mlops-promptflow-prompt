@@ -26,7 +26,7 @@ In [the following document](conda_environment.md) we are explaining how to creat
 
 Export environment variables for Azure OpenAI
 ```bash
-export AOAI_API_BASEURL=<>
+export AOAI_BASE_ENDPOINT=<>
 export AOAI_API_KEY=<>
 ```
 

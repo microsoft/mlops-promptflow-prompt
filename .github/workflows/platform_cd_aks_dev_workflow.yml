@@ -44,6 +44,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: Export Secrets 
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}            
       - name: Install PromptFlow
         run: |
           pip install promptflow promptflow-tools keyrings.alt
@@ -54,10 +58,10 @@ jobs:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
             python -m mlops.connections.local_create_aoai_connection \
-            --aoai-api-key "${{ secrets.aoai_api_key }}" \
-            --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
-            --aoai-api-version "2023-07-01-preview" \
-            --aoai-api-type "azure" \
+            # --aoai-api-key "${{ secrets.aoai_api_key }}" \
+            # --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
+            # --aoai-api-version "2023-07-01-preview" \
+            # --aoai-api-type "azure" \
             --aoai-connection-name "aoai"
             pf connection list
       - name: Build PromptFlow Flow

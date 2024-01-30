@@ -38,6 +38,10 @@ jobs:
     steps:
       - name: Checkout Actions
         uses: actions/checkout@v1
+      - name: Export Secrets 
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}          
       - name: Configure Azure ML Agent
         uses: ./.github/actions/configure_azureml_agent
 
@@ -47,10 +51,10 @@ jobs:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
             python -m mlops.connections.local_create_aoai_connection \
-            --aoai-api-key "${{ secrets.aoai_api_key }}" \
-            --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
-            --aoai-api-version "2023-07-01-preview" \
-            --aoai-api-type "azure" \
+            # --aoai-api-key "${{ secrets.aoai_api_key }}" \
+            # --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
+            # --aoai-api-version "2023-07-01-preview" \
+            # --aoai-api-type "azure" \
             --aoai-connection-name "aoai"
 
       - name: Execute MLOps Pipeline
