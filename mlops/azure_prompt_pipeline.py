@@ -46,7 +46,7 @@ def main():
     flow_config = get_flow_config(env=args.environment_name, flow_name=args.config_name, raw_config=config_data)
 
     experiment_type = flow_config['experiment_base_name']
-    flow_standard_path = flow_config['stadard_flow_path']
+    flow_standard_path = flow_config['standard_flow_path']
     data_standard_path = flow_config['data_path']
     resource_group = flow_config['resource_group_name']
     workspace_name = flow_config['workspace_name']

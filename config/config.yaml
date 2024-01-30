@@ -30,7 +30,7 @@ flow_configs:
     workspace_name: mlops-promptflow-azureml
     connection_name: aoai
     deployment_name: gpt-35-turbo
-    stadard_flow_path: flows/named_entity_recognition/standard
+    standard_flow_path: flows/named_entity_recognition/standard
     evaluation_flow_path: flows/named_entity_recognition/evaluation
     data_path: flows/named_entity_recognition/data/data.jsonl
     eval_data_path: flows/named_entity_recognition/data/eval_data.jsonl
@@ -51,7 +51,7 @@ flow_configs:
     workspace_name: mlops-promptflow-azureml
     connection_name: aoai
     deployment_name: gpt-35-turbo
-    stadard_flow_path: flows/named_entity_recognition/standard
+    standard_flow_path: flows/named_entity_recognition/standard
     evaluation_flow_path: flows/named_entity_recognition/evaluation
     data_path: flows/named_entity_recognition/data/data.jsonl
     eval_data_path: flows/named_entity_recognition/data/eval_data.jsonl

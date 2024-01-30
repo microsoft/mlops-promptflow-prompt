@@ -10,7 +10,7 @@ def load_yaml_config(config_path: Path) -> Dict:
     """Read configuration from yaml file."""
     load_dotenv()
     config = {}
-    with open(config_path, 'r', encoding='utf-8') as stream:
+    with open(config_path, 'r') as stream:
         try:
             config = yaml.safe_load(os.path.expandvars(stream.read()))
         except yaml.YAMLError as err:
@@ -42,3 +42,4 @@ def get_flow_config(env: str, flow_name: str, raw_config: Dict) -> Dict:
         flow_config = flow_configs[config_name]
 
     return flow_config
+
