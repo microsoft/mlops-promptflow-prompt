@@ -177,7 +177,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.ACR_NAME }}.azurecr.io
-          creds: ${{ secrets.azure_credentials }}
+          username: ${{ env.ACR_NAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
   # build-promptflow-flow-app-deploy:
   #   name: Build Promptflow flow and docker
