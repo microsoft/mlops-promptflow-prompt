@@ -5,7 +5,7 @@ import requests
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
 from promptflow.azure._restclient.flow_service_caller import FlowRequestException
-from shared.config_utils import load_yaml_config
+from shared.config_utils import (load_yaml_config, get_aml_config, get_acs_config)
 
 
 def main():
@@ -19,14 +19,14 @@ def main():
     )
     args = parser.parse_args()
     config = load_yaml_config("./config/config.yaml")
-    acs_config = config['acs_config']
-    aml_config = config['aml_config']
+    acs_config = get_acs_config(config)
+    aml_config = get_aml_config(config)
 
     # PFClient can help manage your runs and connections.
     pf = PFClient(
         DefaultAzureCredential(),
         aml_config['subscription_id'],
-        aml_config['resource_group'],
+        aml_config['resource_group_name'],
         aml_config['workspace_name'],
     )
 
@@ -36,7 +36,7 @@ def main():
         print("using existing connection")
     except FlowRequestException:
         url = f"https://management.azure.com/subscriptions/{aml_config['subscription_id']}/" \
-            f"resourcegroups/{aml_config['workspace_name']}/providers/Microsoft.MachineLearningServices/" \
+            f"resourcegroups/{aml_config['resource_group_name']}/providers/Microsoft.MachineLearningServices/" \
             f"workspaces/{aml_config['workspace_name']}/connections/{args.acs_connection_name}?" \
             f"api-version=2023-04-01-preview"
         token = (

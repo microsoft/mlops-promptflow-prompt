@@ -3,7 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
-from shared.config_utils import load_yaml_config
+from shared.config_utils import (load_yaml_config, get_aoai_config)
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
 
     # Read configuration
     config = load_yaml_config("./config/config.yaml")
-    aoai_config = config['aoai_config']
+    aoai_config = get_aoai_config(config)
 
     # PFClient can help manage your runs and connections.
     pf = PFClient()

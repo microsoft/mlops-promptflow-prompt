@@ -1,7 +1,7 @@
 """This is MLOps utility module to execute evaluation flow in Azure ML using automatic cluster."""
 import argparse
 import os
-from shared.config_utils import (load_yaml_config, get_flow_config)
+from shared.config_utils import (load_yaml_config, get_aml_config, get_flow_config)
 from shared.flow_utils import prepare_and_execute_eval_flow
 
 
@@ -42,16 +42,16 @@ def main():
     args = parser.parse_args()
 
     config_data = load_yaml_config("./config/config.yaml")
-    aml_config = config_data['aml_config']
+    aml_config = get_aml_config(config_data)
     flow_config = get_flow_config(env=args.environment_name, flow_name=args.config_name, raw_config=config_data)
 
     experiment_type = flow_config['experiment_base_name']
     flow_eval_path = flow_config['evaluation_flow_path']
     data_eval_path = flow_config['eval_data_path']
-    resource_group = flow_config['resource_group_name']
-    workspace_name = flow_config['workspace_name']
     eval_column_mapping = flow_config['eval_column_mapping']
     subscription_id = aml_config['subscription_id']
+    resource_group = aml_config['resource_group_name']
+    workspace_name = aml_config['workspace_name']
 
     # Setup MLFLOW Experiment
     if args.subscription_id:

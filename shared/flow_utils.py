@@ -1,7 +1,7 @@
 """Flow shared utilities."""
 from promptflow.entities import Run
 from promptflow.azure import PFClient
-from azure.identity import DefaultAzureCredential, AzureCliCredential
+from azure.identity import DefaultAzureCredential
 from promptflow._sdk._constants import RunStatus
 from mlops.common.mlflow_tools import generate_experiment_name, generate_run_name
 
@@ -111,16 +111,6 @@ def prepare_and_execute_eval_flow(
         print(pipeline_job.status)
     else:
         raise Exception("Sorry, exiting job with failure..")
-
-
-def get_credentials():
-    """Get Azure CLI tokem."""
-    credential = AzureCliCredential()
-
-    token = credential.get_token("https://management.azure.com/.default")
-    assert token is not None
-
-    return credential
 
 
 def get_flow_status(pf: PFClient, run_name: str) -> str:
