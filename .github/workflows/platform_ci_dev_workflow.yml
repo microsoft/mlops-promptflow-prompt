@@ -27,6 +27,12 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
+      acr_user_name:
+        required: true
+        description: "Azure Container Registry username."
+      acr_password:
+        required: true
+        description: "Azure Container Registry password."
 env:
   ACR_NAME: mlopspromptflowacr
 
