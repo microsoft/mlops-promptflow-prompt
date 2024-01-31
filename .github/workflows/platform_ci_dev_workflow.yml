@@ -177,10 +177,15 @@ jobs:
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
 
+      - name: Debug ACR step
+        run: |
+          echo "ACR_NAME: ${{ secrets.ACR_NAME }}"
+          echo "ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}"
+
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ env.ACR_NAME }}.azurecr.io
+          login-server: mlopspromptflowacr.azurecr.io
           username: ${{ secrets.ACR_NAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
