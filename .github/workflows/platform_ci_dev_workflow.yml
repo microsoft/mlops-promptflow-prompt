@@ -189,6 +189,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
+          cd /home/runner/work/mlops-promptflow-prompt/mlops-promptflow-prompt/dist
           docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest -f Dockerfile .
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest
         env:
