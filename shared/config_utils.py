@@ -34,7 +34,6 @@ def get_aoai_config(raw_config: Dict) -> Dict:
 
 def get_acs_config(raw_config: Dict) -> Dict:
     """Get the Azure Cognitive configuration from config map."""
-
     acs_config = raw_config['acs_config']
 
     # Load from environment variables if not specified in yaml file
@@ -49,7 +48,6 @@ def get_acs_config(raw_config: Dict) -> Dict:
 
 def get_aml_config(raw_config: Dict) -> Dict:
     """Get the Azure ML workspace configuration from config map."""
-
     aml_config = raw_config['aml_config']
 
     # Load from environment variables if not specified in yaml file
