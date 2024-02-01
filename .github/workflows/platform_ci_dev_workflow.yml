@@ -34,9 +34,11 @@ on:
         required: true
         description: "Azure Container Registry password."
 env:
-  ACR_NAME: mlopspromptflowacr
+  ACR_NAME: "mlopspromptflowacr"
   RG_NAME: "mlops-promptflow-template"
   LOCATION: "West US 2"
+  APP_SER_PLAN_NAME: "mlopspromptflowapp"
+  APP_SER_PLAN_SKU: "F1"
 
 jobs:
   execute-prompt-experiment:
@@ -209,6 +211,18 @@ jobs:
         env:
           RG_NAME: ${{ env.RG_NAME }}
           LOCATION: ${{ env.LOCATION  }}
+
+      - name: Create App Service Plan
+        shell: bash
+        run: |
+          service_plan_name="${APP_SER_PLAN_NAME}_service_plan"
+          echo "Creating service plan...$service_plan_name"
+          az appservice plan create --name "$service_plan_name" --sku "$APP_SER_PLAN_SKU" --location "$LOCATION" --is-linux --resource-group "$RG_NAME"
+        env:
+          APP_SER_PLAN_NAME: ${{ env.APP_SER_PLAN_NAME }}
+          APP_SER_PLAN_SKU: ${{ env.APP_SER_PLAN_SKU }}
+          LOCATION: ${{ env.LOCATION }}
+          RG_NAME: ${{ env.RG_NAME }}
 
       # TODO Web-app, Kuberenetes deployment, AML deployment, 
       #      ADD Signature verifciation of docker images
