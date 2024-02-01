@@ -7,7 +7,8 @@ import yaml
 
 
 class MLopsConfig():
-    """MLopsConfig"""
+    """MLopsConfig Class."""
+
     _configuration_data: Any
     _aml_config: Any
     _aoai_config: Any
@@ -16,6 +17,7 @@ class MLopsConfig():
     _deployment_config: Any
 
     def __init__(self, **data: Any):
+        """Intialize MLConfig with yaml config data."""
         self._raw_config = data
         if "aml_config" in data:
             self._aml_config = data['aml_config']
@@ -30,12 +32,12 @@ class MLopsConfig():
 
     @property
     def configuration_data(self):
-        """configuration data dictionary"""
+        """Configuration data dictionary."""
         return self._configuration_data
 
     @property
     def aml_config(self):
-        """Azure ML workspace configuration data"""
+        """Azure ML workspace configuration data."""
         # Load from environment variables if not specified in yaml file
         if self._aml_config['subscription_id'] is None and "SUBSCRIPTION_ID" in os.environ.keys():
             self._aml_config['subscription_id'] = os.environ.get("SUBSCRIPTION_ID")
@@ -47,7 +49,7 @@ class MLopsConfig():
 
     @property
     def aoai_config(self):
-        """Azure OpenAI configuration data"""
+        """Azure OpenAI configuration data."""
         # Load from environment variables if not specified in yaml file
         if self._aoai_config['aoai_api_base'] is None and "AOAI_BASE_ENDPOINT" in os.environ.keys():
             self._aoai_config['aoai_api_base'] = os.environ.get("AOAI_BASE_ENDPOINT")
@@ -58,7 +60,7 @@ class MLopsConfig():
 
     @property
     def acs_config(self):
-        """Azure Cognititive Services configuration data"""
+        """Azure Cognititive Services configuration data."""
         # Load from environment variables if not specified in yaml file
         if self._aoai_config['aoai_api_base'] is None and "AOAI_BASE_ENDPOINT" in os.environ.keys():
             self._aoai_config['aoai_api_base'] = os.environ.get("AOAI_BASE_ENDPOINT")
@@ -69,12 +71,12 @@ class MLopsConfig():
 
     @property
     def flow_configs(self):
-        """Flow Configurations data"""
+        """Flow Configurations data."""
         return self._flow_configs
 
     @property
     def deployment_config(self):
-        """Deployment configuraton"""
+        """Deployment configuraton."""
         return self._deployment_config
 
     def get_flow_config(self, env: str, flow_name: str) -> Dict:
