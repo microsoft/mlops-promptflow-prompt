@@ -32,7 +32,7 @@ class MLopsConfig():
 
     @property
     def configuration_data(self):
-        """Configuration data dictionary."""
+        """Get Configuration data dictionary."""
         return self._configuration_data
 
     @property
