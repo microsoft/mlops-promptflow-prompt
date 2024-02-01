@@ -35,6 +35,8 @@ on:
         description: "Azure Container Registry password."
 env:
   ACR_NAME: mlopspromptflowacr
+  RG_NAME: "mlops-promptflow-template"
+  LOCATION: "West US 2"
 
 jobs:
   execute-prompt-experiment:
@@ -195,10 +197,19 @@ jobs:
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
 
-      # - name: Deploy Web App
-      #   run: bash deploy.sh --path dist -i latest --name my_app_23d8m -r mlopspromptflowacr.azurecr.io -g your_resource_group
-      #   env:
-      #     DEPLOY_WEBAPP: 'true'
+      - name: Check and Create Resource Group
+        shell: bash  
+        run: |
+          result=$(az group exists --name "$RG_NAME")
+          echo "Result: $result"
+          if [ "$result" = "false" ]; then
+              echo "Creating resource group...$RG_NAME"
+              az group create --name "$RG_NAME" --location "$LOCATION"
+          fi
+        env:
+          RG_NAME: ${{ env.RG_NAME }}
+          LOCATION: ${{ env.LOCATION  }}
+
       # TODO Web-app, Kuberenetes deployment, AML deployment, 
       #      ADD Signature verifciation of docker images
       #      ADD flags  
