@@ -1,7 +1,7 @@
 """This is MLOps utility module to execute standard flow in Azure ML using automatic cluster."""
 import argparse
 import os
-from shared.config_utils import (load_yaml_config, get_aml_config, get_flow_config)
+from shared.config_utils import load_yaml_config
 from shared.flow_utils import prepare_and_execute_std_flow
 
 
@@ -41,9 +41,9 @@ def main():
     )
     args = parser.parse_args()
 
-    config_data = load_yaml_config("./config/config.yaml")
-    aml_config = get_aml_config(config_data)
-    flow_config = get_flow_config(env=args.environment_name, flow_name=args.config_name, raw_config=config_data)
+    mlconfig = load_yaml_config()
+    aml_config = mlconfig.aml_config
+    flow_config = mlconfig.get_flow_config(env=args.environment_name, flow_name=args.config_name)
 
     experiment_type = flow_config['experiment_base_name']
     flow_standard_path = flow_config['standard_flow_path']

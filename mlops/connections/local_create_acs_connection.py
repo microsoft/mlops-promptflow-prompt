@@ -3,7 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import CognitiveSearchConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
-from shared.config_utils import (load_yaml_config, get_acs_config)
+from shared.config_utils import load_yaml_config
 
 
 def main():
@@ -18,8 +18,8 @@ def main():
     args = parser.parse_args()
 
     # Read configuration
-    config = load_yaml_config("./config/config.yaml")
-    acs_config = get_acs_config(config)
+    mlops_config = load_yaml_config()
+    acs_config = mlops_config.acs_config
 
     # PFClient can help manage your runs and connections.
     pf = PFClient()

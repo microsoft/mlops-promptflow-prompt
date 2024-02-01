@@ -5,7 +5,7 @@ import requests
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
 from promptflow.azure._restclient.flow_service_caller import FlowRequestException
-from shared.config_utils import (load_yaml_config, get_aml_config, get_aoai_config)
+from shared.config_utils import load_yaml_config
 
 
 def main():
@@ -20,9 +20,9 @@ def main():
     args = parser.parse_args()
 
     # Read configuratuin
-    config = load_yaml_config("./config/config.yaml")
-    aoai_config = get_aoai_config(config)
-    aml_config = get_aml_config(config)
+    mlops_config = load_yaml_config()
+    aml_config = mlops_config.aml_config
+    aoai_config = mlops_config.aoai_config
 
     # PFClient can help manage your runs and connections.
     pf = PFClient(
