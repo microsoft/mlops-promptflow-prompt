@@ -212,12 +212,19 @@ jobs:
           RG_NAME: ${{ env.RG_NAME }}
           LOCATION: ${{ env.LOCATION  }}
 
-      - name: Create App Service plan
+      - name: Check and Create App Service Plan
         shell: bash
         run: |
           service_plan_name="${APP_SER_PLAN_NAME}_service_plan"
           echo "Creating service plan...$service_plan_name"
-          az appservice plan create --name "$service_plan_name" --sku "$APP_SER_PLAN_SKU" --location "$LOCATION" --is-linux --resource-group "$RG_NAME"
+          result=$(az appservice plan show --name "$service_plan_name" --resource-group "$RG_NAME" --query "name" -o tsv)
+          # check if service plan exists
+          if [ -z "$result" ]; then
+            echo "Service plan does not exist. Creating..."
+            az appservice plan create --name "$service_plan_name" --sku "$APP_SER_PLAN_SKU" --location "$LOCATION" --is-linux --resource-group "$RG_NAME"
+          else
+            echo "Service plan already exists. Skipping creation."
+          fi
         env:
           APP_SER_PLAN_NAME: ${{ env.APP_SER_PLAN_NAME }}
           APP_SER_PLAN_SKU: ${{ env.APP_SER_PLAN_SKU }}
