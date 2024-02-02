@@ -37,7 +37,7 @@ env:
   ACR_NAME: "mlopspromptflowacr"
   RG_NAME: "mlops-promptflow-template"
   LOCATION: "West US 2"
-  APP_SER_PLAN_NAME: "mlopspromptflow"
+  APP_SER_PLAN_NAME: "mlopspromptflowapp"
   APP_SER_PLAN_SKU: "F1"
 
 jobs:
@@ -212,19 +212,12 @@ jobs:
           RG_NAME: ${{ env.RG_NAME }}
           LOCATION: ${{ env.LOCATION  }}
 
-      - name: Create App Service Plan
+      - name: Create App Service plan
         shell: bash
         run: |
-          service_plan_name="${APP_SER_PLAN_NAME}-service-plan"
-          echo "Checking if service plan already exists $service_plan_name"
-          result=$(az appservice plan show --name "$service_plan_name" --resource-group "$RG_NAME" --query 'name' -o tsv 2>/dev/null)
-          if [ -z "$result" ]; then
-            # Service plan does not exist
-            echo "Creating service plan...$service_plan_name"
-            az appservice plan create --name "$service_plan_name" --sku "$APP_SER_PLAN_SKU" --location "$LOCATION" --is-linux --resource-group "$RG_NAME"
-          else
-            echo "Service plan already exists. Skipping creation."
-          fi
+          service_plan_name="${APP_SER_PLAN_NAME}_service_plan"
+          echo "Creating service plan...$service_plan_name"
+          az appservice plan create --name "$service_plan_name" --sku "$APP_SER_PLAN_SKU" --location "$LOCATION" --is-linux --resource-group "$RG_NAME"
         env:
           APP_SER_PLAN_NAME: ${{ env.APP_SER_PLAN_NAME }}
           APP_SER_PLAN_SKU: ${{ env.APP_SER_PLAN_SKU }}
