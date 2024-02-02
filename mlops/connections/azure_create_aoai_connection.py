@@ -5,7 +5,7 @@ import requests
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
 from promptflow.azure._restclient.flow_service_caller import FlowRequestException
-from shared.config_utils import load_yaml_config
+from shared.config_utils import MLOpsConfig
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     # Read configuratuin
-    mlops_config = load_yaml_config()
+    mlops_config = MLOpsConfig()
     aml_config = mlops_config.aml_config
     aoai_config = mlops_config.aoai_config
 

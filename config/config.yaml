@@ -1,21 +1,21 @@
 # Azure ML configuration.
 aml_config:
-  subscription_id: 
-  resource_group_name: mlops-promptflow-template
-  workspace_name: mlops-promptflow-azureml
+  subscription_id: ${SUBSCRIPTION_ID}
+  resource_group_name: ${RESOURCE_GROUP_NAME}
+  workspace_name: ${WORKSPACE_NAME}
 
 # Azure OpenAI configuration. 
 aoai_config:
-  aoai_api_base: 
+  aoai_api_base: ${AOAI_BASE_ENDPOINT}
   aoai_api_type: azure
   aoai_api_version: 2023-07-01-preview
-  aoai_api_key: 
+  aoai_api_key: ${AOAI_API_KEY}
 
 # Azure Cognitive Service config
 acs_config:
-  acs_api_base: 
+  acs_api_base: ${ACS_BASE_ENDPOINT}
   acs_api_version: 2023-07-01-preview
-  acs_api_key: 
+  acs_api_key: ${ACS_API_KEY}
 
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>

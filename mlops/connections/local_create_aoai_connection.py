@@ -3,7 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
-from shared.config_utils import load_yaml_config
+from shared.config_utils import MLOpsConfig
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     args = parser.parse_args()
 
     # Read configuration
-    mlops_config = load_yaml_config()
+    mlops_config = MLOpsConfig()
     aoai_config = mlops_config.aoai_config
 
     # PFClient can help manage your runs and connections.
