@@ -36,7 +36,7 @@ on:
 env:
   ACR_NAME: "mlopspromptflowacr"
   RG_NAME: "mlops-promptflow-template"
-  LOCATION: "West US 2"
+  LOCATION: "West US"
   APP_SER_PLAN_NAME: "mlopspromptflowapp"
   APP_SER_PLAN_SKU: "F1"
 
