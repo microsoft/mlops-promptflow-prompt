@@ -20,7 +20,7 @@ class MLOpsConfig():
             self._raw_config = yaml.safe_load(os.path.expandvars(stream.read()))
 
     def __getattr__(self, __name: str) -> Any:
-        """Returns values for top level keys in configuration"""
+        """Get values for top level keys in configuration."""
         return self._raw_config[__name]
 
     def get_flow_config(self, flow_name: str) -> Dict:
