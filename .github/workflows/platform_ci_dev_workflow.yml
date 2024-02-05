@@ -39,6 +39,7 @@ env:
   LOCATION: "West US"
   APP_SER_PLAN_NAME: "mlopspromptflowapp"
   APP_SER_PLAN_SKU: "F1"
+  APP_NAME: mlops-promptflow
 
 jobs:
   execute-prompt-experiment:
@@ -199,7 +200,7 @@ jobs:
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
 
-      - name: Check and Create Resource Group
+      - name: Create Resource Group
         shell: bash  
         run: |
           result=$(az group exists --name "$RG_NAME")
@@ -212,7 +213,7 @@ jobs:
           RG_NAME: ${{ env.RG_NAME }}
           LOCATION: ${{ env.LOCATION  }}
 
-      - name: Check and Create App Service Plan
+      - name: Create App Service Plan
         shell: bash
         run: |
           service_plan_name="${APP_SER_PLAN_NAME}_service_plan"
@@ -231,6 +232,18 @@ jobs:
           LOCATION: ${{ env.LOCATION }}
           RG_NAME: ${{ env.RG_NAME }}
 
+      - name: Create App
+        shell: bash
+        run: |
+          # APP_NAME is based on model type
+          APP_NAME="${{ inputs.model_type }}-standard-app"
+          service_plan_name="${APP_SER_PLAN_NAME}_service_plan"
+          echo "Creating app...$APP_NAME"
+          az webapp create --name "$APP_NAME" --plan "$service_plan_name" --deployment-container-image-name "${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest" --startup-file 'bash start.sh' --resource-group "$RG_NAME"
+        env:
+          APP_SER_PLAN_NAME: ${{ env.APP_SER_PLAN_NAME }}
+          image_tag: ${{ env.image_tag }}
+          RG_NAME: ${{ env.RG_NAME }}
       # TODO Web-app, Kuberenetes deployment, AML deployment, 
       #      ADD Signature verifciation of docker images
-      #      ADD flags  
+      #      ADD flags 
