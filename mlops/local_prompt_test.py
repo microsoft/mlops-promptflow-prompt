@@ -1,15 +1,13 @@
 """This is MLOps utility module to execute evaluation flow locally using a single line of data."""
-import mlflow
-import os
 import argparse
-import json
-from dotenv import load_dotenv
+import mlflow
 from promptflow import PFClient
 from mlops.common.mlflow_tools import (
     generate_experiment_name,
     generate_run_name,
     set_mlflow_uri,
 )
+from shared.config_utils import MLOpsConfig
 
 
 def main():
@@ -27,35 +25,27 @@ def main():
         "--config_name",
         type=str,
         required=True,
-        help="PROMPT_FLOW_CONFIG_NAME from model_config.json",
+        help="prompt_flow_config_name from config.yaml",
     )
     parser.add_argument(
         "--environment_name",
         type=str,
         required=True,
-        help="ENV_NAME from model_config.json",
+        help="env_name from config.yaml",
     )
     args = parser.parse_args()
 
-    config_file = open("./config/model_config.json")
-    config_data = json.load(config_file)
+    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    aml_config = mlops_config.aml_config
+    flow_config = mlops_config.get_flow_config(flow_name=args.config_name)
 
-    for el in config_data["flows"]:
-        if "PROMPT_FLOW_CONFIG_NAME" in el and "ENV_NAME" in el:
-            if (
-                el["PROMPT_FLOW_CONFIG_NAME"] == args.config_name
-                and el["ENV_NAME"] == args.environment_name
-            ):
-                experiment_type = el["EXPERIMENT_BASE_NAME"]
-                flow_standard_path = el["STANDARD_FLOW_PATH"]
-                resource_group = el["RESOURCE_GROUP_NAME"]
-                workspace_name = el["WORKSPACE_NAME"]
+    experiment_type = flow_config['experiment_base_name']
+    flow_standard_path = flow_config['standard_flow_path']
 
     # Setup MLFLOW Experiment
-    load_dotenv()
-
-    subscription_id = os.environ.get("SUBSCRIPTION_ID")
-
+    subscription_id = aml_config['subscription_id']
+    resource_group = aml_config['resource_group_name']
+    workspace_name = aml_config['workspace_name']
     set_mlflow_uri(subscription_id, resource_group, workspace_name)
 
     experiment_name = generate_experiment_name(experiment_type)

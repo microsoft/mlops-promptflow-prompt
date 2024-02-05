@@ -55,9 +55,9 @@ def set_mlflow_uri(subscription_id: str, resource_group: str, workspace_name: st
       workspace_name (string): Azure ML workspace name
     """
     if (
-        (subscription_id is not None)
-        and (resource_group is not None)
-        and (workspace_name is not None)
+        (subscription_id is not None and subscription_id != "${SUBSCRIPTON_ID}")
+        and (resource_group is not None and resource_group != "${RESOURCE_GROUP_NAME}")
+        and (workspace_name is not None and workspace_name != "${WORKSPACE_NAME}")
     ):
         ml_client = MLClient(
             credential=DefaultAzureCredential(),
