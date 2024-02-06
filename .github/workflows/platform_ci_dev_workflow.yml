@@ -236,7 +236,7 @@ jobs:
         shell: bash
         run: |
           # APP_NAME is based on model type
-          APP_NAME="${{ inputs.model_type }}-standard-app"
+          APP_NAME="${{ inputs.model_type }}_standard_app"
           service_plan_name="${APP_SER_PLAN_NAME}_service_plan"
           echo "Creating app...$APP_NAME"
           az webapp create --name "$APP_NAME" --plan "$service_plan_name" --deployment-container-image-name "${{ env.ACR_NAME }}.azurecr.io/${{ inputs.model_type }}-serve:latest" --resource-group "$RG_NAME"
