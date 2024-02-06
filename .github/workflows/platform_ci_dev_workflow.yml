@@ -244,6 +244,3 @@ jobs:
           APP_SER_PLAN_NAME: ${{ env.APP_SER_PLAN_NAME }}
           image_tag: ${{ env.image_tag }}
           RG_NAME: ${{ env.RG_NAME }}
-      # TODO Web-app, Kuberenetes deployment, AML deployment, 
-      #      ADD Signature verifciation of docker images
-      #      ADD flags 
