@@ -2,11 +2,7 @@
 name: Named Entity Recognition CI Workflow
 
 on:
-  push: 
-    branches:
-      - "agromova/features/aml-deployment"
-  workflow_dispatch:
-  # workflow_call:
+  workflow_call:
     inputs:
       exec_environment:
         type: string
@@ -18,9 +14,9 @@ on:
         description: "The type of model to run the workflow for"
         required: true
         default: "named_entity_recognition"
-  # push:
-  #   branches:
-  #     - "development"
+  push:
+    branches:
+      - "development"
 
 jobs:
   run-ci-workflow:
