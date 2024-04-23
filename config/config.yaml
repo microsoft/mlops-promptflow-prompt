@@ -17,6 +17,15 @@ acs_config:
   acs_api_version: 2023-07-01-preview
   acs_api_key: ${ACS_API_KEY}
 
+# Azure Container Registry & App Service config
+acr_config:
+  acr_name: ${ACR_NAME}
+  resource_group_name: ${RESOURCE_GROUP_NAME}
+  location: ${LOCATION}
+  app_ser_plan_name: ${APP_SER_PLAN_NAME}
+  app_ser_plan_sku: ${APP_SER_PLAN_SKU}
+  app_name: ${APP_NAME}
+ 
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
 flow_configs:
