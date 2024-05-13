@@ -40,12 +40,12 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}   
           convert: upper                  
-      - name: Generate Variables
-        uses: ./.github/actions/generate_variables
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          env_name: ${{ inputs.exec_environment }}
-          model_type: ${{ inputs.model_type }}
+      # - name: Generate Variables
+      #   uses: ./.github/actions/generate_variables
+      #   with:
+      #     azure_credentials: ${{ secrets.azure_credentials }}
+      #     env_name: ${{ inputs.exec_environment }}
+      #     model_type: ${{ inputs.model_type }}
       - name: Configure Azure ML Agent
         uses: ./.github/actions/configure_azureml_agent
 
