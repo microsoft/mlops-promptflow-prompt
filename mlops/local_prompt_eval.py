@@ -1,13 +1,13 @@
 """This is MLOps utility module to execute evaluation flow locally."""
 import argparse
 import mlflow
-from promptflow import PFClient
+from promptflow.client import PFClient
 from mlops.common.mlflow_tools import (
     generate_experiment_name,
     generate_run_name,
     set_mlflow_uri,
 )
-from shared.config_utils import MLOpsConfig
+from mlops.common.config_utils import MLOpsConfig
 
 
 def main():

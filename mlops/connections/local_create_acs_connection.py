@@ -1,9 +1,9 @@
 """This module helps to create a local connection to Azure Cognitive Search service."""
 import argparse
-from promptflow import PFClient
+from promptflow.client import PFClient
 from promptflow.entities import CognitiveSearchConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
-from shared.config_utils import MLOpsConfig
+from mlops.common.config_utils import MLOpsConfig
 
 
 def main():

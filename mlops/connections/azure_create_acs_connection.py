@@ -5,7 +5,7 @@ import requests
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
 from promptflow.azure._restclient.flow_service_caller import FlowRequestException
-from shared.config_utils import MLOpsConfig
+from mlops.common.config_utils import MLOpsConfig
 
 
 def main():
