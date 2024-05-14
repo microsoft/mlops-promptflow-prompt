@@ -3,6 +3,7 @@ aml_config:
   subscription_id: ${SUBSCRIPTION_ID}
   resource_group_name: ${RESOURCE_GROUP_NAME}
   workspace_name: ${WORKSPACE_NAME}
+  project_name: ${PROJECT_NAME}
 
 # Azure OpenAI configuration. 
 aoai_config:

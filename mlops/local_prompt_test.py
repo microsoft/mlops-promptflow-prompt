@@ -1,7 +1,7 @@
 """This is MLOps utility module to execute evaluation flow locally using a single line of data."""
 import argparse
 import mlflow
-from promptflow import PFClient
+from promptflow.client import PFClient
 from mlops.common.mlflow_tools import (
     generate_experiment_name,
     generate_run_name,
