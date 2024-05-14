@@ -63,7 +63,7 @@ deployment_configs:
   real_time:
     prompt_flow_config_name: named_entity_recognition
     endpoint_name: named_entity
-    endpoint_desc: An onlune endpoint serving a Promptflow flow
+    endpoint_desc: An online endpoint serving a Promptflow flow
     deployment_desc: prompt flow deployment
     deployment_name: green
     deployment_traffic_allocation: 100

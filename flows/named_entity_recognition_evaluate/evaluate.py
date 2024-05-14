@@ -1,3 +1,4 @@
+"""Evaluation component for named_entity_recognition flow."""
 import argparse
 from azure.ai.generative.evaluate import evaluate
 from azure.ai.resources.client import AIClient
@@ -11,6 +12,7 @@ from mlops.common.mlflow_tools import (
 
 
 def main():
+    """Evaluate named_entity_recognition flow."""
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
         "--environment_name",
@@ -30,7 +32,7 @@ def main():
     resource_group = aml_config['resource_group_name']
     project_name = aml_config['project_name']
 
-        # Create Azure AI Studio client
+    # Create Azure AI Studio client
     ai_client = AIClient(
         subscription_id=subscription_id,
         resource_group_name=resource_group,
@@ -51,7 +53,6 @@ def main():
     eval_column_mapping = flow_config['eval_column_mapping']
 
     experiment_name = f"{generate_experiment_name(experiment_base_name)}_eval"
-
 
     # Run evaluation
     result = evaluate(
