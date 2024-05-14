@@ -69,12 +69,17 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
-
     parser.add_argument(
         "--subscription_id",
         type=str,
         required=False,
         help="(optional) subscription id to find Azure ML workspace to store mlflow logs",
+    )
+    parser.add_argument(
+        "--output_file",
+        type=str,
+        required=False,
+        help="A file to save run model version",
     )
     args = parser.parse_args()
 
