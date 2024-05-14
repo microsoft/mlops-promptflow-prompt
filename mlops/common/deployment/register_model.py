@@ -3,7 +3,7 @@ import argparse
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import Model
 from azure.identity import DefaultAzureCredential
-
+from shared.config_utils import MLOpsConfig
 
 def register_model(
     subscription_id,
@@ -52,42 +52,47 @@ def register_model(
 
 def main():
     """Collect command string parameters and pass them to the register_model method."""
-    parser = argparse.ArgumentParser("register model")
+    subscription_id = None
+    resource_group = None
+    workspace_name = None
+
+    parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
-        "--subscription_id", type=str, help="Azure subscription id", required=True
-    )
-    parser.add_argument(
-        "--resource_group_name",
+        "--config_name",
         type=str,
-        help="Azure Machine learning resource group",
         required=True,
+        help="prompt_flow_config_name from config.yaml",
     )
     parser.add_argument(
-        "--workspace_name",
+        "--environment_name",
         type=str,
-        help="Azure Machine learning Workspace name",
         required=True,
+        help="env_name from config.yaml",
     )
+
     parser.add_argument(
-        "--model_name",
-        type=str,
-        help="registered model name to be deployed",
-        required=True,
-    )
-    parser.add_argument(
-        "--build_id",
-        type=str,
-        help="Azure DevOps build id for deployment",
-        required=True,
-    )
-    parser.add_argument("--model_path", type=str, help="file path of model files")
-    parser.add_argument("--model_type", type=str, help="model type")
-    parser.add_argument(
-        "--output_file",
+        "--subscription_id",
         type=str,
         required=False,
-        help="A file to save run model version",
+        help="(optional) subscription id to find Azure ML workspace to store mlflow logs",
     )
+    args = parser.parse_args()
+
+    mlconfig = MLOpsConfig(environemnt=args.environment_name)
+    aml_config = mlconfig.aml_config
+    flow_config = mlconfig.get_flow_config(flow_name=args.config_name)
+
+    subscription_id = aml_config['subscription_id']
+    resource_group = aml_config['resource_group_name']
+    workspace_name = aml_config['workspace_name']
+
+    experiment_type = flow_config['experiment_base_name']
+    model_base_name = flow_config['model_base_name']
+    standard_flow_path = flow_config['standard_flow_path']
+
+    # flow_eval_path = flow_config['evaluation_flow_path']
+    # data_eval_path = flow_config['eval_data_path']
+    # eval_column_mapping = flow_config['eval_column_mapping']
 
     args = parser.parse_args()
 
@@ -95,10 +100,10 @@ def main():
         args.subscription_id,
         args.resource_group_name,
         args.workspace_name,
-        args.model_name,
+        args.model_base_name, #experiment_type
         args.build_id,
-        args.model_path,
-        args.model_type,
+        args.standard_flow_path,
+        args.experiment_type,
         args.output_file,
     )
 

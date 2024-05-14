@@ -104,14 +104,19 @@ jobs:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
             python -m mlops.common.deployment.register_model \
-              --subscription_id ${{ secrets.subscription_id }} \
-              --resource_group_name $RESOURCE_GROUP_NAME \
-              --workspace_name $WORKSPACE_NAME \
-              --model_name $MODEL_NAME \
-              --model_path $STANDARD_FLOW_PATH \
-              --model_type ${{ inputs.model_type }} \
+              --config_name ${{ inputs.model_type }} \
+              --environment_name ${{ inputs.exec_environment }} \
+              --subscription_id "${{ secrets.subscription_id }}" \
               --output_file "model_version.txt" \
               --build_id ${{ github.run_id }}
+              # --subscription_id ${{ secrets.subscription_id }} \
+              # --resource_group_name $RESOURCE_GROUP_NAME \
+              # --workspace_name $WORKSPACE_NAME \
+              # --model_name $MODEL_NAME \
+              # --model_path $STANDARD_FLOW_PATH \
+              # --model_type ${{ inputs.model_type }} \
+              # --output_file "model_version.txt" \
+              # --build_id ${{ github.run_id }}
       - name: Read Model Version
         shell: bash
         run: |
