@@ -12,18 +12,10 @@ aoai_config:
   aoai_api_version: 2023-07-01-preview
   aoai_api_key: ${AOAI_API_KEY}
 
-# Azure Cognitive Service config
-acs_config:
-  acs_api_base: ${ACS_BASE_ENDPOINT}
-  acs_api_version: 2023-07-01-preview
-  acs_api_key: ${ACS_API_KEY}
-
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
 flow_configs:
   named_entity_recognition_pr:
-    prompt_flow_config_name: named_entity_recognition
-    env_name: pr
     experiment_base_name: named_entity_recognition
     model_base_name: regr
     connection_name: aoai
@@ -32,7 +24,6 @@ flow_configs:
     evaluation_flow_path: flows/named_entity_recognition/evaluation
     data_path: flows/named_entity_recognition/data/data.jsonl
     eval_data_path: flows/named_entity_recognition/data/eval_data.jsonl
-    realtime_deployment_config: mlops/named_entity_recognition/configs/deployment_config.json
     column_mapping:
       text: ${data.text}
       entity_type: ${data.entity_type}
@@ -41,8 +32,6 @@ flow_configs:
       entities: ${run.outputs.entities}
 
   named_entity_recognition_dev:
-    prompt_flow_config_name: named_entity_recognition
-    env_name: dev
     experiment_base_name: named_entity_recognition
     model_base_name: regr
     connection_name: aoai
@@ -60,8 +49,7 @@ flow_configs:
       entities: ${run.outputs.entities}
       
 deployment_configs:
-  real_time:
-    prompt_flow_config_name: named_entity_recognition
+  named_entity_recognition_online_dev:
     endpoint_name: named_entity
     endpoint_desc: An online endpoint serving a Promptflow flow
     deployment_desc: prompt flow deployment
