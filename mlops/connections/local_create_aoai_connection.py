@@ -3,7 +3,7 @@ import argparse
 from promptflow import PFClient
 from promptflow.entities import AzureOpenAIConnection
 from promptflow._sdk._errors import ConnectionNotFoundError
-from shared.config_utils import MLOpsConfig
+from mlops.common.config_utils import MLOpsConfig
 
 
 def main():

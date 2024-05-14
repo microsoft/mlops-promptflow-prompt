@@ -7,7 +7,7 @@ from mlops.common.mlflow_tools import (
     generate_run_name,
     set_mlflow_uri,
 )
-from shared.config_utils import MLOpsConfig
+from mlops.common.config_utils import MLOpsConfig
 
 
 def main():
