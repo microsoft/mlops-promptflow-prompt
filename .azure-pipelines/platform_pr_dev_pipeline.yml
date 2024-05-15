@@ -18,7 +18,8 @@ stages:
       displayName: 'Execute Evaluation'
       dependsOn: Build_Validation_Pipeline
       steps:
-      - template: templates/configure_azureml_agent.yml
+      - template: templates/configure_devops_agent.yml
+
       - script: |
           python -m mlops.connections.local_create_aoai_connection \
             --aoai-connection-name "aoai"

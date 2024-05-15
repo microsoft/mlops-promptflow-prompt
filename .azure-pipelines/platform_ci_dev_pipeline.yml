@@ -6,16 +6,13 @@ parameters:
  - name: model_type
    displayName: "type of model to execute"
 
-
 stages:
   - stage: execute_prompt_experiment
     displayName: execute_prompt_experiment
-    variables:
-    - template: templates/experiment_variables.yml
     jobs:
     - job: Execute_ml_Job_Pipeline
       steps:
-      - template: templates/configure_azureml_agent.yml
+      - template: templates/configure_devops_agent.yml
       - template: templates/execute_mlops_pipeline.yml
         parameters:
           script_parameter: |
@@ -56,30 +53,7 @@ stages:
     - name: run_id_from_submit_job
       value: $[ stageDependencies.execute_prompt_experiment.Execute_ml_Job_Pipeline.outputs['read_run_id.RUN_NAME'] ]
     jobs:
-
-    #=====================================
-    # Manual Approval: uncomment if needed
-    #=====================================
-    #- job: ApproveDeployment
-    #  displayName: Approve for prompt deployment 
-    #  pool: server    
-    #  timeoutInMinutes: 60 
-    #  steps:   
-    #  - task: ManualValidation@0
-    #    timeoutInMinutes: 60 
-    #    inputs:
-    #      notifyUsers: |
-    #        replace_with_actual_email@your_email.com
-    #      instructions: "$(run_id_from_submit_job)"
-    #      onTimeout: 'reject'
     - job: deploy_flow
-
-      #==================================================
-      # These two lines are important for manual approval
-      #==================================================
-      #dependsOn: 
-      #- ApproveDeployment
-
       steps:
       - template: templates/get_connection_details.yml
       - template: templates/configure_azureml_agent.yml
