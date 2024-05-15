@@ -14,7 +14,7 @@ steps:
     inlineScript: |
       set -e # fail on error
       python -m pip install --upgrade pip
-      python -m pip install -r .azure-pipelines/requirements/execute_job_requirements.txt
+      python -m pip install -r requirements.txt
       az version
 
 

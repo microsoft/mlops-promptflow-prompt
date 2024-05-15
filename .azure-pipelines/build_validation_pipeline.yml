@@ -1,5 +1,6 @@
 jobs:
 - job: Build_Validation_Pipeline
+  displayName: Validate Code
   steps:
   - task: UsePythonVersion@0
     displayName: 'Use Python 3.9'
@@ -9,7 +10,7 @@ jobs:
   - script: |
       set -e
       python -m pip install --upgrade pip
-      pip install -r .azure-pipelines/requirements/build_validation_requirements.txt
+      pip install -r requirements.txt
     displayName: "Load Python Dependencies"
 
   - script: |
