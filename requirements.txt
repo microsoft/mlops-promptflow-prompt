@@ -13,3 +13,4 @@ azureml-mlflow>=1.51
 promptflow
 promptflow-tools
 azure-ai-generative[evaluate]
+keyrings.alt
