@@ -13,11 +13,12 @@ stages:
     displayName: 'Validate Code and Evaluate PF Flow'
     jobs:
     - template: build_validation_pipeline.yml
-
+    
     - job: Execute_pf_Pipeline
       displayName: 'Execute Evaluation'
-      dependsOn: Build_Validation_Pipeline
+      dependsOn: build_validation
       steps:
+      - template: templates/configure_azureml_agent.yml
       - script: |
           python -m mlops.connections.local_create_aoai_connection \
             --aoai-connection-name "aoai"
