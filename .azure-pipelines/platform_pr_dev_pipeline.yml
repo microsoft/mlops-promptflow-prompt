@@ -16,6 +16,7 @@ stages:
 
     - job: Execute_pf_Pipeline
       displayName: 'Execute Evaluation'
+      dependsOn: Build_Validation_Pipeline
       steps:
       - script: |
           python -m mlops.connections.local_create_aoai_connection \
