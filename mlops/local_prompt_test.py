@@ -1,23 +1,13 @@
 """This is MLOps utility module to execute evaluation flow locally using a single line of data."""
 import argparse
-import mlflow
 from promptflow.client import PFClient
-from mlops.common.mlflow_tools import (
-    generate_experiment_name,
-    generate_run_name,
-    set_mlflow_uri,
-)
 from mlops.common.config_utils import MLOpsConfig
 
 
 def main():
     """Collect command line arguments and configuration file parameters to invoke \
         a given standard flow locally on a single line of data."""
-    experiment_type = ""
     flow_standard_path = ""
-    subscription_id = None
-    resource_group = None
-    workspace_name = None
 
     # Config parameters
     parser = argparse.ArgumentParser("config_parameters")
@@ -36,31 +26,17 @@ def main():
     args = parser.parse_args()
 
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
-    aml_config = mlops_config.aml_config
     flow_config = mlops_config.get_flow_config(flow_name=args.config_name)
 
-    experiment_type = flow_config['experiment_base_name']
     flow_standard_path = flow_config['standard_flow_path']
 
-    # Setup MLFLOW Experiment
-    subscription_id = aml_config['subscription_id']
-    resource_group = aml_config['resource_group_name']
-    workspace_name = aml_config['workspace_name']
-    set_mlflow_uri(subscription_id, resource_group, workspace_name)
+    pf_client = PFClient()
 
-    experiment_name = generate_experiment_name(experiment_type)
-    mlflow.set_experiment(experiment_name)
+    # Using default input
+    # inputs = {"<flow_input_name>": "<flow_input_value>"}  # The inputs of the flow.
 
-    # Start the experiment
-    with mlflow.start_run(run_name=generate_run_name()):
-        pf_client = PFClient()
-
-        # Using default input
-        # inputs = {"<flow_input_name>": "<flow_input_value>"}  # The inputs of the flow.
-
-        flow_result = pf_client.test(flow=flow_standard_path)
-        print(f"Flow outputs: {flow_result}")
-        mlflow.log_dict(flow_result, "output.json")
+    flow_result = pf_client.test(flow=flow_standard_path)
+    print(f"Flow outputs: {flow_result}")
 
 
 if __name__ == "__main__":

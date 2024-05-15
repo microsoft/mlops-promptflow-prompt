@@ -29,6 +29,12 @@ class MLOpsConfig():
         if flowconfig_name in self.flow_configs:
             return self.flow_configs[flowconfig_name]
 
+    def get_deployment_config(self, flow_name: str, deployment_type: str) -> Dict:
+        """Get the pipeline configuration for given pipeline name and environment."""
+        deploymentconfig_name = f"{flow_name}_{deployment_type}_{self._environment}"
+        if deploymentconfig_name in self.deployment_configs:
+            return self.deployment_configs[deploymentconfig_name]
+
 
 if __name__ == "__main__":
     mlconfig = MLOpsConfig()
