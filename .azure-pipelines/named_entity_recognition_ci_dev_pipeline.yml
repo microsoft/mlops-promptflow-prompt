@@ -28,10 +28,6 @@ parameters:
 
 
 stages:
-  - template: ./templates/variables_template.yml
-    parameters:
-      env_name: ${{parameters.env_name}}
-      model_type: ${{parameters.model_type}}
   - template: ./platform_ci_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
