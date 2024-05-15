@@ -16,7 +16,7 @@ stages:
     
     - job: Execute_pf_Pipeline
       displayName: 'Execute Evaluation'
-      dependsOn: build_validation
+      dependsOn: Build_Validation_Pipeline
       steps:
       - template: templates/configure_azureml_agent.yml
       - script: |
