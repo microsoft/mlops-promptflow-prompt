@@ -22,10 +22,6 @@ runs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-
     - name: Execute code
       shell: bash
       run: |
