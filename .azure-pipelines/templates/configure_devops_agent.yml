@@ -1,0 +1,13 @@
+steps:
+- task: UsePythonVersion@0
+  displayName: 'Use Python 3.9'
+  inputs:
+    versionSpec: '3.9'
+
+- script: |
+    set -e
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: "Load Python Dependencies"
+
+
