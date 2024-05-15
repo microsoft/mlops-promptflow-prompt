@@ -1,5 +1,5 @@
 """The module contains a tool that evaluation flow is using as a logging step."""
-from promptflow import tool
+from promptflow.core import tool
 from typing import List
 from promptflow import log_metric
 

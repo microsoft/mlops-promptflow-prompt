@@ -8,3 +8,4 @@ azure-identity>=1.15.0
 azureml-mlflow>=1.51
 keyrings.alt
 pyyaml
+azure-ai-generative[evaluate]

@@ -1,4 +1,4 @@
-"""Flow shared utilities."""
+"""Flow common utilities."""
 from promptflow.entities import Run
 from promptflow.azure import PFClient
 from azure.identity import DefaultAzureCredential
