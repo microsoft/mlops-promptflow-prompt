@@ -32,7 +32,6 @@ jobs:
       exec_environment: ${{ inputs.exec_environment || 'pr' }}
       model_type: ${{ inputs.model_type || 'named_entity_recognition' }}
     secrets:
-      subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
       aoai_api_key: ${{ secrets.AOAI_API_KEY }}
       aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}
