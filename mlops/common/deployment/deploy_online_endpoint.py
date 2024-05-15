@@ -1,8 +1,8 @@
 """This module implements provisioning of Azure ML online endpoint."""
 import argparse
-from azure.ai.resources.client import AIClient 
-#from azure.ai.generative.entities.deployment import Deployment
-#from azure.ai.generative.entities.models import PromptflowModel 
+from azure.ai.resources.client import AIClient
+# from azure.ai.generative.entities.deployment import Deployment
+# from azure.ai.generative.entities.models import PromptflowModel
 from azure.identity import DefaultAzureCredential
 from mlops.common.config_utils import MLOpsConfig
 
@@ -24,25 +24,24 @@ def provision_endpoint(
       endpoint_name (string): Service deployment name in AI Studio
       flow_path (string): PromptFlow path to deploy
     """
-
     credential = DefaultAzureCredential()
 
-    client = AIClient(
-        credential=credential, 
-        subscription_id=subscription_id, 
-        resource_group_name=resource_group_name, 
-        project_name=project_name, 
+    AIClient(
+        credential=credential,
+        subscription_id=subscription_id,
+        resource_group_name=resource_group_name,
+        project_name=project_name,
     )
 
-    # Define your deployment 
-    deployment = Deployment(
-        name=endpoint_name, 
-        model=PromptflowModel(path=flow_path), 
-        instance_type="STANDARD_DS2_V2" 
-    ) 
+    # Define your deployment
+    # deployment = Deployment(
+    #     name=endpoint_name,
+    #     model=PromptflowModel(path=flow_path),
+    #     instance_type="STANDARD_DS2_V2"
+    # )
 
-    # Deploy the promptflow 
-    deployment = client.deployments.create_or_update(deployment)
+    # Deploy the promptflow
+    # deployment = client.deployments.create_or_update(deployment)
 
 
 def main():
