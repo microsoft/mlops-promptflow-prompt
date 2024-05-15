@@ -43,6 +43,7 @@ stages:
             run_name=${arr[0]}
             echo $run_name
             echo "##vso[task.setvariable variable=RUN_NAME;isOutput=true;]$run_name"
+        name: read_run_id
         displayName: 'Get run_id for evaluation'
 
       - script: |
