@@ -6,119 +6,49 @@ parameters:
  - name: model_type
    displayName: "type of model to execute"
 
-
 stages:
-  - stage: execute_prompt_experiment
-    displayName: execute_prompt_experiment
-    dependsOn: 
-    - variable_generation
-    variables:
-    - template: templates/experiment_variables.yml
+  - stage: execute_prompt_evaluation
+    displayName: Evaluation Flow
     jobs:
-    - job: Execute_ml_Job_Pipeline
+    - job: Execute_pf_Pipeline
+      displayName: 'Execute Evaluation'
       steps:
-      - template: templates/get_connection_details.yml
-      - template: templates/configure_azureml_agent.yml
-      - template: templates/execute_mlops_pipeline.yml
-        parameters:
-          script_parameter: |
-            python -m mlops.azure_prompt_pipeline \
+      - template: templates/configure_devops_agent.yml
+
+      - script: |
+          python -m mlops.connections.local_create_aoai_connection \
+            --aoai-connection-name "aoai"
+        env:
+          AOAI_API_KEY: $(AOAI_API_KEY)
+        displayName: 'Create a Open AI conection on DevOps host'
+
+      - script: |
+            python -m mlops.local_prompt_pipeline \
               --config_name ${{ parameters.model_type }} \
               --environment_name ${{ parameters.exec_environment }} \
-              --subscription_id $(SUBSCRIPTION_ID) \
               --output_file run_id.txt
-      - task: AzureCLI@2
-        displayName: Read prompt runs
-        name: read_run_id
-        inputs:
-          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
-          scriptType: bash
-          scriptLocation: inlineScript
-          workingDirectory: $(System.DefaultWorkingDirectory)
-          inlineScript: |
+        displayName: 'Execute a PF Flow to generate run id'
+
+      - script: |
             readarray arr <"run_id.txt"
             run_name=${arr[0]}
             echo $run_name
             echo "##vso[task.setvariable variable=RUN_NAME;isOutput=true;]$run_name"
-      - template: templates/execute_mlops_pipeline.yml
-        parameters:
-          script_parameter: |
-            python -m mlops.azure_prompt_eval \
+        name: read_run_id
+        displayName: 'Get run_id for evaluation'
+
+      - script: |
+            python -m mlops.local_prompt_eval \
               --config_name ${{ parameters.model_type }} \
               --environment_name ${{ parameters.exec_environment }} \
-              --subscription_id $(SUBSCRIPTION_ID) \
               --run_id "$(read_run_id.RUN_NAME)"
+        displayName: 'Run Evaluation'
 
   - stage: deploy_prompts
-    displayName: deploy_prompts
+    displayName: Deploy Online Endpoint
     dependsOn: 
-    - variable_generation
-    - execute_prompt_experiment
-    variables:
-    - template: templates/experiment_variables.yml
-    - name: run_id_from_submit_job
-      value: $[ stageDependencies.execute_prompt_experiment.Execute_ml_Job_Pipeline.outputs['read_run_id.RUN_NAME'] ]
+    - execute_prompt_evaluation
     jobs:
-
-    #=====================================
-    # Manual Approval: uncomment if needed
-    #=====================================
-    #- job: ApproveDeployment
-    #  displayName: Approve for prompt deployment 
-    #  pool: server    
-    #  timeoutInMinutes: 60 
-    #  steps:   
-    #  - task: ManualValidation@0
-    #    timeoutInMinutes: 60 
-    #    inputs:
-    #      notifyUsers: |
-    #        replace_with_actual_email@your_email.com
-    #      instructions: "$(run_id_from_submit_job)"
-    #      onTimeout: 'reject'
     - job: deploy_flow
-
-      #==================================================
-      # These two lines are important for manual approval
-      #==================================================
-      #dependsOn: 
-      #- ApproveDeployment
-
       steps:
-      - template: templates/get_connection_details.yml
-      - template: templates/configure_azureml_agent.yml
-      - template: templates/execute_python_code.yml
-        parameters:
-          step_name: "register flow" 
-          script_parameter: |
-            python -m mlops.common.deployment.register_model \
-              --subscription_id $(SUBSCRIPTION_ID) \
-              --resource_group_name $(RESOURCE_GROUP_NAME) \
-              --workspace_name $(WORKSPACE_NAME) \
-              --model_name $(MODEL_NAME) \
-              --model_path $(STANDARD_FLOW_PATH) \
-              --model_type ${{ parameters.model_type }} \
-              --output_file "model_version.txt" \
-              --build_id $(Build.Buildid) 
-      - task: AzureCLI@2
-        displayName: Read model version
-        name: read_model_version
-        inputs:
-          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
-          scriptType: bash
-          scriptLocation: inlineScript
-          workingDirectory: $(System.DefaultWorkingDirectory)
-          inlineScript: |
-            readarray arr <"model_version.txt"
-            model_version=${arr[0]}
-            echo $model_version
-            echo "##vso[task.setvariable variable=MODEL_VERSION;isOutput=true;]$model_version" 
-      - template: templates/aml_real_deployment.yml 
-        parameters:
-          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-          RESOURCE_GROUP_NAME: $(RESOURCE_GROUP_NAME)
-          WORKSPACE_NAME: $(WORKSPACE_NAME)
-          MODEL_TYPE: ${{ parameters.model_type }}
-          MODEL_NAME: $(MODEL_NAME)
-          DEPLOY_ENVIRONMENT: ${{parameters.exec_environment}} 
-          REALTIME_DEPLOYMENT_CONFIG: $(REALTIME_DEPLOYMENT_CONFIG)
-          MODEL_VERSION: $(read_model_version.MODEL_VERSION)
+      - template: templates/configure_devops_agent.yml

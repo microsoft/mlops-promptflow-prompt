@@ -15,9 +15,6 @@ on:
         required: true
         default: "named_entity_recognition"
     secrets:
-      subscription_id:
-        description: "the subscription ID hosting the AML instance."
-        required: true
       azure_credentials:
         description: "the credentials to use to authenticate with Azure."
         required: true
@@ -69,7 +66,6 @@ jobs:
             python -m mlops.local_prompt_pipeline \
               --config_name "${{inputs.model_type}}" \
               --environment_name "${{inputs.exec_environment}}" \
-              --subscription_id "${{ secrets.subscription_id }}" \
               --output_file run_id.txt
 
       - name: Read PromptFlow Runs
@@ -90,5 +86,4 @@ jobs:
             python -m mlops.local_prompt_eval \
               --config_name ${{ inputs.model_type }} \
               --environment_name ${{ inputs.exec_environment }} \
-              --subscription_id "${{ secrets.subscription_id }}" \
               --run_id $RUN_NAME
