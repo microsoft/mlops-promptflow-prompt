@@ -35,7 +35,6 @@ stages:
             python -m mlops.local_prompt_pipeline \
               --config_name ${{ parameters.model_type }} \
               --environment_name ${{ parameters.exec_environment }} \
-              --subscription_id $(SUBSCRIPTION_ID) \
               --output_file run_id.txt
         displayName: 'Execute a PF Flow to generate run id'
 
@@ -50,6 +49,5 @@ stages:
             python -m mlops.local_prompt_eval \
               --config_name ${{ inputs.model_type }} \
               --environment_name ${{ inputs.exec_environment }} \
-              --subscription_id "${{ secrets.subscription_id }}" \
               --run_id "$(read_run_id.RUN_NAME)"
         displayName: 'Run Evaluation'
