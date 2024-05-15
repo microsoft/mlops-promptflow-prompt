@@ -13,13 +13,7 @@ stages:
     displayName: 'Validate Code and Evaluate PF Flow'
     jobs:
     - template: build_validation_pipeline.yml
-
-  # Execute and evaluate PF flow stage
-  - stage: execute_evaluation_stage
-    displayName: 'Execute Evaluation Stage'
-    dependsOn: 
-    - build_validation
-    jobs:
+    
     - job: Execute_pf_Pipeline
       displayName: 'Execute Evaluation'
       steps:

@@ -10,14 +10,11 @@ parameters:
 stages:
   - stage: execute_prompt_experiment
     displayName: execute_prompt_experiment
-    dependsOn: 
-    - variable_generation
     variables:
     - template: templates/experiment_variables.yml
     jobs:
     - job: Execute_ml_Job_Pipeline
       steps:
-      - template: templates/get_connection_details.yml
       - template: templates/configure_azureml_agent.yml
       - template: templates/execute_mlops_pipeline.yml
         parameters:
