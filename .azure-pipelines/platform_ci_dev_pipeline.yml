@@ -8,9 +8,10 @@ parameters:
 
 stages:
   - stage: execute_prompt_evaluation
-    displayName: Evaluate Flow
+    displayName: Evaluation Flow
     jobs:
     - job: Execute_pf_Pipeline
+      displayName: 'Execute Evaluation'
       steps:
       - template: templates/configure_devops_agent.yml
 
