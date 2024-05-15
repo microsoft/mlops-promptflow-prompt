@@ -4,6 +4,7 @@ from promptflow.contracts.types import Secret
 
 
 class CustomConnection(CustomStrongTypeConnection):
+
     """
     :param aoai_api_key: The api key for Azure Open AI.
     :type aoai_api_key: Secret
@@ -31,10 +32,10 @@ class CustomConnection(CustomStrongTypeConnection):
 
 
 class ConnectionInfo(object):
-    """Singleton class to store connection information"""
+    """Singleton class to store connection information."""
 
     def __new__(cls):
-        """Singleton class to store connection information."""
+        """Store connection information."""
         if not hasattr(cls, 'instance'):
             cls.instance = super(ConnectionInfo, cls).__new__(cls)
         return cls.instance

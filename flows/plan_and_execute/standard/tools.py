@@ -43,8 +43,7 @@ def register_tools(agent):
 
 def llm_tool(request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
              context: Optional[Annotated[str, tool_descriptions["llm_tool"]["context"]]] = None) -> str:
-    """A tool that uses an LLM to analyze and extract information from the given context to answer the request."""
-
+    """Use an LLM to analyze and extract information from the given context to answer the request."""
     connection_info = ConnectionInfo().connection_info
 
     try:
@@ -95,9 +94,8 @@ def llm_tool(request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
 
 
 def web_tool(query: Annotated[str, tool_descriptions["web_tool"]["query"]],
-             number_of_results: Optional[Annotated[int, tool_descriptions["web_tool"]["number_of_results"]]]=3) -> list:
-    """A tool that searches results from the internet."""
-
+             number_of_results: Optional[Annotated[int, tool_descriptions["web_tool"]["number_of_results"]]] = 3) -> list:
+    """Search results from the internet."""
     import requests
     from bs4 import BeautifulSoup
 
@@ -130,20 +128,20 @@ def web_tool(query: Annotated[str, tool_descriptions["web_tool"]["query"]],
                 text = f"Failed to fetch content, status code: {response.status_code}"
         except Exception as e:
             text = f"Error fetching the page: {str(e)}"
-        
+
         search_results.append({"title": title, "url": url, "snippet": snippet, "content": text})
 
     return llm_tool(query, search_results)
 
 
 def wikipedia_tool(query: Annotated[str, tool_descriptions["wikipedia_tool"]["query"]],
-                   number_of_results: Optional[Annotated[int, tool_descriptions["wikipedia_tool"]["number_of_results"]]]=3) -> list:
-    """A tool that searches for page contents from Wikipedia."""
-
+                   number_of_results: \
+                    Optional[Annotated[int, tool_descriptions["wikipedia_tool"]["number_of_results"]]] = 3) -> list:
+    """Search for page contents from Wikipedia."""
     import wikipedia
 
     # Set the number of search results
-    wikipedia.set_lang("en") # You can change this to search in a different language
+    wikipedia.set_lang("en")
     results = wikipedia.search(query, results=number_of_results)
 
     # Initialize a list to hold the result titles and URLs
@@ -155,13 +153,13 @@ def wikipedia_tool(query: Annotated[str, tool_descriptions["wikipedia_tool"]["qu
             page = wikipedia.page(title)
             # Append the title and content to the search_results list and limit the content to 2000 characters
             search_results.append({"title": page.title, "url": page.url, "content": page.content[:5000]})
-        except wikipedia.exceptions.DisambiguationError as e:
+        except wikipedia.exceptions.DisambiguationError:
             # todo: Handle disambiguation pages by skipping or adding logic to choose an option
             continue
         except wikipedia.exceptions.PageError:
             # todo: Handle cases where no page matches the title
             continue
-        except Exception as e:
+        except Exception:
             search_results.append(f"Error fetching the page: {str(e)}")
 
     # return llm_tool(query, search_results)
@@ -170,8 +168,7 @@ def wikipedia_tool(query: Annotated[str, tool_descriptions["wikipedia_tool"]["qu
 
 def math_tool(problem_description: Annotated[str, tool_descriptions["math_tool"]["problem_description"]],
               context: Optional[Annotated[str, tool_descriptions["math_tool"]["context"]]] = None) -> str:
-    """A tool that can solve math problems by computing arithmetic expressions."""
-
+    """Solve math problems by computing arithmetic expressions."""
     connection_info = ConnectionInfo().connection_info
 
     def is_termination_msg(content):
@@ -186,7 +183,8 @@ def math_tool(problem_description: Annotated[str, tool_descriptions["math_tool"]
         An agent expert in solving math problems and math expressions.
         """,
         system_message="""
-        Given a math problem and optionally some context with relevant information to solve the ptoblem, translate the math problem into a expression that can be executed using Python's numexpr library.
+        Given a math problem and optionally some context with relevant information to solve the ptoblem, 
+        translate the math problem into a expression that can be executed using Python's numexpr library.
         Then, use the available tool (evaluate_math_expression) to solve the expression and return the result.
         Reply "TERMINATE" in the end when everything is done.
         """,
@@ -201,7 +199,7 @@ def math_tool(problem_description: Annotated[str, tool_descriptions["math_tool"]
                         "api_type": "azure",
                         "api_version": connection_info["aoai_api_version"]
                     }
-                ],
+            ],
             "timeout": 60,
             "cache_seed": None
         }
@@ -226,10 +224,14 @@ def math_tool(problem_description: Annotated[str, tool_descriptions["math_tool"]
     }
 
     from typing_extensions import Annotated
+    
     @math_executor.register_for_execution()
     @math_assistant.register_for_llm(description=tool_descriptions["evaluate_math_expression"]["function"])
-    def evaluate_math_expression(expression: Annotated[str, tool_descriptions["evaluate_math_expression"]["expression"]]) -> str:
-        import math, numexpr, re
+    def evaluate_math_expression(expression: \
+                                 Annotated[str, tool_descriptions["evaluate_math_expression"]["expression"]]) -> str:
+        import math
+        import numexpr
+        import re
         try:
             local_dict = {"pi": math.pi, "e": math.e}
             output = str(

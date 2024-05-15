@@ -10,8 +10,7 @@ from connection_utils import CustomConnection
 # Please update the function name/signature per need
 @tool
 def solver_tool(connection: CustomConnection, system_message: str, question: str, results: str) -> str:
-    """This node is responsible for creating a final response to the user's request."""
-
+    """Create a final response to the user's request."""
     config_list_gpt4 = [{
         "model": connection.configs["aoai_model_gpt4"],
         "api_key": connection.secrets["aoai_api_key"],

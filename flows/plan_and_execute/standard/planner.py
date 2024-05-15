@@ -10,8 +10,7 @@ from tools import register_tools
 # Please update the function name/signature per need
 @tool
 def planner_tool(connection: CustomConnection, system_message: str, question: str) -> str:
-    """This node is used to generate a step-by-step execution plan to solve the user's request."""
-    
+    """Generate a step-by-step execution plan to solve the user's request."""
     config_list_gpt4 = [{
         "model": connection.configs["aoai_model_gpt4"],
         "api_key": connection.secrets["aoai_api_key"],
