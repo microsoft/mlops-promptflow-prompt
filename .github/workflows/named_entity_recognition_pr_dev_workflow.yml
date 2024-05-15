@@ -2,8 +2,11 @@
 name: Named Entity Recognition PR Workflow
 
 on:
+  push:
+    branches: 
+      - 'agromova/features/pr_basic'
   workflow_dispatch:
-  workflow_call:
+  # workflow_call:
     inputs:
       exec_environment:
         type: string
