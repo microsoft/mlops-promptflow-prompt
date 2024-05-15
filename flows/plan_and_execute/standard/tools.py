@@ -1,3 +1,4 @@
+"""Tools definitions for AutoGen."""
 from autogen import AssistantAgent, UserProxyAgent
 from autogen.agentchat import register_function
 from connection_utils import ConnectionInfo
@@ -5,34 +6,45 @@ from typing_extensions import Annotated, Optional
 
 tool_descriptions = {
     "web_tool": {
-        "function": "Worker that searches results from the internet. Useful when you need to find short and succinct answers about a specific topic.",
+        "function": "Worker that searches results from the internet. Useful when you need to find short and succinct \
+        answers about a specific topic.",
         "query": "The search query string.",
         "number_of_results": "The number of search results to return."
     },
     "wikipedia_tool": {
-        "function": "Worker that search for page contents from Wikipedia. Useful when you need to get holistic knowledge about people, places, companies, historical events, or other subjects. You use it when you already have identified the entity name, usually after searching for the entity name using web_tool.",
+        "function": "Worker that search for page contents from Wikipedia. Useful when you need to get holistic \
+        knowledge about people, places, companies, historical events, or other subjects. You use it when you \
+        already have identified the entity name, usually after searching for the entity name using web_tool.",
         "query": "The single person name, entity, or concept to be searched.",
         "number_of_results": "The number of search results to return."
     },
     "llm_tool": {
-        "function": "An agent expert in solving problems by analyzing and extracting information from the given context. It should never be used to do calculations.",
+        "function": "An agent expert in solving problems by analyzing and extracting information from the given \
+        context. It should never be used to do calculations.",
         "request": "The request to be answered.",
         "context": "Context with the relevant information to answer the request."
     },
     "math_tool": {
-        "function": "A tool that can solve math problems by computing arithmetic expressions. It must be used whenever you need to do calculations or solve math problems. You can use it to solve simple or complex math problems.",
+        "function": "A tool that can solve math problems by computing arithmetic expressions. It must be used \
+        whenever you need to do calculations or solve math problems. You can use it to solve simple or complex math \
+        problems.",
         "problem_description": "The problem to be solved.",
         "context": "Context with the relevant information to solve the problem."
     }
 }
 
+
 def register_tools(agent):
+    """Register tools for the agent."""
     for tool in tool_descriptions.keys():
-        register_function(globals()[tool], caller=agent, executor=agent, description=tool_descriptions[tool]["function"])
+        register_function(globals()[tool], caller=agent, executor=agent,
+                          description=tool_descriptions[tool]["function"])
+
 
 def llm_tool(request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
              context: Optional[Annotated[str, tool_descriptions["llm_tool"]["context"]]] = None) -> str:
-    
+    """A tool that uses an LLM to analyze and extract information from the given context to answer the request."""
+
     connection_info = ConnectionInfo().connection_info
 
     try:
@@ -42,7 +54,8 @@ def llm_tool(request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
             An agent expert in answering requests by analyzing and extracting information from the given context.
             """,
             system_message="""
-            Given a request and optionally some context with potentially relevant information to answer it, analyze the context and extract the information needed to answer the request.
+            Given a request and optionally some context with potentially relevant information to answer it,
+            analyze the context and extract the information needed to answer the request.
             Then, create a sentence  that answers the request.
             You must strictly limit your response to only what was asked in the request.
             """,
@@ -80,16 +93,19 @@ def llm_tool(request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
     except Exception as e:
         return f"Error: {str(e)}"
 
+
 def web_tool(query: Annotated[str, tool_descriptions["web_tool"]["query"]],
-             number_of_results: Optional[Annotated[int, tool_descriptions["web_tool"]["number_of_results"]]] = 3 ) -> list:
-    
+             number_of_results: Optional[Annotated[int, tool_descriptions["web_tool"]["number_of_results"]]]=3) -> list:
+    """A tool that searches results from the internet."""
+
     import requests
     from bs4 import BeautifulSoup
 
     connection_info = ConnectionInfo().connection_info
-    
+
     headers = {"Ocp-Apim-Subscription-Key": connection_info["bing_api_key"]}
-    params = {"q": query, "count": number_of_results, "offset": 0, "mkt": "en-US", "safesearch": "Strict", "textDecorations": False, "textFormat": "HTML"}
+    params = {"q": query, "count": number_of_results, "offset": 0, "mkt": "en-US", "safesearch": "Strict",
+              "textDecorations": False, "textFormat": "HTML"}
     response = requests.get(connection_info["bing_endpoint"], headers=headers, params=params)
     response.raise_for_status()
     results = response.json()
@@ -119,9 +135,11 @@ def web_tool(query: Annotated[str, tool_descriptions["web_tool"]["query"]],
 
     return llm_tool(query, search_results)
 
+
 def wikipedia_tool(query: Annotated[str, tool_descriptions["wikipedia_tool"]["query"]],
-                   number_of_results: Optional[Annotated[int, tool_descriptions["wikipedia_tool"]["number_of_results"]]] = 3) -> list:
-    
+                   number_of_results: Optional[Annotated[int, tool_descriptions["wikipedia_tool"]["number_of_results"]]]=3) -> list:
+    """A tool that searches for page contents from Wikipedia."""
+
     import wikipedia
 
     # Set the number of search results
@@ -149,11 +167,13 @@ def wikipedia_tool(query: Annotated[str, tool_descriptions["wikipedia_tool"]["qu
     # return llm_tool(query, search_results)
     return search_results
 
+
 def math_tool(problem_description: Annotated[str, tool_descriptions["math_tool"]["problem_description"]],
               context: Optional[Annotated[str, tool_descriptions["math_tool"]["context"]]] = None) -> str:
-    
+    """A tool that can solve math problems by computing arithmetic expressions."""
+
     connection_info = ConnectionInfo().connection_info
-    
+
     def is_termination_msg(content):
         have_content = content.get("content", None) is not None
         if have_content and "TERMINATE" in content["content"]:
@@ -227,7 +247,7 @@ def math_tool(problem_description: Annotated[str, tool_descriptions["math_tool"]
 
         # Remove any leading and trailing brackets from the output
         return re.sub(r"^\[|\]$", "", output)
-    
+
     message = f"""
     Problem:
     {problem_description}

@@ -1,5 +1,7 @@
+"""This are helper classes to provide custom connection information in promptflow."""
 from promptflow.connections import CustomStrongTypeConnection
 from promptflow.contracts.types import Secret
+
 
 class CustomConnection(CustomStrongTypeConnection):
     """
@@ -18,6 +20,7 @@ class CustomConnection(CustomStrongTypeConnection):
     :param bing_endpoint: The endpoint for the Bing Search.
     :type bing_endpoint: String
     """
+
     aoai_api_key: Secret
     bing_api_key: Secret
     aoai_model_gpt4: str
@@ -26,8 +29,12 @@ class CustomConnection(CustomStrongTypeConnection):
     aoai_api_version: str
     bing_endpoint: str
 
+
 class ConnectionInfo(object):
+    """Singleton class to store connection information"""
+
     def __new__(cls):
+        """Singleton class to store connection information."""
         if not hasattr(cls, 'instance'):
             cls.instance = super(ConnectionInfo, cls).__new__(cls)
         return cls.instance
