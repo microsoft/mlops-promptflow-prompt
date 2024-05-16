@@ -1,6 +1,6 @@
 
 """Solver node for the plan_and_execute flow."""
-from promptflow import tool
+from promptflow.core import tool
 from autogen import AssistantAgent
 from connection_utils import CustomConnection
 

@@ -2,7 +2,7 @@
 
 import concurrent.futures
 import json
-from promptflow import tool
+from promptflow.core import tool
 from autogen import UserProxyAgent, AssistantAgent
 from connection_utils import CustomConnection, ConnectionInfo
 from tools import register_tools
@@ -114,22 +114,24 @@ def substitute_dependency(id, original_argument_value, dependency_value, config_
     return llm_tool(instruction, context, config_list_gpt35)
 
 
-def execute_plan_parallel(plan, agent, config_list_gpt35):
-    """Execute the plan in parallel."""
-    def has_unresolved_dependencies(item, resolved_ids):
-        try:
-            args = json.loads(item['function']['arguments'])
-        except json.JSONDecodeError:
-            return False
-
-        for arg in args.values():
-            if isinstance(arg, str) and any(
-                ref_id for ref_id in plan_ids
-                if ref_id not in resolved_ids and ref_id in arg
-            ):
-                return True
+def has_unresolved_dependencies(item, resolved_ids, plan_ids):
+    """Check for unresolved dependencies in a plan step."""
+    try:
+        args = json.loads(item['function']['arguments'])
+    except json.JSONDecodeError:
         return False
 
+    for arg in args.values():
+        if isinstance(arg, str) and any(
+            ref_id for ref_id in plan_ids
+            if ref_id not in resolved_ids and ref_id in arg
+        ):
+            return True
+    return False
+
+
+def execute_plan_parallel(plan, agent, config_list_gpt35):
+    """Execute the plan in parallel."""
     plan_ids = {item['id']: item for item in plan}
     results = {}
     resolved_ids = set()
@@ -137,7 +139,7 @@ def execute_plan_parallel(plan, agent, config_list_gpt35):
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for item_id, item in plan_ids.items():
-            if not has_unresolved_dependencies(item, resolved_ids):
+            if not has_unresolved_dependencies(item, resolved_ids, plan_ids):
                 arguments = item['function']['arguments']
                 future = executor.submit(
                     agent.execute_function,
@@ -163,7 +165,7 @@ def execute_plan_parallel(plan, agent, config_list_gpt35):
                             next_item_id not in resolved_ids
                             and next_item_id not in futures
                         ):
-                            if not has_unresolved_dependencies(next_item, resolved_ids):
+                            if not has_unresolved_dependencies(next_item, resolved_ids, plan_ids):
                                 updated_arguments = json.loads(
                                     next_item['function']['arguments']
                                 )
