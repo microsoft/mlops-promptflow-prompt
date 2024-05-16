@@ -33,8 +33,8 @@ tool_descriptions = {
     "math_tool": {
         "function": (
             "A tool that can solve math problems by computing arithmetic expressions. It must be used "
-            "whenever you need to do calculations or solve math problems. You can use it to solve simple or complex math "
-            "problems."
+            "whenever you need to do calculations or solve math problems. "
+            "You can use it to solve simple or complex math problems."
         ),
         "problem_description": "The problem to be solved.",
         "context": "Context with the relevant information to solve the problem."
@@ -214,7 +214,10 @@ def math_tool(
 
     math_executor = UserProxyAgent(
         name="TOOL_EXECUTOR",
-        description="An agent that acts as a proxy for the user and executes the suggested function calls from MATH_ASSISTANT.",
+        description=(
+            "An agent that acts as a proxy for the user and executes "
+            "the suggested function calls from MATH_ASSISTANT."
+        ),
         code_execution_config=False,
         is_termination_msg=is_termination_msg,
         human_input_mode="NEVER"

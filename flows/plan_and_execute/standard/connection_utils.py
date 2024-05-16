@@ -5,7 +5,7 @@ from promptflow.contracts.types import Secret
 
 class CustomConnection(CustomStrongTypeConnection):
     """Define the custom connection keys and values.
-    
+
     :param aoai_api_key: The api key for Azure Open AI.
     :type aoai_api_key: Secret
     :param bing_api_key: The api key for the Bing Search.
