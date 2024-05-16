@@ -7,7 +7,7 @@ steps:
 - script: |
     set -e
     python -m pip install --upgrade pip
-    pip install -r requirements.txt
+    pip install -r requirements.txt --extra-index-url https://azuremlsdktestpypi.azureedge.net/promptflow
   displayName: "Load Python Dependencies"
 
 

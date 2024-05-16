@@ -5,12 +5,13 @@ pytest-cov>=4.1.0
 pytest-azurepipelines>=1.0.5
 pytest-mock>=3.12.0
 pytest>=7.4.0
-azure-ai-ml>=1.11.1
-azure-identity>=1.15.0
+azure-ai-ml>=1.16.0
+azure-identity>=1.16.0
 python-dotenv>=0.10.3
 mlflow>=2.7.1
 azureml-mlflow>=1.51
-promptflow
+promptflow==1.11.0
+promptflow-azure==1.11.0
 promptflow-tools
-azure-ai-generative[evaluate]
+promptflow-evals
 keyrings.alt
