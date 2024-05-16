@@ -1,25 +1,15 @@
 """This is MLOps utility module to execute evaluation flow locally."""
 import argparse
-import mlflow
 from promptflow.client import PFClient
-from mlops.common.mlflow_tools import (
-    generate_experiment_name,
-    generate_run_name,
-    set_mlflow_uri,
-)
 from mlops.common.config_utils import MLOpsConfig
 
 
 def main():
     """Collect command line arguments and configuration file parameters to invoke \
         a given evaluation flow locally."""
-    experiment_type = ""
     flow_eval_path = ""
     data_eval_path = ""
     eval_column_mapping = ""
-    subscription_id = None
-    resource_group = None
-    workspace_name = None
 
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
@@ -37,61 +27,35 @@ def main():
     parser.add_argument(
         "--run_id", type=str, required=True, help="Rund ID of a run to evaluate"
     )
-    parser.add_argument(
-        "--subscription_id",
-        type=str,
-        required=False,
-        help="(optional) subscription id to find Azure ML workspace to store mlflow logs",
-    )
     args = parser.parse_args()
 
     mlconfig = MLOpsConfig(environemnt=args.environment_name)
-    aml_config = mlconfig.aml_config
     flow_config = mlconfig.get_flow_config(flow_name=args.config_name)
 
-    experiment_type = flow_config['experiment_base_name']
     flow_eval_path = flow_config['evaluation_flow_path']
     data_eval_path = flow_config['eval_data_path']
     eval_column_mapping = flow_config['eval_column_mapping']
-    subscription_id = aml_config['subscription_id']
-    resource_group = aml_config['resource_group_name']
-    workspace_name = aml_config['workspace_name']
 
-    # Setup MLFLOW Experiment
-    if args.subscription_id:
-        subscription_id = args.subscription_id
+    # Get a pf client to manage runs
+    pf = PFClient()
 
-    set_mlflow_uri(subscription_id, resource_group, workspace_name)
+    base_run = pf.runs.get(args.run_id)
 
-    experiment_name = f"{generate_experiment_name(experiment_type)}_eval"
-    mlflow.set_experiment(experiment_name)
+    # run the flow with exisiting run
+    run_instance = pf.run(
+        flow=flow_eval_path,
+        data=data_eval_path,
+        run=base_run,
+        column_mapping=eval_column_mapping,  # map the url field from the data to the url input of the flow
+    )
 
-    # Start the experiment
-    with mlflow.start_run(run_name=generate_run_name()):
-        # Get a pf client to manage runs
-        pf = PFClient()
+    # stream the run until it's finished
+    pf.stream(run_instance)
 
-        base_run = pf.runs.get(args.run_id)
-
-        # run the flow with exisiting run
-        run_instance = pf.run(
-            flow=flow_eval_path,
-            data=data_eval_path,
-            run=base_run,
-            column_mapping=eval_column_mapping,  # map the url field from the data to the url input of the flow
-        )
-
-        # stream the run until it's finished
-        pf.stream(run_instance)
-
-        if run_instance.status == "Completed" or run_instance.status == "Finished":
-            mlflow.log_table(
-                data=pf.get_details(run_instance), artifact_file="details.json"
-            )
-            mlflow.log_metrics(pf.runs.get_metrics(run_instance))
-        else:
-            mlflow.set_tag("LOG_STATUS", "FAILED")
-            raise Exception("Sorry, exiting job with failure..")
+    if run_instance.status == "Completed" or run_instance.status == "Finished":
+        print("Experiment has been completed")
+    else:
+        raise Exception("Sorry, exiting job with failure..")
 
 
 if __name__ == "__main__":
