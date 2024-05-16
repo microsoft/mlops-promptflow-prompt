@@ -14,6 +14,12 @@ aoai_config:
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
 flow_configs:
+  plan_and_execute_pr:
+    prompt_flow_config_name: plan_and_execute
+    env_name: pr
+    experiment_base_name: plan_and_execute
+    standard_flow_path: flows/plan_and_execute/standard
+
   named_entity_recognition_pr:
     experiment_base_name: named_entity_recognition
     model_base_name: regr
