@@ -1,0 +1,37 @@
+---
+name: class_basic_flow PR Workflow
+
+on:
+  workflow_call:
+    inputs:
+      exec_environment:
+        type: string
+        description: "The environment to run the workflow in"
+        required: true
+        default: "pr"
+      model_type:
+        type: string
+        description: "The type of model to run the workflow for"
+        required: true
+        default: "class_basic_flow"
+  pull_request:
+    branches:
+      - 'development'
+    paths:
+      - '.github/**'
+      - 'mlops/common/**'
+      - 'mlops/**'
+      - 'flows/class_basic_flow/**'
+      - 'src/**'
+      - 'tests/**'
+
+jobs:
+  run-pr-workflow:
+    uses: ./.github/workflows/platform_pr_dev_workflow.yml
+    with:
+      exec_environment: ${{ inputs.exec_environment || 'pr' }}
+      model_type: ${{ inputs.model_type || 'class_basic_flow' }}
+    secrets:
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      aoai_api_key: ${{ secrets.AOAI_API_KEY }}
+      aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}

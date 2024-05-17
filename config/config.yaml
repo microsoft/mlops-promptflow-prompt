@@ -23,6 +23,33 @@ flow_configs:
       text: ${data.text}
       entity_type: ${data.entity_type}
 
+  class_basic_flow_pr:
+    standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
+    deployment_name: gpt-35-turbo
+    data_path: data/basic_flow_data.jsonl
+    eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+
+  function_basic_flow_dev:
+    standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
+    deployment_name: gpt-35-turbo
+    data_path: data/basic_flow_data.jsonl
+    eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+
+  class_basic_flow_dev:
+    standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
+    deployment_name: gpt-35-turbo
+    data_path: data/basic_flow_data.jsonl
+    eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+
   plan_and_execute_pr:
     experiment_base_name: plan_and_execute
     standard_flow_path: flows/plan_and_execute/standard
