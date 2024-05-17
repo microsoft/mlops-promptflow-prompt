@@ -14,9 +14,16 @@ aoai_config:
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
 flow_configs:
+  function_basic_flow_pr:
+    standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
+    deployment_name: gpt-35-turbo
+    data_path: data/basic_flow_data.jsonl
+    eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+
   plan_and_execute_pr:
-    prompt_flow_config_name: plan_and_execute
-    env_name: pr
     experiment_base_name: plan_and_execute
     standard_flow_path: flows/plan_and_execute/standard
 
@@ -25,7 +32,7 @@ flow_configs:
     model_base_name: regr
     connection_name: aoai
     deployment_name: gpt-35-turbo
-    standard_flow_path: flows/named_entity_recognition/standard
+    standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
     evaluation_flow_path: flows/named_entity_recognition/evaluation
     data_path: flows/named_entity_recognition/data/data.jsonl
     eval_data_path: flows/named_entity_recognition/data/eval_data.jsonl

@@ -13,7 +13,7 @@ on:
         type: string
         description: "type of model to execute"
         required: true
-        default: "named_entity_recognition"
+        default: "function_basic_flow"
     secrets:
       azure_credentials:
         description: "the credentials to use to authenticate with Azure."
@@ -46,39 +46,6 @@ jobs:
       - name: Configure DevOps Agent
         uses: ./.github/actions/configure_devops_agent
 
-      - name: Create AOAI Connection
-        uses: ./.github/actions/execute_shell_code
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m mlops.connections.local_create_aoai_connection \
-            --aoai-connection-name "aoai"
-            # --aoai-api-key "${{ secrets.aoai_api_key }}" \
-            # --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
-            # --aoai-api-version "2023-07-01-preview" \
-            # --aoai-api-type "azure" \
-
-      - name: Execute PF Pipeline
-        uses: ./.github/actions/execute_shell_code
-        env:
-          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m mlops.local_prompt_pipeline \
-              --config_name "${{inputs.model_type}}" \
-              --environment_name "${{inputs.exec_environment}}" \
-              --output_file run_id.txt
-
-      - name: Read PromptFlow Runs get run_id for evaluation
-        shell: bash
-        run: |
-          readarray arr <"run_id.txt"
-          run_name=${arr[0]}
-          echo $run_name
-          echo "RUN_NAME=${run_name}"  >> "$GITHUB_ENV"
-          echo $PWD
-
       - name: Execute PF Evaluation Pipeline
         uses: ./.github/actions/execute_shell_code
         env:
@@ -86,7 +53,5 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m mlops.local_prompt_eval \
-              --config_name ${{ inputs.model_type }} \
-              --environment_name ${{ inputs.exec_environment }} \
-              --run_id $RUN_NAME
+            python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
+              --environment_name ${{ inputs.exec_environment }}

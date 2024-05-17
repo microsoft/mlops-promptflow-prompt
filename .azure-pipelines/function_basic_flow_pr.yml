@@ -8,7 +8,8 @@ pr:
       - .azure-pipelines/*
       - mlops/common/*
       - mlops/*
-      - flows/named_entity_recognition/*
+      - flows/function_basic_flow/*
+      - src/*
       - tests
 
 pool:
@@ -23,7 +24,7 @@ parameters:
    default: "pr"
  - name: model_type
    displayName: "model type"
-   default: "named_entity_recognition"
+   default: "function_basic_flow"
 
 stages:
   - template: ./platform_pr_dev_pipeline.yml

@@ -6,7 +6,7 @@ from azure.identity import DefaultAzureCredential
 from typing import List
 from promptflow.client import PFClient
 from mlops.common.config_utils import MLOpsConfig
-from mlops.common.mlflow_tools import (
+from mlops.common.naming_tools import (
     generate_experiment_name,
 )
 

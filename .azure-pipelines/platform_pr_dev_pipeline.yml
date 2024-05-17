@@ -21,30 +21,6 @@ stages:
       - template: templates/configure_devops_agent.yml
 
       - script: |
-          python -m mlops.connections.local_create_aoai_connection \
-            --aoai-connection-name "aoai"
-        env:
-          AOAI_API_KEY: $(AOAI_API_KEY)
-        displayName: 'Create a Open AI conection on DevOps host'
-
-      - script: |
-            python -m mlops.local_prompt_pipeline \
-              --config_name ${{ parameters.model_type }} \
-              --environment_name ${{ parameters.exec_environment }} \
-              --output_file run_id.txt
-        displayName: 'Execute a PF Flow to generate run id'
-
-      - script: |
-            readarray arr <"run_id.txt"
-            run_name=${arr[0]}
-            echo $run_name
-            echo "##vso[task.setvariable variable=RUN_NAME;isOutput=true;]$run_name"
-        name: read_run_id
-        displayName: 'Get run_id for evaluation'
-
-      - script: |
-            python -m mlops.local_prompt_eval \
-              --config_name ${{ parameters.model_type }} \
-              --environment_name ${{ parameters.exec_environment }} \
-              --run_id "$(read_run_id.RUN_NAME)"
+            python -m flows.${{ parameters.model_type }}.evaluate.evaluate \
+              --environment_name ${{ parameters.exec_environment }}
         displayName: 'Run Evaluation'

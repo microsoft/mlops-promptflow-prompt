@@ -1,5 +1,5 @@
 ---
-name: Named Entity Recognition CI Workflow
+name: function_basic_flow CI Workflow
 
 on:
   workflow_call:
@@ -13,7 +13,7 @@ on:
         type: string
         description: "The type of model to run the workflow for"
         required: true
-        default: "named_entity_recognition"
+        default: "function_basic_flow"
   push:
     branches:
       - "development"
@@ -23,7 +23,7 @@ jobs:
     uses: ./.github/workflows/platform_ci_dev_workflow.yml
     with:
       exec_environment: ${{ inputs.exec_environment || 'dev' }}
-      model_type: ${{ inputs.model_type || 'named_entity_recognition' }}
+      model_type: ${{ inputs.model_type || 'function_basic_flow' }}
     secrets:
       subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
