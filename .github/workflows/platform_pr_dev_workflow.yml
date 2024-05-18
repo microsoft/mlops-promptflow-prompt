@@ -15,6 +15,9 @@ on:
         required: true
         default: "function_basic_flow"
     secrets:
+      subscription_id:
+        description: "the subscription ID hosting the AML instance."
+        required: true
       azure_credentials:
         description: "the credentials to use to authenticate with Azure."
         required: true
