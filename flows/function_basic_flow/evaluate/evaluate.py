@@ -1,3 +1,4 @@
+"""Evaluation flow for function_basic_flow."""
 import os
 import argparse
 from pprint import pprint
@@ -8,9 +9,8 @@ from src.evaluators.match_evaluator import MatchEvaluator
 from mlops.common.naming_tools import generate_experiment_name
 
 
-
 def main():
-
+    """Implement parameter reading and evaluation flow."""
     # Config parameters
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
@@ -33,7 +33,7 @@ def main():
     os.environ["AZURE_OPENAI_DEPLOYMENT"] = aoai_deployment
     os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
 
-    matchEvaluator = MatchEvaluator()
+    matchevaluator = MatchEvaluator()
 
     data_eval_path = flow_config['eval_data_path']
 
@@ -45,7 +45,7 @@ def main():
         data=data_eval_path,
         target=extract_entity,
         evaluators={
-            "matchevaluator": matchEvaluator,
+            "matchevaluator": matchevaluator,
         },
         evaluator_config={
             "matchevaluator": {

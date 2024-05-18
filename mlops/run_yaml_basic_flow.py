@@ -1,5 +1,4 @@
 """Shows example how to invoke the flow using different ways."""
-import os
 import argparse
 from promptflow.client import PFClient
 from mlops.common.config_utils import MLOpsConfig
@@ -7,10 +6,11 @@ from promptflow.client import load_flow
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
 
+
 def main():
     """
     Execute function_basic_flow using different ways.
-    
+
     The method uses config.yaml as a source for parameters, and
     it runs the flow in different ways that can be used to test the flow locally.
     """
@@ -63,7 +63,7 @@ def main():
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        connections = {"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
+        connections={"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
     )
 
     pf.stream(run_instance)
@@ -72,7 +72,7 @@ def main():
         print("Experiment has been completed")
     else:
         raise Exception("Sorry, exiting job with failure..")
-    
+
     print(run_instance.name)
     if args.visualize is True:
         pf.runs.visualize(run_instance)

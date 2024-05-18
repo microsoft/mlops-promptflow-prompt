@@ -1,3 +1,4 @@
+"""function_basic_flow implementation."""
 import pathlib
 import os
 from promptflow.tracing import trace
@@ -7,6 +8,7 @@ from flows.function_basic_flow.standard.cleansing import cleansing
 
 @trace
 def extract_entity(entity_type: str, text: str):
+    """Implement the flow as a function."""
     override_model = {
         "configuration": {
             "azure_deployment": "${env:AZURE_OPENAI_DEPLOYMENT}",
@@ -15,10 +17,10 @@ def extract_entity(entity_type: str, text: str):
             "azure_endpoint": "${env:AZURE_OPENAI_ENDPOINT}"
         }
     }
-    rootPath = pathlib.Path(__file__).parent.resolve()
+    rootpath = pathlib.Path(__file__).parent.resolve()
 
     prompty = Prompty.load(
-        source=os.path.join(rootPath, "entity_template.prompty"),
+        source=os.path.join(rootpath, "entity_template.prompty"),
         model=override_model,
     )
 

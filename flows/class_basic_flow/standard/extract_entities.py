@@ -1,3 +1,4 @@
+"""Implement PromptFlow flow as a class."""
 import os
 import pathlib
 from typing import List
@@ -5,7 +6,10 @@ from promptflow.core import Prompty
 
 
 class EntityExtraction:
+    """Implement the flow."""
+
     def __init__(self):
+        """Initialize environment and load prompty into the memory."""
         override_model = {
             "configuration": {
                 "azure_deployment": "${env:AZURE_OPENAI_DEPLOYMENT}",
@@ -14,14 +18,15 @@ class EntityExtraction:
                 "azure_endpoint": "${env:AZURE_OPENAI_ENDPOINT}"
             }
         }
-        rootPath = pathlib.Path(__file__).parent.resolve()
+        rootpath = pathlib.Path(__file__).parent.resolve()
 
         self.prompty = Prompty.load(
-            source=os.path.join(rootPath, "entity_template.prompty"),
+            source=os.path.join(rootpath, "entity_template.prompty"),
             model=override_model,
         )
-        
+
     def __call__(self, *, entity_type: str, text: str, **kwargs):
+        """Invoke the flow for a single request."""
         result = self.prompty(entity_type=entity_type, text=text)
 
         output = self.cleansing(result)

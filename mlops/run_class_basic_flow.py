@@ -5,10 +5,11 @@ from promptflow.client import PFClient
 from flows.class_basic_flow.standard.extract_entities import EntityExtraction
 from mlops.common.config_utils import MLOpsConfig
 
+
 def main():
     """
     Execute class_basic_flow using different ways.
-    
+
     The method uses config.yaml as a source for parameters, and
     it runs the flow in different ways that can be used to test the flow locally.
     """
@@ -64,7 +65,7 @@ def main():
         print("Experiment has been completed")
     else:
         raise Exception("Sorry, exiting job with failure..")
-    
+
     print(run_instance.name)
     if args.visualize is True:
         pf.runs.visualize(run_instance)

@@ -1,4 +1,4 @@
-import os
+"""Evaluation flow for yaml_basic_flow."""
 import argparse
 from pprint import pprint
 from promptflow.evals.evaluate import evaluate
@@ -10,9 +10,8 @@ from src.evaluators.match_evaluator import MatchEvaluator
 from mlops.common.naming_tools import generate_experiment_name
 
 
-
 def main():
-
+    """Implement parameter reading and evaluation flow."""
     # Config parameters
     parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
@@ -26,7 +25,7 @@ def main():
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_basic_flow")
 
-    matchEvaluator = MatchEvaluator()
+    matchevaluator = MatchEvaluator()
 
     data_eval_path = flow_config['eval_data_path']
     flow_standard_path = flow_config["standard_flow_path"]
@@ -54,7 +53,7 @@ def main():
         data=data_eval_path,
         target=flow,
         evaluators={
-            "matchevaluator": matchEvaluator,
+            "matchevaluator": matchevaluator,
         },
         evaluator_config={
             "matchevaluator": {

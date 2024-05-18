@@ -5,10 +5,11 @@ from promptflow.client import PFClient
 from flows.function_basic_flow.standard import extract_entities
 from mlops.common.config_utils import MLOpsConfig
 
+
 def main():
     """
     Execute function_basic_flow using different ways.
-    
+
     The method uses config.yaml as a source for parameters, and
     it runs the flow in different ways that can be used to test the flow locally.
     """
@@ -36,7 +37,9 @@ def main():
     os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
 
     # Run the flow as a basic function call with no tracing
-    print(extract_entities.extract_entity("job title", "The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(extract_entities.extract_entity(
+        "job title",
+        "The CEO and CFO are discussing the financial forecast for the next quarter."))
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
@@ -60,7 +63,7 @@ def main():
         print("Experiment has been completed")
     else:
         raise Exception("Sorry, exiting job with failure..")
-    
+
     print(run_instance.name)
     if args.visualize is True:
         pf.runs.visualize(run_instance)

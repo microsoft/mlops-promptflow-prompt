@@ -3,10 +3,14 @@ from typing import List
 
 
 class MatchEvaluator:
+    """Basic evaluator example."""
+
     def __init__(self):
+        """Initialize the object of the class."""
         pass
 
     def __call__(self, *, response: str, ground_truth: str, **kwargs):
+        """Calculate te metric using a single response and associated ground truth."""
         exact_match = 0
         partial_match = 0
 
