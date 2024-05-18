@@ -43,6 +43,7 @@ def main():
         api_version=openai_config["aoai_api_version"],
     )
 
+    pf = PFClient()
     pf.connections.create_or_update(connection)
 
     flow = load_flow(flow_standard_path)
@@ -55,7 +56,6 @@ def main():
         text="The CEO and CFO are discussing the financial forecast for the next quarter."))
 
     # Run the flow as a PromptFlow batch on a data frame.
-    pf = PFClient()
     data_standard_path = flow_config['data_path']
     column_mapping = flow_config['column_mapping']
 
