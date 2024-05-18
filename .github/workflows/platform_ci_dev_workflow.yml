@@ -13,7 +13,7 @@ on:
         type: string
         description: "type of model to execute"
         required: true
-        default: "named_entity_recognition"
+        default: "function_basic_flow"
     secrets:
       subscription_id:
         description: "the subscription ID hosting the AML instance."
@@ -27,6 +27,11 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
+
+env:
+  # Setting an environment variable with the value of a configuration variable
+  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+  RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
 
 jobs:
   execute-prompt-experiment:
@@ -43,50 +48,17 @@ jobs:
       - name: Configure Azure DevOps Agent
         uses: ./.github/actions/configure_devops_agent
 
-      - name: Create AOAI Connection
-        uses: ./.github/actions/execute_shell_code
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m mlops.connections.local_create_aoai_connection \
-            --aoai-connection-name "aoai"
-            # --aoai-api-key "${{ secrets.aoai_api_key }}" \
-            # --aoai-api-base "${{ secrets.aoai_base_endpoint }}" \
-            # --aoai-api-version "2023-07-01-preview" \
-            # --aoai-api-type "azure" \
-
-      - name: Execute MLOps Standard Pipeline
-        uses: ./.github/actions/execute_shell_code
-        env:
-          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m mlops.local_prompt_pipeline \
-              --config_name ${{ inputs.model_type }} \
-              --environment_name ${{ inputs.exec_environment }} \
-              --subscription_id "${{ secrets.subscription_id }}" \
-              --output_file run_id.txt
-      - name: Read PromptFlow Runs
-        shell: bash
-        run: |
-          readarray arr <"run_id.txt"
-          run_name=${arr[0]}
-          echo $run_name
-          echo "RUN_NAME=${run_name}"  >> "$GITHUB_ENV"
-          echo $PWD
       - name: Execute MLOps Evaluation Pipeline
         uses: ./.github/actions/execute_shell_code
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+          BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m mlops.local_prompt_eval \
-              --config_name ${{ inputs.model_type }} \
-              --environment_name ${{ inputs.exec_environment }} \
-              --subscription_id "${{ secrets.subscription_id }}" \
-              --run_id $RUN_NAME
+            python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
+              --environment_name ${{ inputs.exec_environment }}
+
   deploy-prompts:
     name: Deploy Prompts
     runs-on: ubuntu-latest
@@ -98,36 +70,3 @@ jobs:
         uses: actions/checkout@v1
       - name: Configure Azure ML Agent
         uses: ./.github/actions/configure_devops_agent
-      - name: Register Flow
-        uses: ./.github/actions/execute_shell_code
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m mlops.common.deployment.register_model \
-              --subscription_id ${{ secrets.subscription_id }} \
-              --resource_group_name $RESOURCE_GROUP_NAME \
-              --workspace_name $WORKSPACE_NAME \
-              --model_name $MODEL_NAME \
-              --model_path $STANDARD_FLOW_PATH \
-              --model_type ${{ inputs.model_type }} \
-              --output_file "model_version.txt" \
-              --build_id ${{ github.run_id }}
-      - name: Read Model Version
-        shell: bash
-        run: |
-          readarray arr <"model_version.txt"
-          model_version=${arr[0]}
-          echo $model_version
-          echo "MODEL_VERSION=${model_version}"  >> "$GITHUB_ENV"
-      - name: Deploy to Azure ML
-        uses: ./.github/actions/aml_real_deployment
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          SUBSCRIPTION_ID: ${{ secrets.subscription_id }}
-          RESOURCE_GROUP_NAME: $RESOURCE_GROUP_NAME
-          WORKSPACE_NAME: $WORKSPACE_NAME
-          MODEL_TYPE: ${{ inputs.model_type }}
-          MODEL_NAME: $MODEL_NAME
-          DEPLOY_ENVIRONMENT: ${{ inputs.exec_environment }}
-          REALTIME_DEPLOYMENT_CONFIG: $REALTIME_DEPLOYMENT_CONFIG
-          MODEL_VERSION: $MODEL_VERSION

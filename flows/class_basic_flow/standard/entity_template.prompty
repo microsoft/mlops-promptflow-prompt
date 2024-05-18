@@ -1,0 +1,33 @@
+---
+name: Basic Prompt
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+model:
+  api: chat
+  configuration:
+    type: azure_openai
+    azure_deployment: ${env:AZURE_OPENAI_DEPLOYMENT}
+    api_key: ${env:AZURE_OPENAI_API_KEY}
+    api_version: ${env:AZURE_OPENAI_API_VERSION}
+    azure_endpoint: ${env:AZURE_OPENAI_ENDPOINT}
+  parameters:
+    max_tokens: 128
+    temperature: 0.2
+inputs:
+  entity_type:
+    type: string
+  text:
+    type: string
+sample:
+    entity_type: people's full name
+    text: The novel 'The Great Gatsby' was written by F. Scott Fitzgerald.
+---
+system:
+Your task is to find entities of certain type from the given text content.
+If there're multiple entities, please return them all with comma separated, e.g. "entity1, entity2, entity3".
+You should only return the entity list, nothing else.
+If there's no such entity, please return "None".
+
+user:
+Entity type: {{entity_type}}
+Text content: {{text}}
+Entities:
