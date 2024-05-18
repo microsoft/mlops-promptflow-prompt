@@ -5,6 +5,7 @@ from promptflow.evals.evaluate import evaluate
 from promptflow.client import load_flow
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
+from promptflow.client import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from src.evaluators.match_evaluator import MatchEvaluator
 from mlops.common.naming_tools import generate_experiment_name
@@ -41,6 +42,9 @@ def main():
         api_type="azure",
         api_version=openai_config["aoai_api_version"],
     )
+
+    pf = PFClient()
+    pf.connections.create_or_update(connection)
 
     flow = load_flow(flow_standard_path)
     flow.context = FlowContext(

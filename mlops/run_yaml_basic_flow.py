@@ -43,6 +43,8 @@ def main():
         api_version=openai_config["aoai_api_version"],
     )
 
+    pf.connections.create_or_update(connection)
+
     flow = load_flow(flow_standard_path)
     flow.context = FlowContext(
         overrides={"nodes.NER_LLM.inputs.deployment_name": aoai_deployment},
@@ -56,8 +58,6 @@ def main():
     pf = PFClient()
     data_standard_path = flow_config['data_path']
     column_mapping = flow_config['column_mapping']
-
-    pf.connections.create_or_update(connection)
 
     run_instance = pf.run(
         flow=flow_standard_path,
