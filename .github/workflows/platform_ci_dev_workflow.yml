@@ -28,6 +28,11 @@ on:
         required: true
         description: "Azure OpenAI base endpoint."
 
+env:
+  # Setting an environment variable with the value of a configuration variable
+  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+  RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+
 jobs:
   execute-prompt-experiment:
     name: Execute PromptFlow Experiment
@@ -47,6 +52,7 @@ jobs:
         uses: ./.github/actions/execute_shell_code
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+          BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
