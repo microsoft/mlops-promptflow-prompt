@@ -15,10 +15,21 @@ stages:
       steps:
       - template: templates/configure_devops_agent.yml
 
-      - script: |
+      - task: AzureCLI@2
+        displayName: 'Run Evaluation'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
             python -m flows.${{ parameters.model_type }}.evaluate.evaluate \
               --environment_name ${{ parameters.exec_environment }}
-        displayName: 'Run Evaluation'
 
   - stage: deploy_prompts
     displayName: Deploy Online Endpoint
