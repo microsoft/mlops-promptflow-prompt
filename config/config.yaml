@@ -32,6 +32,16 @@ flow_configs:
       text: ${data.text}
       entity_type: ${data.entity_type}
 
+  yaml_basic_flow_pr:
+    standard_flow_path: flows/yaml_basic_flow/standard
+    deployment_name: gpt-35-turbo
+    connection_name: aoai
+    data_path: data/basic_flow_data.jsonl
+    eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+
   function_basic_flow_dev:
     standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
@@ -46,6 +56,16 @@ flow_configs:
     deployment_name: gpt-35-turbo
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+
+  yaml_basic_flow_dev:
+    standard_flow_path: flows/yaml_basic_flow/standard
+    deployment_name: gpt-35-turbo
+    data_path: data/basic_flow_data.jsonl
+    eval_data_path: data/basic_flow_eval_data.jsonl
+    connection_name: aoai
     column_mapping:
       text: ${data.text}
       entity_type: ${data.entity_type}

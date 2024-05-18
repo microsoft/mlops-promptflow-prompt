@@ -1,14 +1,14 @@
 $schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
 inputs:
-  entity_type:
-    type: string
-    default: job title
   text:
     type: string
     default: Maxime is a data scientist at Auto Dataset, and his wife is a finance
       manager in the same company.
+  entity_type:
+    type: string
+    default: job title
 outputs:
-  entities:
+  answer:
     type: string
     reference: ${cleansing.output}
 nodes:

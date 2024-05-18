@@ -1,3 +1,4 @@
+"""Evaluator that matching a response dictionary to ground truth one using a basic comparison."""
 from typing import List
 
 
@@ -27,7 +28,6 @@ class MatchEvaluator:
             "exact_match": exact_match,
             "partial_match": partial_match
         }
-
 
     def is_match(
         self,
