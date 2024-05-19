@@ -2,12 +2,9 @@
 import argparse
 from pprint import pprint
 from promptflow.evals.evaluate import evaluate
-from promptflow.client import load_flow
-from promptflow.entities import FlowContext
-from promptflow.entities import AzureOpenAIConnection
-from promptflow.client import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from src.evaluators.match_evaluator import MatchEvaluator
+from flows.yaml_basic_flow.evaluate.flow_wrapper import StandardFlowWrapper
 from mlops.common.naming_tools import generate_experiment_name
 
 
@@ -35,22 +32,7 @@ def main():
     aistudio_config = mlops_config.aistudio_config
     openai_config = mlops_config.aoai_config
 
-    connection = AzureOpenAIConnection(
-        name=flow_config["connection_name"],
-        api_key=openai_config["aoai_api_key"],
-        api_base=openai_config["aoai_api_base"],
-        api_type="azure",
-        api_version=openai_config["aoai_api_version"],
-    )
-
-    pf = PFClient()
-    pf.connections.create_or_update(connection)
-
-    flow = load_flow(flow_standard_path)
-    flow.context = FlowContext(
-        overrides={"nodes.NER_LLM.inputs.deployment_name": aoai_deployment},
-        connections={"NER_LLM": {"connection": connection}}
-    )
+    flow = StandardFlowWrapper(flow_standard_path, flow_config["connection_name"], aoai_deployment, openai_config)
 
     results = evaluate(
         evaluation_name=generate_experiment_name("yaml_basic_flow"),
