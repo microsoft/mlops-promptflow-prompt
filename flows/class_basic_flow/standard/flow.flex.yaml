@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+entry: extract_entities:EntityExtraction
+sample:
+    inputs:
+      entity_type: people's full name
+      text: The novel 'The Great Gatsby' was written by F. Scott Fitzgerald.
