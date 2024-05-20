@@ -27,6 +27,12 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
+      acr_user_name:
+        required: true
+        description: "Azure Container Registry user name."
+      acr_password:
+        required: true
+        description: "Azure Container Registry password."
 env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
@@ -35,11 +41,24 @@ env:
 jobs:
   build-validation:
     name: Build Validation
-    uses: ./.github/workflows/build_validation_workflow.yml
+    runs-on: ubuntu-latest
+    container: 
+      image: ${{ secrets.acr_user_name }}.azurecr.io/image:tag
+      credentials:
+        username: ${{ secrets.acr_user_name }}
+        password: ${{ secrets.acr_password }}
+    steps:
+      - name: Run Build Validation Workflow
+        uses: ./.github/workflows/build_validation_workflow.yml
 
   execute-ml-job-pipeline:
     name: Execute PF Job Pipeline
     runs-on: ubuntu-latest
+    container: 
+      image: ${{ secrets.acr_user_name }}.azurecr.io/image:tag
+      credentials:
+        username: ${{ secrets.acr_user_name }}
+        password: ${{ secrets.acr_password }}
     needs: build-validation
     steps:
       - name: Checkout Actions
