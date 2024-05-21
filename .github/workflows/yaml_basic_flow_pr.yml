@@ -14,6 +14,11 @@ on:
         description: "The type of model to run the workflow for"
         required: true
         default: "yaml_basic_flow"
+      acr_registry:
+        type: string
+        description: "The name of ACR registry"
+        required: true
+        default: "acrpromptpromptflow.azurecr.io"
   pull_request:
     branches:
       - 'development'
@@ -31,6 +36,8 @@ jobs:
     with:
       exec_environment: ${{ inputs.exec_environment || 'pr' }}
       model_type: ${{ inputs.model_type || 'yaml_basic_flow' }}
+      acr_registry: ${{ inputs.acr_registry || 'acrpromptpromptflow.azurecr.io' }}
+
     secrets:
       subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
