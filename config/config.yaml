@@ -13,12 +13,12 @@ aoai_config:
 
 # Custom configuration for plan_and_execute flow
 plan_and_execute_config:
-  aoai_model_gpt4: ${aoai_model_gpt4}
-  aoai_model_gpt35: ${aoai_model_gpt35}
-  aoai_api_key: ${aoai_api_key}
-  aoai_base_url: ${aoai_base_url}
+  aoai_model_gpt4: gpt-4o
+  aoai_model_gpt35: gpt-35-turbo
+  aoai_api_key: ${AOAI_API_KEY}
+  aoai_base_url: ${AOAI_BASE_ENDPOINT}
   aoai_api_version: 2023-12-01-preview
-  bing_api_key: ${bing_api_key}
+  bing_api_key: ${BING_API_KEY}
   bing_endpoint: https://api.bing.microsoft.com/v7.0/search
 
 # flow configurations 
