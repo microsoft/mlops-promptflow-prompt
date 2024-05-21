@@ -19,6 +19,11 @@ on:
         description: "The name of ACR registry"
         required: true
         default: "acrpromptpromptflow.azurecr.io"
+      image_name:
+        type: string
+        description: "The name of the ACR image"
+        required: true
+        default: "devops_container_image"
   pull_request:
     branches:
       - 'development'
@@ -37,6 +42,7 @@ jobs:
       exec_environment: ${{ inputs.exec_environment || 'pr' }}
       model_type: ${{ inputs.model_type || 'yaml_basic_flow' }}
       acr_registry: ${{ inputs.acr_registry || 'acrpromptpromptflow.azurecr.io' }}
+      image_name: ${{ inputs.image_name || 'devops_container_image' }}
 
     secrets:
       subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
