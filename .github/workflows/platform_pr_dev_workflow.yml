@@ -59,6 +59,8 @@ jobs:
         username: ${{ secrets.acr_user_name }}
         password: ${{ secrets.acr_password }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Run Build Validation Workflow
         uses: ./.github/workflows/build_validation_workflow.yml
 
