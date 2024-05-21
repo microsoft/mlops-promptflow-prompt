@@ -54,7 +54,7 @@ jobs:
     name: Build Validation
     runs-on: ubuntu-latest
     container: 
-      image: ${{ github.event.input.acr_registry }}/${{ github.event.input.image_name }}:tag 
+      image: ${{ github.event.inputs.acr_registry }}/${{ github.event.inputs.image_name }}:tag 
       credentials:
         username: ${{ secrets.acr_user_name }}
         password: ${{ secrets.acr_password }}
@@ -66,7 +66,7 @@ jobs:
     name: Execute PF Job Pipeline
     runs-on: ubuntu-latest
     container: 
-      image: ${{ github.event.input.acr_registry }}/${{ github.event.input.image_name }}:tag 
+      image: ${{ github.event.inputs.acr_registry }}/${{ github.event.input.image_name }}:tag 
       credentials:
         username: ${{ secrets.acr_user_name }}
         password: ${{ secrets.acr_password }}
