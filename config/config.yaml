@@ -11,6 +11,16 @@ aoai_config:
   aoai_api_version: 2023-07-01-preview
   aoai_api_key: ${AOAI_API_KEY}
 
+# Custom configuration for plan_and_execute flow
+plan_and_execute_config:
+  aoai_model_gpt4: ${aoai_model_gpt4}
+  aoai_model_gpt35: ${aoai_model_gpt35}
+  aoai_api_key: ${aoai_api_key}
+  aoai_base_url: ${aoai_base_url}
+  aoai_api_version: 2023-12-01-preview
+  bing_api_key: ${bing_api_key}
+  bing_endpoint: https://api.bing.microsoft.com/v7.0/search
+
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
 flow_configs:
@@ -71,8 +81,12 @@ flow_configs:
       entity_type: ${data.entity_type}
 
   plan_and_execute_pr:
-    experiment_base_name: plan_and_execute
     standard_flow_path: flows/plan_and_execute/standard
+    connection_name: plan_execute_agent_connection
+    data_path: data/plan_and_execute_data.jsonl
+    eval_data_path: data/plan_and_execute_eval_data.jsonl
+    column_mapping:
+      question: ${data.question}
 
   named_entity_recognition_pr:
     experiment_base_name: named_entity_recognition
