@@ -53,16 +53,14 @@ jobs:
   build-validation:
     name: Build Validation
     runs-on: ubuntu-latest
-    container: 
-      image: ${{ inputs.acr_registry }}/${{ inputs.image_name }}:latest
-      credentials:
-        username: ${{ secrets.acr_user_name }}
-        password: ${{ secrets.acr_password }}
     steps:
       - name: Checkout Actions
         uses: actions/checkout@v1
       - name: Run Build Validation Workflow
         uses: ./.github/workflows/build_validation_workflow.yml
+        with:
+          acr_registry: ${{ toJson(inputs.acr_registry) }}
+          image_name: ${{ toJson(inputs.image_name) }}
 
   execute-ml-job-pipeline:
     name: Execute PF Job Pipeline
