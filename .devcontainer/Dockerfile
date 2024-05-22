@@ -30,7 +30,7 @@ RUN sudo apt-get update \
     && az config set extension.use_dynamic_install=yes_without_prompt \
     && az extension add -n ml
 
-COPY ../requirements.txt .
+COPY ./requirements.txt .
 
 RUN conda init bash \
     && conda create -n promptflow-env python=3.9.16 pip=23.0.1 -q -y \
