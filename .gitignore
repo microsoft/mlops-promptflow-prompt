@@ -167,3 +167,6 @@ mlruns/
 
 # Promt flow folders
 .promptflow
+
+# To test functions locally
+flow_code

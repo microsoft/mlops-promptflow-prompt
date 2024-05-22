@@ -1,0 +1,31 @@
+---
+name: class_basic_flow CI Workflow
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - "development"
+
+env:
+  PYTHON_VERSION: "3.9"
+
+jobs:
+  run-function-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Export Secrets 
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+          convert: upper
+
+      - name: Configure DevOps Agent
+        uses: ./.github/actions/configure_devops_agent          
