@@ -60,8 +60,8 @@ stages:
             az functionapp config appsettings set --name $(APP_NAME) --resource-group $(RESOURCE_GROUP_NAME) \
             --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
             "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
-            "AOAI_API_KEY=$(AOAI_API_KEY)" \
-            "AOAI_BASE_ENDPOINT=$(AOAI_BASE_ENDPOINT)"
+            "AZURE_OPENAI_API_KEY=$(AOAI_API_KEY)" \
+            "AZURE_OPENAI_ENDPOINT=$(AOAI_BASE_ENDPOINT)"
 
       - task: PublishBuildArtifacts@1
         inputs:
