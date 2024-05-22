@@ -1,6 +1,6 @@
 import logging
 import azure.functions as func
-from flow_code.extract_entities import extract_entity
+from .flow_code.extract_entities import extract_entity
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
