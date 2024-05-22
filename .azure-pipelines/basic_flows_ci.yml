@@ -54,7 +54,8 @@ stages:
           scriptLocation: inlineScript
           inlineScript: |
             az functionapp deployment source config-zip -g $(RESOURCE_GROUP_NAME) -n \
-            $(APP_NAME) --src '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+            $(APP_NAME) --src '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip' \
+            --build-remote true
 
             az functionapp config appsettings set --name $(APP_NAME) --resource-group $(RESOURCE_GROUP_NAME) \
             --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
