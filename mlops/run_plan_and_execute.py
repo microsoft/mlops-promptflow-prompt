@@ -26,20 +26,20 @@ def main():
 
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="plan_and_execute")
-    plan_and_execute_config = mlops_config.plan_and_execute_config
+    openai_config = mlops_config.aoai_config
 
     # Run the flow as a function.
     flow_standard_path = flow_config["standard_flow_path"]
 
     connection = CustomConnection(
         name=flow_config["connection_name"],
-        secrets={"aoai_api_key": plan_and_execute_config["aoai_api_key"],
-                 "bing_api_key": plan_and_execute_config["bing_api_key"]},
-        configs={"aoai_model_gpt4": plan_and_execute_config["aoai_model_gpt4"],
-                 "aoai_model_gpt35": plan_and_execute_config["aoai_model_gpt35"],
-                 "aoai_base_url": plan_and_execute_config["aoai_base_url"],
-                 "aoai_api_version": plan_and_execute_config["aoai_api_version"],
-                 "bing_endpoint": plan_and_execute_config["bing_endpoint"]}
+        secrets={"aoai_api_key": openai_config["aoai_api_key"],
+                 "bing_api_key": flow_config["bing_api_key"]},
+        configs={"aoai_model_gpt4": flow_config["deployment_name_gpt4"],
+                 "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
+                 "aoai_base_url": openai_config["aoai_api_base"],
+                 "aoai_api_version": flow_config["aoai_api_version"],
+                 "bing_endpoint": flow_config["bing_endpoint"]}
     )
 
     pf = PFClient()
