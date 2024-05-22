@@ -1,4 +1,5 @@
 import logging
+import os
 import azure.functions as func
 from .flow_code.extract_entities import extract_entity
 
@@ -11,7 +12,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
 
     if entity_type and text:
 
-        result = extract_entity(entity_type=entity_type, text=text)
+        result = os.environ["AZURE_OPENAI_ENDPOINT"] #extract_entity(entity_type=entity_type, text=text)
 
         return func.HttpResponse(f"{result}", status_code=200)
     else:
