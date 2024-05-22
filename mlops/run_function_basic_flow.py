@@ -1,6 +1,8 @@
 """Shows example how to invoke the flow using different ways."""
 import os
+import sys
 import argparse
+from pathlib import Path
 from promptflow.client import PFClient
 from flows.function_basic_flow.standard import extract_entities
 from mlops.common.config_utils import MLOpsConfig
@@ -43,6 +45,8 @@ def main():
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
+
+    sys.path.append(str(os.path.join(Path(__file__).parent.parent, "flows/function_basic_flow/standard")))
 
     pf = PFClient()
     print(pf.test(flow=flow_standard_path))

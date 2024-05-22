@@ -6,7 +6,7 @@ from promptflow.core import Prompty
 from .cleansing import cleansing
 
 
-@trace
+# @trace
 def extract_entity(entity_type: str, text: str):
     """Implement the flow as a function."""
     override_model = {
