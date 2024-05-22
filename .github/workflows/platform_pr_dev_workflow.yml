@@ -66,24 +66,12 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Configure DevOps Agent
-        uses: ./.github/actions/configure_devops_agent
-
       - name: Execute PF Evaluation Pipeline
         run: |
-          docker run --rm -v $PWD:/workspace - w /workspace ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest bash -c "
+          docker run --rm -v $PWD:/workspace -w /workspace ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest bash -c "
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
           "
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
-      #   uses: ./.github/actions/execute_shell_code
-      #   env:
-      #     BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
-      #     BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
-      #   with:
-      #     azure_credentials: ${{ secrets.azure_credentials }}
-      #     script_parameter: |
-      #       python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
-      #         --environment_name ${{ inputs.exec_environment }}
