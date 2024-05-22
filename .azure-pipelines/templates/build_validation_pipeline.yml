@@ -2,7 +2,7 @@ jobs:
 - job: Build_Validation_Pipeline
   displayName: Validate Code
   steps:
-  - template: templates/configure_devops_agent.yml
+  - template: configure_devops_agent.yml
 
   - script: |
       flake8 .

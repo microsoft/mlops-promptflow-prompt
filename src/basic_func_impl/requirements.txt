@@ -1,0 +1,11 @@
+# Do not include azure-functions-worker in this file
+# The Python Worker is managed by the Azure Functions platform
+# Manually managing azure-functions-worker may cause unexpected issues
+
+azure-functions
+azure-ai-ml>=1.16.0
+azure-identity>=1.16.0
+python-dotenv>=0.10.3
+promptflow>=1.11.0
+promptflow-tools
+keyrings.alt

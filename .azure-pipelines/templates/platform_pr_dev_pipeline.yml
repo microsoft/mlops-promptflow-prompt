@@ -18,7 +18,7 @@ stages:
       displayName: 'Execute Evaluation'
       dependsOn: Build_Validation_Pipeline
       steps:
-      - template: templates/configure_devops_agent.yml
+      - template: configure_devops_agent.yml
 
       - task: AzureCLI@2
         displayName: 'Run Evaluation'

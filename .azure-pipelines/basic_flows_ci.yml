@@ -1,0 +1,67 @@
+pr: none
+trigger:
+  branches:
+   include:
+     - development
+  paths:
+    include:
+      - .azure-pipelines/basic_flows_ci.yml
+      - flows/function_basic_flow/*
+      - flows/class_basic_flow/*
+      - flows/yaml_basic_flow/*
+      - src/basic_func_imple/*
+
+pool:
+  vmImage: ubuntu-latest
+
+
+variables:
+- group: mlops_platform_dev_vg
+
+
+stages:
+  - stage: deploy_prompts
+    displayName: Deploy Promptflow Basic Flows as Azure Functions
+    jobs:
+    - job: deploy_flow
+      steps:
+      - template: templates/configure_devops_agent.yml
+
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/flows/function_basic_flow/standard'
+          Contents: '**'
+          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/function_basic_invoke/flow_code'
+
+      - task: ArchiveFiles@2
+        displayName: "Archive files"
+        inputs:
+          rootFolderOrFile: "$(System.DefaultWorkingDirectory)/src/basic_func_impl"
+          includeRootFolder: false
+          archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+      - task: AzureCLI@2
+        name: deploy_function
+        displayName: Deploy Azure Function
+        continueOnError: false
+        env:
+          AOAI_API_KEY: $(AOAI_API_KEY)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            az functionapp deployment source config-zip -g $(RESOURCE_GROUP_NAME) -n \
+            $(APP_NAME) --src '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+
+            az functionapp config appsettings set --name $(APP_NAME) --resource-group $(RESOURCE_GROUP_NAME) \
+            --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
+            "AOAI_API_KEY=$(AOAI_API_KEY)" \
+            "AOAI_BASE_ENDPOINT=$(AOAI_BASE_ENDPOINT)"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+          artifactName: 'drop'
