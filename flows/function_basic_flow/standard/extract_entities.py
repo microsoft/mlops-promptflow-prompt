@@ -3,7 +3,7 @@ import pathlib
 import os
 from promptflow.tracing import trace
 from promptflow.core import Prompty
-from flows.function_basic_flow.standard.cleansing import cleansing
+from .cleansing import cleansing
 
 
 @trace
