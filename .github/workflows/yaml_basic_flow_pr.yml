@@ -24,6 +24,9 @@ on:
       - 'flows/yaml_basic_flow/**'
       - 'src/**'
       - 'tests/**'
+  push: 
+    branches:
+      - 'agromova/features/devops_with_container_v3'
 
 jobs:
   run-pr-workflow:
