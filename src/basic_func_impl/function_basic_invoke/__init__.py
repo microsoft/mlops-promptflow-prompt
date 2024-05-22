@@ -1,12 +1,14 @@
 import logging
 import os
 import azure.functions as func
+from dotenv import load_dotenv
 from .flow_code.extract_entities import extract_entity
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
+    load_dotenv()
     entity_type = req.params.get('entity_type')
     text = req.params.get('text')
 
