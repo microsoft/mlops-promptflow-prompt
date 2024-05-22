@@ -31,6 +31,7 @@ env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+  REGISTRY: 
 
 jobs:
   build-validation:
@@ -42,6 +43,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-validation
     steps:
+      - name: Docker login
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_REGISTRY }}.azurecr.io -u ${{ secrets.ACR_USER_NAME }} --password-stdin
+
+      - name: Pull Docker image
+        run: docker pull ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest
+
       - name: Checkout Actions
         uses: actions/checkout@v1
 
@@ -55,12 +62,20 @@ jobs:
         uses: ./.github/actions/configure_devops_agent
 
       - name: Execute PF Evaluation Pipeline
-        uses: ./.github/actions/execute_shell_code
+        run: |
+          docker run --rm -v $PWD:/workspace - w /workspace ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest bash -c "
+            python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
+              --environment_name ${{ inputs.exec_environment }}
+          "
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
-              --environment_name ${{ inputs.exec_environment }}
+      #   uses: ./.github/actions/execute_shell_code
+      #   env:
+      #     BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+      #     BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
+      #   with:
+      #     azure_credentials: ${{ secrets.azure_credentials }}
+      #     script_parameter: |
+      #       python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
+      #         --environment_name ${{ inputs.exec_environment }}
