@@ -1,3 +1,5 @@
+"""Invoking basic yaml flow from Azure Function."""
+
 import logging
 import os
 import azure.functions as func
@@ -7,6 +9,7 @@ from promptflow.entities import AzureOpenAIConnection
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+    """Invoke basic yaml flow from Azure Function."""
     logging.info('Python HTTP trigger function processed a request.')
 
     entity_type = req.params.get('entity_type')

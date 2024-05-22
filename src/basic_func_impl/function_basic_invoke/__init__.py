@@ -1,9 +1,11 @@
+"""Invoking basic function flow from Azure Function."""
 import logging
 import azure.functions as func
 from .flow_code.extract_entities import extract_entity
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+    """Invoke basic function flow from Azure Function."""
     logging.info('Python HTTP trigger function processed a request.')
 
     entity_type = req.params.get('entity_type')
