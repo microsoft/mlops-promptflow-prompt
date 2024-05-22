@@ -16,4 +16,4 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
 
         return func.HttpResponse(f"{result}", status_code=200)
     else:
-        return func.HttpResponse("entity_name and text parameters have not been provided.", status_code=200)
+        return func.HttpResponse("entity_type and text parameters have not been provided.", status_code=200)
