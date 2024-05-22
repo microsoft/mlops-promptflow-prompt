@@ -70,6 +70,8 @@ jobs:
         run: |
           docker run --rm --privileged -v $PWD:/workspace -w /workspace ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest bash -c "
             git config --global --add safe.directory /workspace
+            echo ${{ secrets.azure_credentials }} > temp.json
+            az login --service-principal --tenant $(jq -r '.tenantId' temp.json) -u $(jq -r '.clientId' temp.json) -p $(jq -r '.clientSecret' temp.json)
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
           "
