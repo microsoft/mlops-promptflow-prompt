@@ -3,8 +3,7 @@ name: Pre-build dev container image and Push to ACR
 on:
   push:
     branches:
-      - 'agromova/features/devops_with_container_v3'
-    #   - 'development'
+      - 'development'
 
 env:
   IMAGE_NAME: devops_container_image

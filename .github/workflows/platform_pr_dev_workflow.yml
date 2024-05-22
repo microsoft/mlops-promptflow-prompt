@@ -27,11 +27,19 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
+      acr_username:
+        required: true
+        description: "Azure Container Registry username."
+      acr_password:
+        required: true
+        description: "Azure Container Registry password."
+      acr_registry:
+        required: true
+        description: "Azure Container Registry registry."
 env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
-  REGISTRY: 
 
 jobs:
   build-validation:
@@ -44,7 +52,7 @@ jobs:
     needs: build-validation
     steps:
       - name: Docker login
-        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_REGISTRY }}.azurecr.io -u ${{ secrets.ACR_USER_NAME }} --password-stdin
+        run: echo "${{ secrets.acr_password }}" | docker login ${{ secrets.acr_registry }}.azurecr.io -u ${{ secrets.acr_password }} --password-stdin
 
       - name: Pull Docker image
         run: docker pull ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest
