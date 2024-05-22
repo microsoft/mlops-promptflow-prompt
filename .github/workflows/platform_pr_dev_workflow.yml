@@ -52,7 +52,7 @@ jobs:
     needs: build-validation
     steps:
       - name: Docker login
-        run: echo "${{ secrets.acr_password }}" | docker login ${{ secrets.acr_registry }}.azurecr.io -u ${{ secrets.acr_password }} --password-stdin
+        run: echo "${{ secrets.acr_password }}" | docker login ${{ secrets.acr_registry }}.azurecr.io -u ${{ secrets.acr_username }} --password-stdin
 
       - name: Pull Docker image
         run: docker pull ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest
