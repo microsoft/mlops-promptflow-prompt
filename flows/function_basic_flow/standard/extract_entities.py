@@ -1,11 +1,11 @@
 """function_basic_flow implementation."""
 import pathlib
 import sys
-sys.path.append(str(pathlib.Path(__file__).parent))
-import cleansing
 import os
 from promptflow.tracing import trace
 from promptflow.core import Prompty
+sys.path.append(str(pathlib.Path(__file__).parent))
+import cleansing  # noqa: E402
 
 
 @trace
