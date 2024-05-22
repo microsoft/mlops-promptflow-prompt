@@ -69,6 +69,7 @@ jobs:
       - name: Execute PF Evaluation Pipeline
         run: |
           docker run --rm --privileged -v $PWD:/workspace -w /workspace ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest bash -c "
+            git config --global --add safe.directory /workspace
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
           "
