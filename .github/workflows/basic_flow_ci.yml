@@ -2,7 +2,7 @@
 name: basic_flow CI Workflow
 
 on:
-  pull-request:
+  pull_request:
     branches:
       - "development"
     paths:
