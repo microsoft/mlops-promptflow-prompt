@@ -17,6 +17,9 @@ pool:
 
 variables:
 - group: mlops_platform_dev_vg
+- dockerRegistryServiceConnection: '<SERVICE>'
+- dockerfilePath: '$(Build.SourceDirectory)/app/DockerFile'
+- tag: '$(Build.BuildId)'
 
 parameters:
  - name: env_name
@@ -25,9 +28,16 @@ parameters:
  - name: model_type
    displayName: "model type"
    default: "yaml_basic_flow"
+ - name: devops_container_image
+   type: string
+   displayName: "acr image name"
+   required: true
+   default: "acrpromptpromptflow.azurecr.io/devops_container_image:latest"
+
 
 stages:
   - template: ./platform_pr_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}
+      devops_container_image: ${{ parameters.devops_container_image }}

@@ -1,0 +1,44 @@
+- stage: Build and Push
+  displayName: Build and push Pre-build dev container image
+  jobs:  
+  - job: Build
+    displayName: Build job
+    pool:
+      vmImage: 'ubuntu-latest'
+    parameters:
+     - name: acr_registry_connection
+       type: string
+       displayName: "The ACR registry connection"
+       required: true
+       default: "acrpromptpromptflow.azurecr.io"
+    - name: dockerfile
+      type: string
+      displayName: "docker fle to build"
+      required: true
+      default: "./.devcontainer/Dockerfile"
+    - name: image_name
+      type: string
+      displayName: "The name of the ACR image"
+      required: true
+      default: "devops_container_image"
+    steps:
+    - task: Docker@2
+      displayName: Login to ACR
+      inputs:
+        command: login
+        containerRegistry: $(acr_registry_connection)
+    
+    - task: Docker@2
+      displayName: Build and Push image
+      inputs:
+        repository: $(acr_registry_connection)
+        dockerfile: $(dockerfile)
+        command: buildAndPush
+        tags: |
+            $(tag)
+
+    - task: Docker@2
+      displayName: Logout of ACR
+      inputs:
+        command: logout
+        containerRegistry: $(acr_registry_connection)

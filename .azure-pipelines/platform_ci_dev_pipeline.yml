@@ -5,6 +5,13 @@ parameters:
    default: "dev"
  - name: model_type
    displayName: "type of model to execute"
+ - name: devops_container_image
+   displayName: acr image
+
+resources:
+  containers:
+  - container: devops_container
+    image: ${{ parameters.devops_container_image }}
 
 stages:
   - stage: execute_prompt_evaluation
@@ -12,6 +19,7 @@ stages:
     jobs:
     - job: Execute_pf_Pipeline
       displayName: 'Execute Evaluation'
+      container: devops_container
       steps:
       - template: templates/configure_devops_agent.yml
 

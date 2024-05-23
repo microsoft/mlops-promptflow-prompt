@@ -25,9 +25,21 @@ parameters:
  - name: model_type
    displayName: "model type"
    default: "class_basic_flow"
-
+ - name: acr_registry
+   type: string
+   displayName: "The name of ACR registry"
+   default: "acrpromptpromptflow.azurecr.io"
+ - name: image_name
+   type: string
+   displayName: "The name of the ACR image"
+   default: "devops_container_image"
 stages:
+  - template: ./templates/build_and_push_devopsimage.yml
+    parameters:
+      acr_registry: ${{acr_registry}}
+      image_name: ${{image_name}}
   - template: ./platform_pr_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}
+      image_name: ${{image_name}}
