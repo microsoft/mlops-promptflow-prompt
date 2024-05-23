@@ -17,8 +17,7 @@ pool:
 
 variables:
 - group: mlops_platform_dev_vg
-- dockerRegistryServiceConnection: '<SERVICE>'
-- dockerfilePath: '$(Build.SourceDirectory)/app/DockerFile'
+- dockerRegistryServiceConnection: acr_connection
 - tag: '$(Build.BuildId)'
 
 parameters:
