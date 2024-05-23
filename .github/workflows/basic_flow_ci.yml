@@ -111,7 +111,7 @@ jobs:
             $(APP_NAME) --src 'src/basic_func_impl/build.zip' \
             --build-remote true
 
-            az functionapp config appsettings set --name $(APP_NAME) --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
+            az functionapp config appsettings set --name ${{ vars.APP_NAME }} --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
             --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
             "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
             "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
