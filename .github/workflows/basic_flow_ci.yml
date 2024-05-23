@@ -1,8 +1,8 @@
 ---
-name: class_basic_flow CI Workflow
+name: basic_flow CI Workflow
 
 on:
-  push:
+  pull-request:
     branches:
       - "development"
     paths:
@@ -101,12 +101,11 @@ jobs:
 
       - name: Execute Azure Functions Deployment
         uses: ./.github/actions/execute_shell_code
-        working-directory: ./src/basic_func_impl
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
             az functionapp deployment source config-zip -g ${{ vars.RESOURCE_GROUP_NAME }} -n \
-            $(APP_NAME) --src 'build.zip' \
+            $(APP_NAME) --src 'src/basic_func_impl/build.zip' \
             --build-remote true
 
             az functionapp config appsettings set --name $(APP_NAME) --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
