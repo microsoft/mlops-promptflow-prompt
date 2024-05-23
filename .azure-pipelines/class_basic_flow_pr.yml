@@ -17,6 +17,10 @@ pool:
 
 variables:
 - group: mlops_platform_dev_vg
+- name: devops_container_image
+  value: 'acrpromptpromptflow.azurecr.io/devops_container_image'
+- name: dockerRegistryServiceConnection
+  value: acrpromptpromptflow
 
 parameters:
  - name: env_name
@@ -29,23 +33,16 @@ parameters:
    type: string
    displayName: "The name of ACR registry connection"
    default: "acrpromptpromptflow.azurecr.io"
- - name: dockerfile
-   type: string
-   displayName: "docker fle to build"
-   default: "./.devcontainer/Dockerfile"
- - name: image_name
-   type: string
-   displayName: "The name of the ACR image"
-   default: "devops_container_image"
-stages:
-  - template: ./templates/build_and_push_devopsimage.yml
-    parameters:
-      acr_registry: ${{parameters.acr_registry_connection}}
-      dockerfile: ${{parameters.dockerfile}}
-      image_name: ${{parameters.image_name}}
 
+resources:
+  containers:
+  - container: devops_container
+    image: $(devops_container_image)
+
+stages:
   - template: ./templates/platform_pr_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}
-      image_name: ${{image_name}}
+      acr_connection: $(dockerRegistryServiceConnection)
+      devops_container_image: $(devops_container_image)

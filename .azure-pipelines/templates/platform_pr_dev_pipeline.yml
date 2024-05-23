@@ -7,11 +7,10 @@ parameters:
    displayName: "type of model to execute"
  - name: devops_container_image
    displayName: acr image
-
-resources:
-  containers:
-  - container: devops_container
-    image: ${{ parameters.devops_container_image }}
+   default: "acrpromptpromptflow.azurecr.io/devops_container_image"
+ - name: acr_connection
+   displayName: "Azure Container Registry Managed connection"
+   default: "acrpromptpromptflow"
 
 stages:
   # Code Validation Stage
@@ -26,7 +25,6 @@ stages:
       container: devops_container
       steps:
       - template: configure_devops_agent.yml
-
       - task: AzureCLI@2
         displayName: 'Run Evaluation'
         continueOnError: false
