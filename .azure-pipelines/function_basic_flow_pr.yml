@@ -29,7 +29,7 @@ parameters:
    displayName: acr image
 
 stages:
-  - template: ./platform_pr_dev_pipeline.yml
+  - template: ./templates/platform_pr_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}

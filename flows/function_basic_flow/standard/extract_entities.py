@@ -1,9 +1,11 @@
 """function_basic_flow implementation."""
 import pathlib
+import sys
 import os
 from promptflow.tracing import trace
 from promptflow.core import Prompty
-from flows.function_basic_flow.standard.cleansing import cleansing
+sys.path.append(str(pathlib.Path(__file__).parent))
+import cleansing  # noqa: E402
 
 
 @trace
@@ -26,7 +28,7 @@ def extract_entity(entity_type: str, text: str):
 
     result = prompty(entity_type=entity_type, text=text)
 
-    output = cleansing(result)
+    output = cleansing.cleansing(result)
 
     return {"answer": output}
 

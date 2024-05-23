@@ -1,11 +1,9 @@
 """Shows example how to invoke the flow using different ways."""
-import os
-import sys
 import argparse
-from pathlib import Path
 from promptflow.client import PFClient
-from flows.function_basic_flow.standard import extract_entities
 from mlops.common.config_utils import MLOpsConfig
+from promptflow.client import load_flow
+from promptflow.entities import CustomConnection
 
 
 def main():
@@ -27,29 +25,31 @@ def main():
     args = parser.parse_args()
 
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
-    flow_config = mlops_config.get_flow_config(flow_name="function_basic_flow")
-
-    aoai_deployment = flow_config["deployment_name"]
-
+    flow_config = mlops_config.get_flow_config(flow_name="plan_and_execute")
     openai_config = mlops_config.aoai_config
 
-    os.environ["AZURE_OPENAI_API_KEY"] = openai_config["aoai_api_key"]
-    os.environ["AZURE_OPENAI_API_VERSION"] = openai_config["aoai_api_version"]
-    os.environ["AZURE_OPENAI_DEPLOYMENT"] = aoai_deployment
-    os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
-
-    # Run the flow as a basic function call with no tracing
-    print(extract_entities.extract_entity(
-        "job title",
-        "The CEO and CFO are discussing the financial forecast for the next quarter."))
-
-    # Run the flow as a PromptFlow flow with tracing on a single row.
+    # Run the flow as a function.
     flow_standard_path = flow_config["standard_flow_path"]
 
-    sys.path.append(str(os.path.join(Path(__file__).parent.parent, "flows/function_basic_flow/standard")))
+    connection = CustomConnection(
+        name=flow_config["connection_name"],
+        secrets={"aoai_api_key": openai_config["aoai_api_key"],
+                 "bing_api_key": flow_config["bing_api_key"]},
+        configs={"aoai_model_gpt4": flow_config["deployment_name_gpt4"],
+                 "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
+                 "aoai_base_url": openai_config["aoai_api_base"],
+                 "aoai_api_version": flow_config["aoai_api_version"],
+                 "bing_endpoint": flow_config["bing_endpoint"]}
+    )
 
     pf = PFClient()
-    print(pf.test(flow=flow_standard_path))
+    pf.connections.create_or_update(connection)
+
+    flow = load_flow(flow_standard_path)
+
+    print(flow(
+        question="What was the total box office performance of 'Inception' and 'Interstellar' together?")
+    )
 
     # Run the flow as a PromptFlow batch on a data frame.
     data_standard_path = flow_config['data_path']
@@ -58,7 +58,7 @@ def main():
     run_instance = pf.run(
         flow=flow_standard_path,
         data=data_standard_path,
-        column_mapping=column_mapping,
+        column_mapping=column_mapping
     )
 
     pf.stream(run_instance)
