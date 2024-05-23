@@ -3,6 +3,8 @@ import argparse
 from pprint import pprint
 from promptflow.evals.evaluate import evaluate
 from mlops.common.config_utils import MLOpsConfig
+from promptflow.core import AzureOpenAIModelConfiguration
+from promptflow.evals.evaluators import RelevanceEvaluator, CoherenceEvaluator
 from src.evaluators.match_evaluator import MatchEvaluator
 from flows.chat_with_pdf.evaluate.flow_wrapper import StandardFlowWrapper
 from mlops.common.naming_tools import generate_experiment_name
@@ -23,6 +25,14 @@ def main():
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_chat_with_pdf")
 
+    model_config = AzureOpenAIModelConfiguration(
+                azure_endpoint=mlops_config.aoai_config['aoai_api_base'],
+                api_key=mlops_config.aoai_config['aoai_api_key'],
+                azure_deployment=mlops_config.aoai_config['aoai_deployment_name']
+            )
+    
+    coherence_eval = CoherenceEvaluator(model_config=model_config)
+    relevance_eval = RelevanceEvaluator(model_config=model_config)
     matchevaluator = MatchEvaluator()
 
     data_eval_path = flow_config['eval_data_path']
@@ -43,6 +53,8 @@ def main():
         target=flow,
         evaluators={
             "matchevaluator": matchevaluator,
+            "coherence_eval": coherence_eval,
+            "relevance_eval": relevance_eval
         },
         evaluator_config={
             "matchevaluator": {
