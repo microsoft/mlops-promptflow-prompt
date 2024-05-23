@@ -108,7 +108,7 @@ jobs:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
             az functionapp deployment source config-zip -g ${{ vars.RESOURCE_GROUP_NAME }} -n \
-            $(APP_NAME) --src 'src/basic_func_impl/build.zip' \
+            ${{ vars.APP_NAME }} --src 'src/basic_func_impl/build.zip' \
             --build-remote true
 
             az functionapp config appsettings set --name ${{ vars.APP_NAME }} --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
