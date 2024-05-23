@@ -1,5 +1,5 @@
 ---
-name: basic_flow CI Workflow
+name: Basic Flow CI Workflow
 
 on:
   pull_request:
@@ -14,6 +14,9 @@ on:
 
 env:
   PYTHON_VERSION: "3.9"
+  # Setting an environment variable with the value of a configuration variable
+  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+  RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
 
 jobs:
   run-evaluation-full:
