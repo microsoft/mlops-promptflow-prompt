@@ -2,8 +2,7 @@
 name: class_basic_flow CI Workflow
 
 on:
-  workflow_call:
-  pull_request:
+  push:
     branches:
       - "development"
     paths:
