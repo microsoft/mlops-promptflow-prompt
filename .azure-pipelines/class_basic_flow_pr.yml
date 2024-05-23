@@ -29,6 +29,10 @@ parameters:
    type: string
    displayName: "The name of ACR registry connection"
    default: "acrpromptpromptflow.azurecr.io"
+ - name: dockerfile
+   type: string
+   displayName: "docker fle to build"
+   default: "./.devcontainer/Dockerfile"
  - name: image_name
    type: string
    displayName: "The name of the ACR image"
@@ -37,10 +41,10 @@ stages:
   - template: ./templates/build_and_push_devopsimage.yml
     parameters:
       acr_registry: ${{parameters.acr_registry_connection}}
-      dockerfile: ${{parameters.image_name}}
+      dockerfile: ${{parameters.dockerfile}}
       image_name: ${{parameters.image_name}}
-  - template: ./templates/platform_pr_dev_pipeline.yml
 
+  - template: ./templates/platform_pr_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}
