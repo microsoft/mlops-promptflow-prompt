@@ -70,7 +70,8 @@ jobs:
           convert: upper
 
       - name: Execute PF Evaluation Pipeline within container
-        run: \
+        shell: bash
+        run: |
           docker run \
             -e BUILD_BUILDID="${{ github.run_id }}" \
             -e BUILD_SOURCEBRANCHNAME="${{ github.head_ref || github.ref_name }}" \
