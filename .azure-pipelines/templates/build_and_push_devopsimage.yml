@@ -10,11 +10,10 @@
        type: string
        displayName: "The ACR registry connection"
        required: true
-       default: "acrpromptpromptflow.azurecr.io"
+       default: "acrpromptpromptflow"
     - name: dockerfile
       type: string
       displayName: "docker fle to build"
-      required: true
       default: "./.devcontainer/Dockerfile"
     - name: image_name
       type: string

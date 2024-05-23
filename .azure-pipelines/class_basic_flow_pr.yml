@@ -45,4 +45,4 @@ stages:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}
       acr_connection: $(dockerRegistryServiceConnection)
-      devops_container_image: $(devops_container_image)
+      devops_container_image: $(devops_container_image):latest

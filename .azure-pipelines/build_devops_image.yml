@@ -5,13 +5,8 @@ pr:
      - development
   paths:
     include:
-      - .azure-pipelines/*
-      - mlops/common/*
-      - mlops/*
-      - flows/class_basic_flow/*
-      - src/*
-      - tests
-
+      - requirements.txt
+      - Dockerfile
 pool:
   vmImage: ubuntu-latest
 
@@ -37,5 +32,5 @@ stages:
       acr_registry_connection:
       devops_container_image: $(devops_container_image)
       dockerfile: ${{parameters.dockerfile}}
-      image_name: ${{parameters.image_name}}
+      image_name: ${{parameters.image_name}}:latest
 

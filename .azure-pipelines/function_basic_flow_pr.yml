@@ -18,7 +18,7 @@ pool:
 variables:
 - group: mlops_platform_dev_vg
 - name: devops_container_image
-  value: 'acrpromptpromptflow.azurecr.io/devops_container_image:latest'
+  value: 'acrpromptpromptflow.azurecr.io/devops_container_image'
 - name: dockerRegistryServiceConnection
   value: acrpromptpromptflow
 
@@ -30,10 +30,15 @@ parameters:
    displayName: "model type"
    default: "function_basic_flow"
 
+resources:
+  containers:
+  - container: devops_container
+    image: $(devops_container_image)
+
 stages:
   - template: ./templates/platform_pr_dev_pipeline.yml
     parameters:
       exec_environment: ${{ parameters.env_name }}
       model_type: ${{ parameters.model_type }}
       acr_connection: $(dockerRegistryServiceConnection)
-      devops_container_image: $(devops_container_image)
+      devops_container_image: $(devops_container_image):latest
