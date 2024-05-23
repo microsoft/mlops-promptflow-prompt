@@ -25,7 +25,6 @@ stages:
     jobs:
     - job: Execute_pf_Pipeline
       displayName: 'Execute Evaluation'
-      dependsOn: Build_Validation_Pipeline
       steps:
       - template: templates/configure_devops_agent.yml
 
