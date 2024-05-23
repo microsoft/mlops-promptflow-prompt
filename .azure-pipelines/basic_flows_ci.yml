@@ -20,7 +20,65 @@ variables:
 
 
 stages:
+  - stage: evaluation
+    displayName: 'Evaluate Basic PF Flow'
+    jobs:
+    - job: Execute_pf_Pipeline
+      displayName: 'Execute Evaluation'
+      dependsOn: Build_Validation_Pipeline
+      steps:
+      - template: configure_devops_agent.yml
+
+      - task: AzureCLI@2
+        displayName: 'Run Evaluation for Function Flow'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            python -m flows.function_basic_flow.evaluate.evaluate \
+              --environment_name dev
+
+      - task: AzureCLI@2
+        displayName: 'Run Evaluation for Class Flow'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            python -m flows.class_basic_flow.evaluate.evaluate \
+              --environment_name dev
+
+      - task: AzureCLI@2
+        displayName: 'Run Evaluation for YAML Flow'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            python -m flows.yaml_basic_flow.evaluate.evaluate \
+              --environment_name dev
+
   - stage: deploy_prompts
+    dependsOn: evaluation
     displayName: Deploy Promptflow Basic Flows as Azure Functions
     jobs:
     - job: deploy_flow
