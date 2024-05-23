@@ -115,6 +115,26 @@ flow_configs:
     eval_column_mapping:
       gound_truth: ${data.results}
       entities: ${run.outputs.entities}
+  
+  yaml_chat_with_pdf_pr:
+    standard_flow_path: flows/chat_with_pdf/standard
+    EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
+    CHAT_MODEL_DEPLOYMENT_NAME: aoai
+    connection_name: aoai
+    data_path: flows/chat_with_pdf/data/bert-paper-qna.jsonl
+    eval_data_path: flows/chat_with_pdf/data/bert-paper-qna-3-line.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+      pdf_url: ${data.pdf_url}
+      chat_history: ${data.chat_history}
+      question: ${data.question}
+    eval_column_mapping:
+      pdf_url: ${data.pdf_url}
+      chat_history: ${data.chat_history}
+      question: ${data.question}
+      gound_truth: ${data.groundtruth}
+
       
 deployment_configs:
   named_entity_recognition_online_dev:
