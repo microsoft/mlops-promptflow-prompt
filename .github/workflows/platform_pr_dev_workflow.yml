@@ -55,7 +55,7 @@ jobs:
         run: echo "${{ secrets.acr_password }}" | docker login ${{ secrets.acr_registry }}.azurecr.io -u ${{ secrets.acr_username }} --password-stdin
 
       - name: Pull Docker image
-        run: docker pull ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest
+        run: docker pull ${{ secrets.acr_registry }}.azurecr.io/devops_container_image:latest
 
       - name: Checkout Actions
         uses: actions/checkout@v1
@@ -66,15 +66,15 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Execute PF Evaluation Pipeline
-        run: |
-          docker run --rm --privileged -v $PWD:/workspace -w /workspace ${{ secrets.ACR_REGISTRY }}.azurecr.io/devops_container_image:latest bash -c "
-            git config --global --add safe.directory /workspace
-            echo ${{ secrets.azure_credentials }} > temp.json
-            az login --service-principal --tenant $(jq -r '.tenantId' temp.json) -u $(jq -r '.clientId' temp.json) -p $(jq -r '.clientSecret' temp.json)
+      - name: Execute PF Evaluation Pipeline within container
+        run: \
+          docker run \
+            -e BUILD_BUILDID="${{ github.run_id }}" \
+            -e BUILD_SOURCEBRANCHNAME="${{ github.head_ref || github.ref_name }}" \
+            -e azure_credentials="${{ secrets.azure_credentials }}" \
+            ${{ secrets.acr_registry }}.azurecr.io/devops_container_image:latest \
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
-          "
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
