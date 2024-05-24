@@ -5,7 +5,7 @@ from promptflow.entities import AzureOpenAIConnection
 from promptflow.client import PFClient
 
 
-class StandardFlowWrapper:
+class ChatWithPdfFlowWrapper:
     """Implement the flow."""
 
     def __init__(self, flow_standard_path: str, connection_name: str, aoai_deployment: str, aoai_config: dict):

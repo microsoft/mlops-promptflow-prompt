@@ -1,3 +1,4 @@
+"""Promptflow tool to setup environment."""
 import os
 from typing import Union
 
@@ -11,6 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + "/chat_with_pdf/"
 
 @tool
 def setup_env(connection: Union[AzureOpenAIConnection, OpenAIConnection], config: dict):
+    """Provide setup for the environment."""
     if not connection or not config:
         return
 
