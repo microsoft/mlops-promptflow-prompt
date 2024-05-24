@@ -19,9 +19,6 @@ runs:
       with:
         creds: ${{ inputs.azure_credentials }}
 
-    - name: Checkout
-      uses: actions/checkout@v1
-
     - name: Execute code
       shell: bash
       run: |
