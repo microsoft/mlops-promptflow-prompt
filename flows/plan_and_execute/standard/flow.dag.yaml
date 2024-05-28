@@ -1,11 +1,21 @@
 inputs:
   question:
     type: string
-    default: What was the total box office performance of 'Inception' and 'Interstellar' together?
+    default: What was the total box office performance of 'Inception' and
+      'Interstellar' together?
 outputs:
+  plan:
+    type: string
+    reference: ${planner.output}
+  steps:
+    type: string
+    reference: ${executor.output.executor_reply}
   answer:
     type: string
     reference: ${solver.output}
+  number_of_steps:
+    type: string
+    reference: ${executor.output.number_of_steps}
 nodes:
 - name: planner_system_prompt
   type: prompt
