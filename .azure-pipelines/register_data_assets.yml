@@ -17,6 +17,8 @@ stages:
     - template: templates/configure_devops_agent.yml
     - task: AzureCLI@2
       displayName: 'Run Dataset Registration'
+      env:
+        SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
       continueOnError: false
       inputs: 
         azureSubscription: $(AZURE_RM_SVC_CONNECTION)
