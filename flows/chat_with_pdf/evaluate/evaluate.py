@@ -28,7 +28,7 @@ def main():
     model_config = AzureOpenAIModelConfiguration(
         azure_endpoint=mlops_config.aoai_config['aoai_api_base'],
         api_key=mlops_config.aoai_config['aoai_api_key'],
-        azure_deployment=mlops_config.aoai_config['aoai_deployment_name']
+        azure_deployment=flow_config["deployment_name"]
     )
 
     coherence_eval = CoherenceEvaluator(model_config=model_config)

@@ -10,7 +10,6 @@ aoai_config:
   aoai_api_type: azure
   aoai_api_version: 2023-07-01-preview
   aoai_api_key: ${AOAI_API_KEY}
-  aoai_deployment_name: aoai
   
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
@@ -90,16 +89,11 @@ flow_configs:
     CHAT_MODEL_DEPLOYMENT_NAME: aoai
     deployment_name: aoai
     connection_name: aoai
-    data_path: flows/chat_with_pdf/data/bert-paper-qna.jsonl
-    eval_data_path: flows/chat_with_pdf/data/bert-paper-qna-3-line.jsonl
+    data_path: data/bert-paper-qna.jsonl
+    eval_data_path: data/bert-paper-qna-3-line.jsonl
     column_mapping:
       text: ${data.text}
       entity_type: ${data.entity_type}
       pdf_url: ${data.pdf_url}
       chat_history: ${data.chat_history}
       question: ${data.question}
-    eval_column_mapping:
-      pdf_url: ${data.pdf_url}
-      chat_history: ${data.chat_history}
-      question: ${data.question}
-      gound_truth: ${data.groundtruth}
