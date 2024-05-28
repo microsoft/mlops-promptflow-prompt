@@ -1,0 +1,27 @@
+name: Register Datasets
+
+on:
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.9"
+  PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+  RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+
+jobs:
+  run-registration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Configure DevOps Agent
+        uses: ./.github/actions/configure_devops_agent
+      - name: Execute Dataset Registration
+        uses: ./.github/actions/execute_shell_code
+        env: 
+            SUBSCRIPTION_ID: ${{ secrets.subscription_id }}
+        with:
+            azure_credentials: ${{ secrets.azure_credentials }}
+            script_parameter: |
+                python -m mlops.common.register_data_assets \
+                    --data_config_path config/data_config.json
