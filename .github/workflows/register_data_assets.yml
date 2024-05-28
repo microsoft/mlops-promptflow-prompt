@@ -1,10 +1,7 @@
 name: Register Datasets
 
 on:
-  workflow_call:
-  pull_request:
-    branches:
-      - 'development'
+  workflow_dispatch:
 
 env:
   PYTHON_VERSION: "3.9"
