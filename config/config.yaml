@@ -10,6 +10,9 @@ aoai_config:
   aoai_api_type: azure
   aoai_api_version: 2023-07-01-preview
   aoai_api_key: ${AOAI_API_KEY}
+  # If connection_name is present, code will try to get it from AI Studio,
+  # and all parameters from above will be ignored.
+  connection_name: aoai
   
 # flow configurations 
 # flow config names are formatted as <flow_name>_<environment>
