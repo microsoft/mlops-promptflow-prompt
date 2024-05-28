@@ -1,10 +1,9 @@
 """This module helps to create a connection in Azure ML to Azure Open AI service."""
 import argparse
-import json
-import requests
-from promptflow.azure import PFClient
+from azure.ai.ml import MLClient
+from azure.ai.ml.entities import AzureOpenAIConnection
 from azure.identity import DefaultAzureCredential
-from promptflow.azure._restclient.flow_service_caller import FlowRequestException
+from azure.core.exceptions import HttpResponseError
 from mlops.common.config_utils import MLOpsConfig
 
 
@@ -21,59 +20,33 @@ def main():
 
     # Read configuratuin
     mlops_config = MLOpsConfig()
-    aml_config = mlops_config.aml_config
+    aistudio_config = mlops_config.aistudio_config
     aoai_config = mlops_config.aoai_config
 
-    # PFClient can help manage your runs and connections.
-    pf = PFClient(
+    # MLClient can help manage your runs and connections.
+    client = MLClient(
         DefaultAzureCredential(),
-        aml_config['subscription_id'],
-        aml_config['resource_group_name'],
-        aml_config['workspace_name'],
+        aistudio_config['subscription_id'],
+        aistudio_config['resource_group_name'],
+        aistudio_config['project_name'],
     )
 
     try:
         conn_name = args.aoai_connection_name
-        pf._connections.get(name=conn_name)
+        result = client.connections.get(name=conn_name)
         print("using existing connection")
-    except FlowRequestException:
-        url = f"https://management.azure.com/subscriptions/{aml_config['subscription_id']}/" \
-            f"resourcegroups/{aml_config['resource_group_name']}/providers/Microsoft.MachineLearningServices/" \
-            f"workspaces/{aml_config['workspace_name']}/connections/{args.aoai_connection_name}" \
-            f"?api-version=2023-04-01-preview"
-        token = (
-            DefaultAzureCredential()
-            .get_token("https://management.azure.com/.default")
-            .token
+    except HttpResponseError:
+        print("connection not found. creating a new one.")
+        connection = AzureOpenAIConnection(
+            name=conn_name,
+            api_key=aoai_config['aoai_api_key'],
+            api_version=aoai_config['aoai_api_version'],
+            azure_endpoint=aoai_config['aoai_api_base']
         )
-        header = {
-            "Authorization": f"Bearer {token}",
-            "content-type": "application/json",
-        }
+        result = client.connections.create_or_update(connection)
+        print("connection has been created")
 
-        data = json.dumps(
-            {
-                "properties": {
-                    "category": "AzureOpenAI",
-                    "target": aoai_config['aoai_api_base'],
-                    "authType": "ApiKey",
-                    "credentials": {
-                        "key": aoai_config['aoai_api_key'],
-                    },
-                    "metadata": {
-                        "ApiType": aoai_config['aoai_api_type'],
-                        "ApiVersion": aoai_config['aoai_api_version'],
-                    },
-                }
-            }
-        )
-
-        with requests.Session() as session:
-            response = session.put(url, data=data, headers=header)
-            # Raise an exception if the response contains an HTTP error status code
-            response.raise_for_status()
-
-        print(response.json())
+    return result
 
 
 if __name__ == "__main__":
