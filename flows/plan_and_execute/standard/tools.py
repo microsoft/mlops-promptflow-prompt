@@ -126,7 +126,7 @@ def web_tool(
     results = response.json()
 
     search_results = []
-    for i in range(number_of_results):
+    for i in range(len(results["webPages"]["value"])):
         title = results["webPages"]["value"][i]["name"]
         url = results["webPages"]["value"][i]["url"]
         snippet = results["webPages"]["value"][i]["snippet"]

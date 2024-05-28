@@ -231,5 +231,6 @@ def worker_tool(connection: CustomConnection, plan: str) -> str:
 
     plan = json.loads(plan)
     executor_reply = execute_plan_parallel(plan['Functions'], executor, config_list_gpt35)
+    number_of_steps = len(plan['Plan'])
 
-    return executor_reply
+    return {'executor_reply': executor_reply, 'number_of_steps': number_of_steps}
