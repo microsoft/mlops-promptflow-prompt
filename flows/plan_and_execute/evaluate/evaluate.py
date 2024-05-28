@@ -46,12 +46,12 @@ def main():
     relevance_evaluator = RelevanceEvaluator(model_config)
     similarity_evaluator = SimilarityEvaluator(model_config)
 
-    connection_secrets={
+    connection_secrets = {
         "aoai_api_key": openai_config["aoai_api_key"],
         "bing_api_key": flow_config["bing_api_key"]
     }
-    
-    connection_configs={
+
+    connection_configs = {
         "aoai_model_gpt4": flow_config["deployment_name_gpt4"],
         "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
         "aoai_base_url": openai_config["aoai_api_base"],
@@ -59,7 +59,10 @@ def main():
         "bing_endpoint": flow_config["bing_endpoint"]
     }
 
-    flow = PlanAndExecuteFlowWrapper(flow_standard_path, flow_config["connection_name"], connection_secrets, connection_configs)
+    flow = PlanAndExecuteFlowWrapper(
+        flow_standard_path, flow_config["connection_name"],
+        connection_secrets, connection_configs
+    )
 
     results = evaluate(
         evaluation_name=generate_experiment_name("plan_and_execute"),

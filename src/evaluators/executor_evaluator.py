@@ -1,11 +1,12 @@
 """Evaluator that validates the output of plan execution steps against an expected number of steps and step format."""
 import re
 
+
 class ExecutorEvaluator:
+    """Evaluator example for the Executor node in the plan_and_execute flow."""
+
     def __init__(self):
-        """
-        Initialize the evaluator.
-        """
+        """Initialize the evaluator."""
         pass
 
     def __call__(self, plan_steps_count, result_string):
@@ -31,5 +32,3 @@ class ExecutorEvaluator:
         return {
             "missing_steps": list(missing_steps)
         }
-
-    

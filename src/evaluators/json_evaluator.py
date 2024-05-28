@@ -4,6 +4,8 @@ from jsonschema import validate, ValidationError, SchemaError
 
 
 class JsonEvaluator:
+    """Evaluator example for the Planner node in the plan_and_execute flow."""
+
     def __init__(self, json_schema_path):
         """
         Initialize the evaluator.
@@ -49,7 +51,6 @@ class JsonEvaluator:
         :param json_string: The JSON string to evaluate.
         :return: A dictionary with 'valid_json' and 'valid_schema' indicating the validity.
         """
-
         result = {
             "valid_json": 0,
             "valid_schema": 0
@@ -67,4 +68,3 @@ class JsonEvaluator:
             pass
 
         return result
-    

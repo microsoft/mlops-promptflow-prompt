@@ -1,6 +1,5 @@
 """Implement a wrapper for yaml based flow since it's not supported by evaluate explicitly."""
 from promptflow.client import load_flow
-from promptflow.entities import FlowContext
 from promptflow.entities import CustomConnection
 from promptflow.client import PFClient
 
@@ -8,13 +7,16 @@ from promptflow.client import PFClient
 class PlanAndExecuteFlowWrapper:
     """Implement the flow."""
 
-    def __init__(self, flow_standard_path: str, connection_name: str, connection_secrets: dict, connection_configs: dict):
+    def __init__(
+            self, flow_standard_path: str, connection_name: str,
+            connection_secrets: dict, connection_configs: dict
+    ):
         """Initialize environment and load prompty into the memory."""
         connection = CustomConnection(
             name=connection_name,
             secrets=connection_secrets,
             configs=connection_configs
-    )
+        )
 
         pf = PFClient()
         pf.connections.create_or_update(connection)
