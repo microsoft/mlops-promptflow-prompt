@@ -18,3 +18,5 @@ keyrings.alt
 PyPDF2
 pyautogen
 faiss-cpu
+bs4
+wikipedia
