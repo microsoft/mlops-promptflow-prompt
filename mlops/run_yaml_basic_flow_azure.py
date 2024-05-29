@@ -5,7 +5,6 @@ import argparse
 from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from azure.identity import DefaultAzureCredential
-from azure.ai.ml.entities import (Hub, Project, AzureOpenAIConnection)
 from azure.ai.ml import MLClient
 import logging
 
@@ -29,13 +28,11 @@ def main():
     args = parser.parse_args()
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_basic_flow")
-    # aoai_deployment = flow_config["deployment_name"]
+    aoai_deployment = flow_config["deployment_name"]
     aistudio_config = mlops_config.aistudio_config
     flow_standard_path = flow_config["standard_flow_path"]
-    # openai_config = mlops_config.aoai_config
 
-
- # Azure OpenAI Connection check (aoai):
+    # Azure OpenAI Connection check (aoai):
     try:
         ml_client = MLClient(
             subscription_id=aistudio_config['subscription_id'],
@@ -64,7 +61,7 @@ def main():
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        #connections={"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
+        connections={"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
     )
     pf.stream(run_instance)
 
@@ -73,7 +70,9 @@ def main():
     if run_instance.status == "Completed" or run_instance.status == "Finished":
         print("Experiment has been completed")
     elif run_instance.status =="Preparing":
-        print("Preparing flow run")
+        print("Preparing flow run for the experiment")
+    elif run_instance.status == "NotStarted":
+        print("Flow run for the experiment not started")
     else:
         raise Exception("Sorry, exiting job with failure..")
     print(run_instance.name)
