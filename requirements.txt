@@ -16,5 +16,5 @@ promptflow-tools
 promptflow-evals
 keyrings.alt
 PyPDF2
-autogen
+pyautogen
 faiss-cpu
