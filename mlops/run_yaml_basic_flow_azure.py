@@ -1,4 +1,6 @@
-#"""Shows example how to invoke the flow using different ways in Azure."""
+"""
+Shows example how to invoke the flow using different ways in Azure.
+"""
 import argparse
 from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
@@ -28,11 +30,10 @@ def main():
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_basic_flow")
     # aoai_deployment = flow_config["deployment_name"]
-    # openai_config = mlops_config.aoai_config
     aistudio_config = mlops_config.aistudio_config
-
-    # Run the flow as a function.
     flow_standard_path = flow_config["standard_flow_path"]
+    # openai_config = mlops_config.aoai_config
+
 
  # Azure OpenAI Connection check (aoai):
     try:
