@@ -3,7 +3,7 @@ import argparse
 from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from azure.identity import DefaultAzureCredential
-from azure.ai.ml.entities import (Hub, Project, AzureOpenAIConnection, AzureAISearchConnection)
+from azure.ai.ml.entities import (Hub, Project, AzureOpenAIConnection)
 from azure.ai.ml import MLClient
 import logging
 
@@ -11,8 +11,9 @@ import logging
 def main():
     """
     Execute function_basic_flow using different ways.
+
     The method uses config.yaml as a source for parameters, and
-    it runs the flow in different ways that can be used to test the flow locally.
+    it runs the flow in different ways that can be used to test the flow in Azure.
     """
     # Config parameters
     parser = argparse.ArgumentParser("config_parameters")
@@ -29,6 +30,7 @@ def main():
     # aoai_deployment = flow_config["deployment_name"]
     # openai_config = mlops_config.aoai_config
     aistudio_config = mlops_config.aistudio_config
+
     # Run the flow as a function.
     flow_standard_path = flow_config["standard_flow_path"]
 
