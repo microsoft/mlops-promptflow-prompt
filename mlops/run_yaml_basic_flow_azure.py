@@ -1,6 +1,4 @@
-"""
-Shows example how to invoke the flow using different ways in Azure.
-"""
+"""Shows example how to invoke the flow using different ways in Azure."""
 import argparse
 from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
@@ -69,7 +67,7 @@ def main():
 
     if run_instance.status == "Completed" or run_instance.status == "Finished":
         print("Experiment has been completed")
-    elif run_instance.status =="Preparing":
+    elif run_instance.status == "Preparing":
         print("Preparing flow run for the experiment")
     elif run_instance.status == "NotStarted":
         print("Flow run for the experiment not started")
@@ -78,6 +76,7 @@ def main():
     print(run_instance.name)
     if args.visualize is True:
         pf.runs.visualize(run_instance)
+
 
 if __name__ == "__main__":
     main()
