@@ -1,0 +1,56 @@
+trigger: none
+pr:
+  branches:
+   include:
+     - development
+  paths:
+    include:
+      - .azure-pipelines/*
+      - mlops/common/*
+      - mlops/*
+      - flows/plan_and_execute/*
+      - src/*
+      - tests
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: mlops_platform_dev_vg
+
+parameters:
+ - name: env_name
+   displayName: "Execution Environment"
+   default: "pr"
+ - name: model_type
+   displayName: "model type"
+   default: "plan_and_execute"
+
+stages:
+  - stage: build_validation
+    displayName: 'Validate Code and Evaluate PF Flow'
+    jobs:
+    - template: build_validation_pipeline.yml
+    
+    - job: Execute_pf_Pipeline
+      displayName: 'Execute Evaluation'
+      dependsOn: Build_Validation_Pipeline
+      steps:
+      - template: configure_devops_agent.yml
+
+      - task: AzureCLI@2
+        displayName: 'Run Evaluation'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+          BING_API_KEY: $(BING_API_KEY)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            python -m flows.${{ parameters.model_type }}.evaluate.evaluate \
+              --environment_name ${{ parameters.exec_environment }}
