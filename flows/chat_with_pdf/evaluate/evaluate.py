@@ -23,7 +23,7 @@ def main():
     args = parser.parse_args()
 
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
-    flow_config = mlops_config.get_flow_config(flow_name="yaml_chat_with_pdf")
+    flow_config = mlops_config.get_flow_config(flow_name="chat_with_pdf")
 
     model_config = AzureOpenAIModelConfiguration(
         azure_endpoint=mlops_config.aoai_config['aoai_api_base'],
@@ -45,7 +45,7 @@ def main():
     flow = ChatWithPdfFlowWrapper(flow_standard_path, flow_config["connection_name"], aoai_deployment, openai_config)
 
     results = evaluate(
-        evaluation_name=generate_experiment_name("yaml_chat_with_pdf"),
+        evaluation_name=generate_experiment_name("chat_with_pdf"),
         data=data_eval_path,
         target=flow,
         evaluators={
