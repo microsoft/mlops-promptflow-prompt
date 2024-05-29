@@ -15,3 +15,4 @@ promptflow-azure>=1.11.0
 promptflow-tools
 promptflow-evals
 keyrings.alt
+PyPDF2
