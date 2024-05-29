@@ -88,7 +88,7 @@ flow_configs:
     standard_flow_path: flows/chat_with_pdf/standard
     EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
     CHAT_MODEL_DEPLOYMENT_NAME: aoai
-    deployment_name: aoai
+    deployment_name: gpt-35-turbo
     connection_name: aoai
     data_path: data/bert-paper-qna.jsonl
     eval_data_path: data/bert-paper-qna-3-line.jsonl
