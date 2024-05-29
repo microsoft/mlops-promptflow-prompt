@@ -3,17 +3,6 @@ name: plan_and_execute PR Workflow
 
 on:
   workflow_call:
-    inputs:
-      exec_environment:
-        type: string
-        description: "The environment to run the workflow in"
-        required: true
-        default: "pr"
-      model_type:
-        type: string
-        description: "The type of model to run the workflow for"
-        required: true
-        default: "plan_and_execute"
   pull_request:
     branches:
       - 'development'
@@ -60,5 +49,5 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
-              --environment_name ${{ inputs.exec_environment }}
+            python -m flows.plan_and_execute.evaluate.evaluate \
+              --environment_name pr
