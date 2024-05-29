@@ -7,6 +7,7 @@ from azure.ai.ml.entities import (Hub, Project, AzureOpenAIConnection, AzureAISe
 from azure.ai.ml import MLClient
 import logging
 
+
 def main():
     """
     Execute function_basic_flow using different ways.
