@@ -1,5 +1,5 @@
 """Invoking basic function flow from Azure Function."""
-from logging import INFO, WARNING, getLogger
+from logging import WARNING, getLogger
 import azure.functions as func
 from azure.monitor.opentelemetry import configure_azure_monitor
 from class_basic_invoke import bp as bp_class_based_invoke
