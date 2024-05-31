@@ -7,7 +7,7 @@ from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapProp
 from .flow_code.extract_entities import EntityExtraction
 
 tracer = trace.get_tracer(__name__)
-logger = logging.getLogger("functions")
+logger = logging.getLogger(__name__)
 
 bp = func.Blueprint()
 

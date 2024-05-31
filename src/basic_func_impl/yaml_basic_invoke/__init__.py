@@ -10,7 +10,7 @@ from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
 
 tracer = trace.get_tracer(__name__)
-logger = logging.getLogger("functions")
+logger = logging.getLogger(__name__)
 
 bp = func.Blueprint()
 
