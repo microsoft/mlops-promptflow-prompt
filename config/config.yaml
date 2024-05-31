@@ -151,7 +151,7 @@ flow_configs:
       dataset_desc: test set for plan and execute evaluation flow
       column_mapping:
         question: ${data.question}
-        json_schema_path: flows/plan_and_execute/evaluate/plan_and_execute_json_schema.json
+    json_schema_path: flows/plan_and_execute/evaluate/plan_and_execute_json_schema.json
 
   chat_with_pdf_pr:
     standard_flow_path: flows/chat_with_pdf/standard
