@@ -35,7 +35,8 @@ def main():
 
     matchevaluator = MatchEvaluator()
 
-    data_eval_path = flow_config['eval_data_path']
+    eval_dataset_config = mlops_config.get_dataset_config(name="basic_flow_eval")
+    data_eval_path = eval_dataset_config['data_path']
 
     aistudio_config = mlops_config.aistudio_config
     print(aistudio_config["project_name"])

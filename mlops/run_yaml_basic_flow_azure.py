@@ -4,6 +4,7 @@ from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from azure.identity import DefaultAzureCredential
 from azure.ai.ml import MLClient
+from mlops.common.register_data_assets import check_data_asset_registered, register_data_asset
 import logging
 
 
@@ -45,6 +46,7 @@ def main():
         raise Exception("Azure OpenAI configuration connection does not exist.")
 
     credential = DefaultAzureCredential()
+    
     pf = PFClient(
         credential,
         aistudio_config["subscription_id"],
@@ -53,11 +55,18 @@ def main():
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    basic_flow_dataset_config = mlops_config.get_dataset_config("basic_flow")
+    data_standard_path = basic_flow_dataset_config['data_path']
+    column_mapping = basic_flow_dataset_config['column_mapping']
+    if not check_data_asset_registered(ml_client=ml_client, dataset_name=basic_flow_dataset_config['dataset_name']):
+        register_data_asset(ml_client=ml_client, config=basic_flow_dataset_config)             
+    
+    data_input = ml_client.data.get(name=basic_flow_dataset_config["dataset_name"], label="latest")
+    print(f'Dataset Name: {data_input.name} version: {data_input.version}')
+
     run_instance = pf.run(
         flow=flow_standard_path,
-        data=data_standard_path,
+        data=data_input.path,
         column_mapping=column_mapping,
         connections={"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
     )

@@ -14,7 +14,31 @@ from azure.ai.ml import MLClient
 from azure.ai.ml.entities import Data
 from azure.ai.ml.constants import AssetTypes
 from mlops.common.config_utils import MLOpsConfig
+from typing import Dict, Any
+from azure.core.exceptions import ResourceNotFoundError
+import logging
 
+def register_data_asset(ml_client: MLClient, config: Dict) -> Data:
+    """ Create or update data asset in AML workspace for a given dataset configuration"""
+    aml_dataset = Data(
+        path=config['data_path'],
+        type=AssetTypes.URI_FILE,
+        description=config['dataset_desc'],
+        name=config['dataset_name'],
+        )
+    
+    return ml_client.data.create_or_update(aml_dataset)
+
+def check_data_asset_registered(ml_client: MLClient, dataset_name:str) -> bool:
+    """Check if a specified datset is registered"""
+    try:
+        data_items = ml_client.data.list(name = dataset_name)
+        data_items_count = sum(1 for _ in data_items)
+        if data_items_count:
+            return True    
+    except Exception as e:
+        logging.debug(f"data asset not found: {e}")
+    return False
 
 def main():
     """Register all datasets from the config file."""
@@ -26,39 +50,22 @@ def main():
         config.aistudio_config["resource_group_name"],
         config.aistudio_config["project_name"],
     )
-
-    parser = argparse.ArgumentParser("register data assets")
-
-    parser.add_argument(
-        "--data_config_path", type=str, help="data config file path", required=True
-    )
-
-    args = parser.parse_args()
-
-    data_config_path = args.data_config_path
-
-    config_file = open(data_config_path)
-    data_config = json.load(config_file)
-
-    for elem in data_config["datasets"]:
-        data_path = elem["DATA_PATH"]
-        dataset_desc = elem["DATASET_DESC"]
-        dataset_name = elem["DATASET_NAME"]
-
-        aml_dataset = Data(
-            path=data_path,
-            type=AssetTypes.URI_FILE,
-            description=dataset_desc,
-            name=dataset_name,
-        )
-
-        ml_client.data.create_or_update(aml_dataset)
-
-        aml_dataset_unlabeled = ml_client.data.get(
-            name=dataset_name, label="latest"
-        )
-
-        print(aml_dataset_unlabeled.id)
+    print(check_data_asset_registered(ml_client=ml_client, dataset_name="dataset_name"))
+    flow_configs = config.flow_configs
+    
+    for flow_config_key in flow_configs.keys():
+        flow_config = flow_configs[flow_config_key]
+        if 'datasets' in flow_config:
+            dataset_configs = flow_config['datasets']
+            for dataset_config in dataset_configs:
+                dataset_name = dataset_config['dataset_name']
+                print(f'Registering {dataset_name}')
+                register_data_asset(ml_client=ml_client, config=dataset_config)
+                aml_dataset_unlabeled = ml_client.data.get(
+                    name=dataset_name, label="latest"
+                    )
+                print(aml_dataset_unlabeled.id)
+                print(check_data_asset_registered(ml_client=ml_client, dataset_name=dataset_name))
 
 
 if __name__ == "__main__":

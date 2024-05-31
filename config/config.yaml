@@ -17,58 +17,117 @@ flow_configs:
   function_basic_flow_pr:
     standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
-    data_path: data/basic_flow_data.jsonl
-    eval_data_path: data/basic_flow_eval_data.jsonl
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
+    datasets:
+    - name: basic_flow
+      data_path: data/basic_flow_data.jsonl
+      dataset_name: basic_flow
+      dataset_desc: test set for all basic flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+    - name: basic_flow_eval
+      data_path: data/basic_flow_eval_data.jsonl
+      dataset_name: basic_flow_eval
+      dataset_desc: test set for all basic evaluation flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
 
   class_basic_flow_pr:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
-    data_path: data/basic_flow_data.jsonl
-    eval_data_path: data/basic_flow_eval_data.jsonl
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
+    datasets:
+    - name: basic_flow
+      data_path: data/basic_flow_data.jsonl
+      dataset_name: basic_flow
+      dataset_desc: test set for all basic flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+    - name: basic_flow_eval
+      data_path: data/basic_flow_eval_data.jsonl
+      dataset_name: basic_flow_eval
+      dataset_desc: test set for all basic evaluation flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
 
   yaml_basic_flow_pr:
     standard_flow_path: flows/yaml_basic_flow/standard
     deployment_name: gpt-35-turbo
     connection_name: aoai
-    data_path: data/basic_flow_data.jsonl
-    eval_data_path: data/basic_flow_eval_data.jsonl
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
+    datasets:
+    - name: basic_flow
+      data_path: data/basic_flow_data.jsonl
+      dataset_name: basic_flow
+      dataset_desc: test set for all basic flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+    - name: basic_flow_eval
+      data_path: data/basic_flow_eval_data.jsonl
+      dataset_name: basic_flow_eval
+      dataset_desc: test set for all basic evaluation flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
 
   function_basic_flow_dev:
     standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
-    data_path: data/basic_flow_data.jsonl
-    eval_data_path: data/basic_flow_eval_data.jsonl
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
+    datasets:
+    - name: basic_flow
+      data_path: data/basic_flow_data.jsonl
+      dataset_name: basic_flow
+      dataset_desc: test set for all basic flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+    - name: basic_flow_eval
+      data_path: data/basic_flow_eval_data.jsonl
+      dataset_name: basic_flow_eval
+      dataset_desc: test set for all basic evaluation flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
 
   class_basic_flow_dev:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
-    data_path: data/basic_flow_data.jsonl
-    eval_data_path: data/basic_flow_eval_data.jsonl
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
+    datasets:
+    - name: basic_flow
+      data_path: data/basic_flow_data.jsonl
+      dataset_name: basic_flow
+      dataset_desc: test set for all basic flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+    - name: basic_flow_eval
+      data_path: data/basic_flow_eval_data.jsonl
+      dataset_name: basic_flow_eval
+      dataset_desc: test set for all basic evaluation flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
 
   yaml_basic_flow_dev:
     standard_flow_path: flows/yaml_basic_flow/standard
     deployment_name: gpt-35-turbo
-    data_path: data/basic_flow_data.jsonl
-    eval_data_path: data/basic_flow_eval_data.jsonl
-    connection_name: aoai
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
+    datasets:
+    - name: basic_flow
+      data_path: data/basic_flow_data.jsonl
+      dataset_name: basic_flow
+      dataset_desc: test set for all basic flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+    - name: data_evaluation
+      data_path: data/basic_flow_eval_data.jsonl
+      dataset_name: basic_flow_eval
+      dataset_desc: test set for all basic evaluation flows
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
 
   plan_and_execute_pr:
     standard_flow_path: flows/plan_and_execute/standard
@@ -78,11 +137,21 @@ flow_configs:
     bing_api_key: ${BING_API_KEY}
     bing_endpoint: https://api.bing.microsoft.com/v7.0/search
     connection_name: plan_execute_agent_connection
-    data_path: data/plan_and_execute_data.jsonl
-    eval_data_path: data/plan_and_execute_eval_data.jsonl
-    column_mapping:
-      question: ${data.question}
-    json_schema_path: flows/plan_and_execute/evaluate/plan_and_execute_json_schema.json
+    datasets:
+    - name: plan_and_execute_flow
+      data_path: data/plan_and_execute_data.jsonl
+      dataset_name: plan_and_execute_flow
+      dataset_desc: test set for plan and execute flow
+      column_mapping:
+        question: ${data.question}
+        json_schema_path: flows/plan_and_execute/evaluate/plan_and_execute_json_schema.json
+    - name: plan_and_execute_flow_eval
+      data_path: data/plan_and_execute_eval_data.jsonl
+      dataset_name: plan_and_execute_flow_eval
+      dataset_desc: test set for plan and execute evaluation flow
+      column_mapping:
+        question: ${data.question}
+        json_schema_path: flows/plan_and_execute/evaluate/plan_and_execute_json_schema.json
 
   chat_with_pdf_pr:
     standard_flow_path: flows/chat_with_pdf/standard
@@ -90,11 +159,26 @@ flow_configs:
     CHAT_MODEL_DEPLOYMENT_NAME: gpt-35-turbo
     deployment_name: gpt-35-turbo
     connection_name: aoai
-    data_path: data/bert-paper-qna.jsonl
-    eval_data_path: data/bert-paper-qna-3-line.jsonl
-    column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
-      pdf_url: ${data.pdf_url}
-      chat_history: ${data.chat_history}
-      question: ${data.question}
+    
+    datasets:
+    - name: chat_with_pdf_data
+      data_path: data/bert-paper-qna.jsonl
+      dataset_name: chat_with_pdf_data
+      dataset_desc: test set for chat with pdf 
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+        pdf_url: ${data.pdf_url}
+        chat_history: ${data.chat_history}
+        question: ${data.question}      
+    
+    - name: chat_with_pdf_eval_data
+      data_path: data/bert-paper-qna-3-line.jsonl
+      dataset_name: chat_with_pdf_eval_data
+      dataset_desc: test set for chat with pdf eval
+      column_mapping:
+        text: ${data.text}
+        entity_type: ${data.entity_type}
+        pdf_url: ${data.pdf_url}
+        chat_history: ${data.chat_history}
+        question: ${data.question}
