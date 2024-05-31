@@ -5,6 +5,7 @@ from typing import List
 from promptflow.core import Prompty
 from promptflow.tracing import trace
 
+
 class EntityExtraction:
     """Implement the flow."""
 
