@@ -46,7 +46,7 @@ def main():
         raise Exception("Azure OpenAI configuration connection does not exist.")
 
     credential = DefaultAzureCredential()
-    
+
     pf = PFClient(
         credential,
         aistudio_config["subscription_id"],
@@ -56,11 +56,10 @@ def main():
 
     # Run the flow as a PromptFlow batch on a data frame.
     basic_flow_dataset_config = mlops_config.get_dataset_config("basic_flow")
-    data_standard_path = basic_flow_dataset_config['data_path']
     column_mapping = basic_flow_dataset_config['column_mapping']
     if not check_data_asset_registered(ml_client=ml_client, dataset_name=basic_flow_dataset_config['dataset_name']):
-        register_data_asset(ml_client=ml_client, config=basic_flow_dataset_config)             
-    
+        register_data_asset(ml_client=ml_client, config=basic_flow_dataset_config)
+
     data_input = ml_client.data.get(name=basic_flow_dataset_config["dataset_name"], label="latest")
     print(f'Dataset Name: {data_input.name} version: {data_input.version}')
 

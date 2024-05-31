@@ -36,9 +36,9 @@ class MLOpsConfig():
         deploymentconfig_name = f"{flow_name}_{deployment_type}_{self._environment}"
         if deploymentconfig_name in self.deployment_configs:
             return self.deployment_configs[deploymentconfig_name]
-    
+
     def get_dataset_config(self, name: str) -> Dict:
-        """Get the dataset config for a given dataset name"""
+        """Get the dataset config for a given dataset name."""
         dataset_config = None
         flow_config = self.get_flow_config(self._flow_name)
         if 'datasets' in flow_config:
@@ -55,4 +55,3 @@ if __name__ == "__main__":
     print(flow_config)
     print(flow_config["datasets"])
     print(mlconfig.get_dataset_config("basic_flow"))
-
