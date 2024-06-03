@@ -1,3 +1,4 @@
+"""Faiss index class."""
 import os
 from typing import Iterable, List, Optional
 from dataclasses import dataclass
@@ -11,6 +12,8 @@ from .oai import OAIEmbedding as Embedding
 
 @dataclass
 class SearchResultEntity:
+    """Data class for search results."""
+
     text: str = None
     vector: List[float] = None
     score: float = None
@@ -23,7 +26,10 @@ DATA_FILE_NAME = "index.pkl"
 
 
 class FAISSIndex:
+    """Faiss index class."""
+
     def __init__(self, index: Index, embedding: Embedding) -> None:
+        """Init Faiss index class."""
         self.index = index
         self.docs = {}  # id -> doc, doc is (text, metadata)
         self.embedding = embedding
@@ -31,6 +37,7 @@ class FAISSIndex:
     def insert_batch(
         self, texts: Iterable[str], metadatas: Optional[List[dict]] = None
     ) -> None:
+        """Insert batch into index."""
         documents = []
         vectors = []
         for i, text in enumerate(texts):
@@ -47,6 +54,7 @@ class FAISSIndex:
         pass
 
     def query(self, text: str, top_k: int = 10) -> List[SearchResultEntity]:
+        """Query index."""
         vector = self.embedding.generate(text)
         scores, indices = self.index.search(np.array([vector], dtype=np.float32), top_k)
         docs = []
@@ -60,6 +68,7 @@ class FAISSIndex:
         return docs
 
     def save(self, path: str) -> None:
+        """Save index to disk."""
         faiss.write_index(self.index, os.path.join(path, INDEX_FILE_NAME))
         # dump docs to pickle file
         with open(os.path.join(path, DATA_FILE_NAME), "wb") as f:
@@ -67,6 +76,7 @@ class FAISSIndex:
         pass
 
     def load(self, path: str) -> None:
+        """Load index from disk."""
         self.index = faiss.read_index(os.path.join(path, INDEX_FILE_NAME))
         with open(os.path.join(path, DATA_FILE_NAME), "rb") as f:
             self.docs = pickle.load(f)

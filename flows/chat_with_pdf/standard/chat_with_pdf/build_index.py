@@ -1,3 +1,4 @@
+"""Build index from pdfs."""
 import PyPDF2
 import faiss
 import os
@@ -12,6 +13,7 @@ from constants import INDEX_DIR
 
 
 def create_faiss_index(pdf_path: str) -> str:
+    """Create faiss index from pdfs."""
     chunk_size = int(os.environ.get("CHUNK_SIZE"))
     chunk_overlap = int(os.environ.get("CHUNK_OVERLAP"))
     log(f"Chunk size: {chunk_size}, chunk overlap: {chunk_overlap}")
@@ -53,6 +55,7 @@ def create_faiss_index(pdf_path: str) -> str:
 
 # Split the text into chunks with CHUNK_SIZE and CHUNK_OVERLAP as character count
 def split_text(text, chunk_size, chunk_overlap):
+    """Split text in chunks."""
     # Calculate the number of chunks
     num_chunks = (len(text) - chunk_overlap) // (chunk_size - chunk_overlap)
 
