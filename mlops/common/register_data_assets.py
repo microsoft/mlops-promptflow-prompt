@@ -50,7 +50,7 @@ def main():
         config.aistudio_config["resource_group_name"],
         config.aistudio_config["project_name"],
     )
-    
+
     for dataset_config in datasets_config:
         dataset_name = dataset_config['dataset_name']
         print(f'Registering {dataset_name}')
@@ -58,7 +58,7 @@ def main():
         aml_dataset_unlabeled = ml_client.data.get(
             name=dataset_name, label="latest"
         )
-        print(aml_dataset_unlabeled)
+        print(aml_dataset_unlabeled.id)
         print(check_data_asset_registered(ml_client=ml_client, dataset_name=dataset_name))
 
 

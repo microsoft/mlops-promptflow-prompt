@@ -40,6 +40,7 @@ class MLOpsConfig():
 
 class DatasetsConfig():
     """Datasets Configuration Class."""
+
     _raw_config: Any
 
     def __init__(self, environemnt: str = 'pr', config_path: Path = './config/data_config.yaml'):
@@ -53,7 +54,7 @@ class DatasetsConfig():
     def __getattr__(self, __name: str) -> Any:
         """Get values for top level keys in configuration."""
         return self._raw_config[__name]
-    
+
     def get_dataset_config(self, name: str) -> Dict:
         """Get the dataset config for a given dataset name."""
         dataset_config = None
