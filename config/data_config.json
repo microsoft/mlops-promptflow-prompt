@@ -1,0 +1,24 @@
+{
+    "datasets":[
+        {
+            "DATA_PATH":"data/basic_flow_data.jsonl",
+            "DATASET_NAME":"basic_flow",
+            "DATASET_DESC":"test set for all basic flows"
+        },
+        {
+            "DATA_PATH":"data/basic_flow_data.jsonl",
+            "DATASET_NAME":"basic_flow_eval",
+            "DATASET_DESC":"test set for all basic evaluation flows"
+        },    
+        {
+            "DATA_PATH":"data/plan_and_execute_data.jsonl",
+            "DATASET_NAME":"plan_and_execute_flow",
+            "DATASET_DESC":"test set for plan and execute flow"
+        },
+        {
+            "DATA_PATH":"data/plan_and_execute_eval_data.jsonl",
+            "DATASET_NAME":"plan_and_execute_flow_eval",
+            "DATASET_DESC":"test set for plan and execute evaluation flow"
+        }
+    ]
+}
