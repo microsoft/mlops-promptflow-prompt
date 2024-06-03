@@ -34,8 +34,8 @@ class OAI:
         self.check_openai_version()
         init_params = self.get_initial_params()
         api_type = os.environ.get("OPENAI_API_TYPE")
-        self.sanity_checks(api_type, init_params)
         self.initialize_client(api_type, init_params)
+        self.sanity_checks(api_type, init_params)
 
     def check_openai_version(self):
         """Check the OpenAI package version."""
