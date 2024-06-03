@@ -1,9 +1,11 @@
+"""Promptflow Tool for chat_with_pdf example."""
 from promptflow import tool
 from chat_with_pdf.main import chat_with_pdf
 
 
 @tool
 def chat_with_pdf_tool(question: str, pdf_url: str, history: list, ready: str):
+    """Run chat_with_pdf example."""
     history = convert_chat_history_to_chatml_messages(history)
 
     stream, context = chat_with_pdf(question, pdf_url, history)
@@ -16,6 +18,7 @@ def chat_with_pdf_tool(question: str, pdf_url: str, history: list, ready: str):
 
 
 def convert_chat_history_to_chatml_messages(history):
+    """Convert chat history to chat messages."""
     messages = []
     for item in history:
         messages.append({"role": "user", "content": item["inputs"]["question"]})
@@ -25,6 +28,7 @@ def convert_chat_history_to_chatml_messages(history):
 
 
 def convert_chatml_messages_to_chat_history(messages):
+    """Convert chat chat messages to history."""
     history = []
     for i in range(0, len(messages), 2):
         history.append(

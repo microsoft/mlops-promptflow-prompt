@@ -98,3 +98,18 @@ flow_configs:
     column_mapping:
       question: ${data.question}
     json_schema_path: flows/class_plan_and_execute/evaluate/plan_and_execute_json_schema.json
+
+  chat_with_pdf_pr:
+    standard_flow_path: flows/chat_with_pdf/standard
+    EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
+    CHAT_MODEL_DEPLOYMENT_NAME: gpt-35-turbo
+    deployment_name: gpt-35-turbo
+    connection_name: aoai
+    data_path: data/bert-paper-qna.jsonl
+    eval_data_path: data/bert-paper-qna-3-line.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
+      pdf_url: ${data.pdf_url}
+      chat_history: ${data.chat_history}
+      question: ${data.question}
