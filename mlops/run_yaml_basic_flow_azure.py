@@ -4,7 +4,6 @@ from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from azure.identity import DefaultAzureCredential
 from azure.ai.ml import MLClient
-from mlops.common.register_data_assets import check_data_asset_registered, register_data_asset
 import logging
 
 
