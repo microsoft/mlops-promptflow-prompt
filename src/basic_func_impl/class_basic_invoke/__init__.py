@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 bp = func.Blueprint()
 
 
-@bp.route(route="classbasedinvoke")
-def class_based_invoke(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+@bp.route(route="classbasicinvoke")
+def class_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     """Invoke basic class flow from Azure Function."""
     carrier = {'traceparent': req.headers['Traceparent']}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)

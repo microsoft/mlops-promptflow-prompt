@@ -7,13 +7,13 @@ from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapProp
 from .flow_code.extract_entities import extract_entity
 
 tracer = trace.get_tracer(__name__)
-logger = logging.getLogger("functions")
+logger = logging.getLogger(__name__)
 
 bp = func.Blueprint()
 
 
-@bp.route(route="functionbasedinvoke")
-def function_based_invoke(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+@bp.route(route="functionbasicinvoke")
+def function_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     """Invoke basic function flow from Azure Function."""
     carrier = {'traceparent': req.headers['Traceparent']}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
