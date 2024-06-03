@@ -14,7 +14,7 @@ keyrings.alt
 azure-monitor-opentelemetry
 opentelemetry-instrumentation-openai>=0.21.3
 # configure_azure_monitor installs the below with v0.42b0
-# but we need >=0.45b0 for openai
+# but we need >=0.45b0 for opentelemetry-semantic-conventions to enable openai
 opentelemetry-instrumentation-requests>=0.45b0
 opentelemetry-instrumentation-fastapi>=0.45b0
 opentelemetry-instrumentation-urllib>=0.45b0
