@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 bp = func.Blueprint()
 
 
-@bp.route(route="functionbasedinvoke")
-def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+@bp.route(route="yamlbasicinvoke")
+def yaml_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     """Invoke basic yaml flow from Azure Function."""
     carrier = {'traceparent': req.headers['Traceparent']}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
