@@ -54,8 +54,6 @@ class OAI:
             init_params["organization"] = os.environ.get("OPENAI_ORG_ID")
         if os.getenv("OPENAI_API_KEY") is None:
             raise ValueError("OPENAI_API_KEY is not set in environment variables")
-        if os.getenv("OPENAI_API_BASE") is not None:
-            init_params["base_url"] = os.environ.get("OPENAI_API_BASE")
 
         init_params["api_key"] = os.environ.get("OPENAI_API_KEY")
         return init_params
