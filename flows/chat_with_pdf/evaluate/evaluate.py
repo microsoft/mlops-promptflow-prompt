@@ -35,8 +35,7 @@ def main():
     relevance_eval = RelevanceEvaluator(model_config=model_config)
     match_eval = MatchEvaluator()
 
-    eval_dataset_config = mlops_config.get_dataset_config(name="chat_with_pdf_eval_data")
-    data_eval_path = eval_dataset_config['data_path']
+    data_eval_path = flow_config['eval_data_path']
     flow_standard_path = flow_config["standard_flow_path"]
     aoai_deployment = flow_config["CHAT_MODEL_DEPLOYMENT_NAME"]
 

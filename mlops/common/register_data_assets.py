@@ -11,7 +11,7 @@ from azure.identity import DefaultAzureCredential
 from azure.ai.ml import MLClient
 from azure.ai.ml.entities import Data
 from azure.ai.ml.constants import AssetTypes
-from mlops.common.config_utils import MLOpsConfig
+from mlops.common.config_utils import MLOpsConfig, DatasetsConfig
 from typing import Dict
 import logging
 
@@ -42,6 +42,7 @@ def check_data_asset_registered(ml_client: MLClient, dataset_name: str) -> bool:
 def main():
     """Register all datasets from the config file."""
     config = MLOpsConfig()
+    datasets_config = DatasetsConfig().datasets
 
     ml_client = MLClient(
         DefaultAzureCredential(),
@@ -49,21 +50,16 @@ def main():
         config.aistudio_config["resource_group_name"],
         config.aistudio_config["project_name"],
     )
-    print(check_data_asset_registered(ml_client=ml_client, dataset_name="dataset_name"))
-    flow_configs = config.flow_configs
-    for flow_config_key in flow_configs.keys():
-        flow_config = flow_configs[flow_config_key]
-        if 'datasets' in flow_config:
-            dataset_configs = flow_config['datasets']
-            for dataset_config in dataset_configs:
-                dataset_name = dataset_config['dataset_name']
-                print(f'Registering {dataset_name}')
-                register_data_asset(ml_client=ml_client, config=dataset_config)
-                aml_dataset_unlabeled = ml_client.data.get(
-                    name=dataset_name, label="latest"
-                )
-                print(aml_dataset_unlabeled.id)
-                print(check_data_asset_registered(ml_client=ml_client, dataset_name=dataset_name))
+    
+    for dataset_config in datasets_config:
+        dataset_name = dataset_config['dataset_name']
+        print(f'Registering {dataset_name}')
+        register_data_asset(ml_client=ml_client, config=dataset_config)
+        aml_dataset_unlabeled = ml_client.data.get(
+            name=dataset_name, label="latest"
+        )
+        print(aml_dataset_unlabeled)
+        print(check_data_asset_registered(ml_client=ml_client, dataset_name=dataset_name))
 
 
 if __name__ == "__main__":

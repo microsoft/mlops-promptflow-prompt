@@ -25,8 +25,7 @@ def main():
 
     matchevaluator = MatchEvaluator()
 
-    eval_dataset_config = mlops_config.get_dataset_config(name='basic_flow_eval')
-    data_eval_path = eval_dataset_config['data_path']
+    data_eval_path = flow_config['eval_data_path']
     flow_standard_path = flow_config["standard_flow_path"]
     aoai_deployment = flow_config["deployment_name"]
 

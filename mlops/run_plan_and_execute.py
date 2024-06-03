@@ -52,9 +52,8 @@ def main():
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    plan_and_execute_flow_dataset_config = mlops_config.get_dataset_config("plan_and_execute_flow")
-    data_standard_path = plan_and_execute_flow_dataset_config['data_path']
-    column_mapping = plan_and_execute_flow_dataset_config['column_mapping']
+    data_standard_path = flow_config['data_path']
+    column_mapping = flow_config['column_mapping']
 
     run_instance = pf.run(
         flow=flow_standard_path,
