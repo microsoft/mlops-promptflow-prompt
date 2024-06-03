@@ -7,7 +7,7 @@ from mlops.common.config_utils import MLOpsConfig
 from src.evaluators.json_evaluator import JsonEvaluator
 from src.evaluators.executor_evaluator import ExecutorEvaluator
 from promptflow.evals.evaluators import GroundednessEvaluator, RelevanceEvaluator, SimilarityEvaluator
-from flows.plan_and_execute.evaluate.flow_wrapper import PlanAndExecuteFlowWrapper
+from flows.yaml_plan_and_execute.evaluate.flow_wrapper import PlanAndExecuteFlowWrapper
 from mlops.common.naming_tools import generate_experiment_name
 
 
@@ -24,7 +24,7 @@ def main():
     args = parser.parse_args()
 
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
-    flow_config = mlops_config.get_flow_config(flow_name="plan_and_execute")
+    flow_config = mlops_config.get_flow_config(flow_name="yaml_plan_and_execute")
 
     json_schema_path = flow_config["json_schema_path"]
     data_eval_path = flow_config['eval_data_path']

@@ -8,7 +8,7 @@ from promptflow.entities import CustomConnection
 
 def main():
     """
-    Execute function_basic_flow using different ways.
+    Execute yaml_plan_and_execute using different ways.
 
     The method uses config.yaml as a source for parameters, and
     it runs the flow in different ways that can be used to test the flow locally.
@@ -25,7 +25,7 @@ def main():
     args = parser.parse_args()
 
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
-    flow_config = mlops_config.get_flow_config(flow_name="plan_and_execute")
+    flow_config = mlops_config.get_flow_config(flow_name="yaml_plan_and_execute")
     openai_config = mlops_config.aoai_config
 
     # Run the flow as a function.

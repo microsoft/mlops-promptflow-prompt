@@ -70,9 +70,9 @@ flow_configs:
       text: ${data.text}
       entity_type: ${data.entity_type}
 
-  plan_and_execute_pr:
-    standard_flow_path: flows/plan_and_execute/standard
-    deployment_name_gpt35: gpt-35-turbo
+  yaml_plan_and_execute_pr:
+    standard_flow_path: flows/yaml_plan_and_execute/standard
+    deployment_name_gpt35: gpt-35-turbo-16k
     deployment_name_gpt4: gpt-4o
     aoai_api_version: 2023-12-01-preview
     bing_api_key: ${BING_API_KEY}
@@ -82,4 +82,19 @@ flow_configs:
     eval_data_path: data/plan_and_execute_eval_data.jsonl
     column_mapping:
       question: ${data.question}
-    json_schema_path: flows/plan_and_execute/evaluate/plan_and_execute_json_schema.json
+    json_schema_path: flows/yaml_plan_and_execute/evaluate/plan_and_execute_json_schema.json
+
+  class_plan_and_execute_pr:
+    standard_flow_path: flows/class_plan_and_execute/standard/flow.flex.yaml
+    planner_system_message_path: flows/class_plan_and_execute/standard/planner_system_message.txt
+    solver_system_message_path: flows/class_plan_and_execute/standard/solver_system_message.txt
+    deployment_name_gpt35: gpt-35-turbo-16k
+    deployment_name_gpt4: gpt-4o
+    aoai_api_version: 2023-12-01-preview
+    bing_api_key: ${BING_API_KEY}
+    bing_endpoint: https://api.bing.microsoft.com/v7.0/search
+    data_path: data/plan_and_execute_data.jsonl
+    eval_data_path: data/plan_and_execute_eval_data.jsonl
+    column_mapping:
+      question: ${data.question}
+    json_schema_path: flows/class_plan_and_execute/evaluate/plan_and_execute_json_schema.json
