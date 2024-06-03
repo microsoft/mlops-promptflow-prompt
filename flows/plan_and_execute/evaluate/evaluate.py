@@ -27,7 +27,7 @@ def main():
     flow_config = mlops_config.get_flow_config(flow_name="plan_and_execute")
 
     json_schema_path = flow_config["json_schema_path"]
-    data_eval_path = flow_config["eval_data_path"]
+    data_eval_path = flow_config['eval_data_path']
     flow_standard_path = flow_config["standard_flow_path"]
 
     aistudio_config = mlops_config.aistudio_config

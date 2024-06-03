@@ -49,8 +49,7 @@ flow_configs:
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:
       text: ${data.text}
-      entity_type: ${data.entity_type}
-   
+      entity_type: ${data.entity_type} 
   class_basic_flow_dev:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo

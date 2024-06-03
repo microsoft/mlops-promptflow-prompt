@@ -46,7 +46,6 @@ def main():
         raise Exception("Azure OpenAI configuration connection does not exist.")
 
     credential = DefaultAzureCredential()
-
     pf = PFClient(
         credential,
         aistudio_config["subscription_id"],
@@ -57,7 +56,6 @@ def main():
     # Run the flow as a PromptFlow batch on a data frame.
     data_standard_path = flow_config['data_path']
     column_mapping = flow_config['column_mapping']
-    
     run_instance = pf.run(
         flow=flow_standard_path,
         data=data_standard_path,
