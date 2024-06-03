@@ -3,6 +3,7 @@ import os
 import pathlib
 from typing import List
 from promptflow.core import Prompty
+from promptflow.tracing import trace
 
 
 class EntityExtraction:
@@ -25,6 +26,7 @@ class EntityExtraction:
             model=override_model,
         )
 
+    @trace
     def __call__(self, *, entity_type: str, text: str, **kwargs):
         """Invoke the flow for a single request."""
         result = self.prompty(entity_type=entity_type, text=text)

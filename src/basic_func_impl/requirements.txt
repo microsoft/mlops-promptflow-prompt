@@ -9,3 +9,13 @@ python-dotenv>=0.10.3
 promptflow>=1.11.0
 promptflow-tools
 keyrings.alt
+
+## Telemetry
+azure-monitor-opentelemetry
+opentelemetry-instrumentation-openai>=0.45b0
+# configure_azure_monitor installs the below with v0.42b0
+# but we need >=0.45b0 for openai
+opentelemetry-instrumentation-requests>=0.45b0
+opentelemetry-instrumentation-fastapi>=0.45b0
+opentelemetry-instrumentation-urllib>=0.45b0
+opentelemetry-instrumentation-urllib3>=0.45b0
