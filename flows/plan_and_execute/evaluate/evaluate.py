@@ -7,7 +7,7 @@ from mlops.common.config_utils import MLOpsConfig
 from src.evaluators.json_evaluator import JsonEvaluator
 from src.evaluators.executor_evaluator import ExecutorEvaluator
 from promptflow.evals.evaluators import GroundednessEvaluator, RelevanceEvaluator, SimilarityEvaluator
-from flows.yaml_plan_and_execute.evaluate.flow_wrapper import PlanAndExecuteFlowWrapper
+from flows.plan_and_execute.evaluate.flow_wrapper import PlanAndExecuteFlowWrapper
 from mlops.common.naming_tools import generate_experiment_name
 
 
