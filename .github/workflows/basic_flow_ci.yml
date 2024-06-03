@@ -11,7 +11,7 @@ on:
       - 'flows/function_basic_flow/**'
       - 'flows/class_basic_flow/**'
       - 'flows/yaml_basic_flow/**'
-      - 'src/basic_func_imple/**'
+      - 'src/basic_func_impl/**'
 
 env:
   PYTHON_VERSION: "3.9"
