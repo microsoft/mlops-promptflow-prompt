@@ -1,0 +1,30 @@
+datasets:
+- name: basic_flow
+  data_path: data/basic_flow_data.jsonl
+  dataset_name: basic_flow
+  dataset_desc: test set for all basic flows
+
+- name: basic_flow_eval
+  data_path: data/basic_flow_eval_data.jsonl
+  dataset_name: basic_flow_eval
+  dataset_desc: test set for all basic evaluation flows
+
+- name: plan_and_execute_flow
+  data_path: data/plan_and_execute_data.jsonl
+  dataset_name: plan_and_execute_flow
+  dataset_desc: test set for plan and execute flow
+
+- name: plan_and_execute_flow_eval
+  data_path: data/plan_and_execute_eval_data.jsonl
+  dataset_name: plan_and_execute_flow_eval
+  dataset_desc: test set for plan and execute evaluation flow
+  
+- name: chat_with_pdf_data
+  data_path: data/bert-paper-qna.jsonl
+  dataset_name: chat_with_pdf_data
+  dataset_desc: test set for chat with pdf 
+    
+- name: chat_with_pdf_eval_data
+  data_path: data/bert-paper-qna-3-line.jsonl
+  dataset_name: chat_with_pdf_eval_data
+  dataset_desc: test set for chat with pdf eval
