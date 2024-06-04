@@ -59,7 +59,6 @@ def main():
             name=dataset_name, label="latest"
         )
         print(aml_dataset_unlabeled.id)
-        print(check_data_asset_registered(ml_client=ml_client, dataset_name=dataset_name))
 
 
 if __name__ == "__main__":
