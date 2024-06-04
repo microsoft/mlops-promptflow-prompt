@@ -1,9 +1,10 @@
 """Shows example how to invoke the flow using different ways."""
-import os
 import argparse
 from promptflow.client import PFClient
 from flows.class_basic_flow.standard.extract_entities import EntityExtraction
 from mlops.common.config_utils import MLOpsConfig
+from promptflow.entities import AzureOpenAIConnection
+from promptflow.core import AzureOpenAIModelConfiguration
 
 
 def main():
@@ -31,13 +32,24 @@ def main():
 
     openai_config = mlops_config.aoai_config
 
-    os.environ["AZURE_OPENAI_API_KEY"] = openai_config["aoai_api_key"]
-    os.environ["AZURE_OPENAI_API_VERSION"] = openai_config["aoai_api_version"]
-    os.environ["AZURE_OPENAI_DEPLOYMENT"] = aoai_deployment
-    os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
+    connection = AzureOpenAIConnection(
+        name=flow_config["connection_name"],
+        api_key=openai_config["aoai_api_key"],
+        api_base=openai_config["aoai_api_base"],
+        api_type="azure",
+        api_version=openai_config["aoai_api_version"],
+    )
+
+    pf = PFClient()
+    pf.connections.create_or_update(connection)
+
+    # create the model config to be used in below flow calls
+    config = AzureOpenAIModelConfiguration(
+        connection=flow_config["connection_name"], azure_deployment=aoai_deployment
+    )
 
     # Run the flow as a basic function call with no tracing
-    obj_chat = EntityExtraction()
+    obj_chat = EntityExtraction(model_config=config)
 
     print(obj_chat(
         entity_type="job title",
@@ -47,7 +59,8 @@ def main():
     flow_standard_path = flow_config["standard_flow_path"]
 
     pf = PFClient()
-    print(pf.test(flow=flow_standard_path))
+    print(pf.test(flow=flow_standard_path,
+                  init={"model_config": config}))
 
     # Run the flow as a PromptFlow batch on a data frame.
     data_standard_path = flow_config['data_path']
@@ -57,6 +70,7 @@ def main():
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
+        init={"model_config": config}
     )
 
     pf.stream(run_instance)

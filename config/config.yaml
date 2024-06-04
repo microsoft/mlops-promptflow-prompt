@@ -17,6 +17,7 @@ flow_configs:
   function_basic_flow_pr:
     standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
+    connection_name: aoai
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:
@@ -26,6 +27,7 @@ flow_configs:
   class_basic_flow_pr:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
+    connection_name: aoai
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:
@@ -45,6 +47,7 @@ flow_configs:
   function_basic_flow_dev:
     standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
+    connection_name: aoai
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:
@@ -54,6 +57,7 @@ flow_configs:
   class_basic_flow_dev:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
+    connection_name: aoai
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:

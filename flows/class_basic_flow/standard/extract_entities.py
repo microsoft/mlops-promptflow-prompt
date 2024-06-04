@@ -2,28 +2,22 @@
 import os
 import pathlib
 from typing import List
-from promptflow.core import Prompty
+from promptflow.core import Prompty, AzureOpenAIModelConfiguration
 from promptflow.tracing import trace
 
 
 class EntityExtraction:
     """Implement the flow."""
 
-    def __init__(self):
+    def __init__(self, model_config: AzureOpenAIModelConfiguration):
         """Initialize environment and load prompty into the memory."""
-        override_model = {
-            "configuration": {
-                "azure_deployment": "${env:AZURE_OPENAI_DEPLOYMENT}",
-                "api_key": "${env:AZURE_OPENAI_API_KEY}",
-                "api_version": "${env:AZURE_OPENAI_API_VERSION}",
-                "azure_endpoint": "${env:AZURE_OPENAI_ENDPOINT}"
-            }
-        }
         rootpath = pathlib.Path(__file__).parent.resolve()
+
+        self.model_config = model_config
 
         self.prompty = Prompty.load(
             source=os.path.join(rootpath, "entity_template.prompty"),
-            model=override_model,
+            model={"configuration": self.model_config},
         )
 
     @trace
