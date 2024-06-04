@@ -1,0 +1,5 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+entry: plan_and_execute:PlanAndExecute
+sample:
+    inputs:
+      question: "What was the total box office performance of 'Inception' and 'Interstellar' together?"
