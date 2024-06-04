@@ -1,3 +1,4 @@
+"""Re-write question from user."""
 from jinja2 import Environment, FileSystemLoader
 import os
 from utils.logging import log
@@ -5,6 +6,7 @@ from utils.oai import OAIChat, render_with_token_limit
 
 
 def rewrite_question(question: str, history: list):
+    """Re-write question from user function."""
     template = Environment(
         loader=FileSystemLoader(os.path.dirname(os.path.abspath(__file__)))
     ).get_template("rewrite_question_prompt.md")

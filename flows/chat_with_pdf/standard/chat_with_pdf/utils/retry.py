@@ -1,3 +1,4 @@
+"""Retry decorators."""
 from typing import Tuple, Union, Optional, Type
 import functools
 import time
@@ -12,6 +13,7 @@ def retry_and_handle_exceptions(
     jitter: bool = False,
     extract_delay_from_error_message: Optional[any] = None,
 ):
+    """Create decorator to retry a function call with exponential backoff in case of specified exceptions."""
     def deco_retry(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -55,6 +57,7 @@ def retry_and_handle_exceptions_for_generator(
     jitter: bool = False,
     extract_delay_from_error_message: Optional[any] = None,
 ):
+    """Create decorator to retry a generator function call with exponential backoff in case of specified exceptions."""
     def deco_retry(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):

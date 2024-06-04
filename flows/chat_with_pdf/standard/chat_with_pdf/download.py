@@ -1,3 +1,4 @@
+"""Download pdfs."""
 import requests
 import os
 import re
@@ -7,8 +8,8 @@ from utils.logging import log
 from constants import PDF_DIR
 
 
-# Download a pdf file from a url and return the path to the file
 def download(url: str) -> str:
+    """Download a pdf file from a url and return the path to the file."""
     path = os.path.join(PDF_DIR, normalize_filename(url) + ".pdf")
     lock_path = path + ".lock"
 
@@ -27,5 +28,5 @@ def download(url: str) -> str:
 
 
 def normalize_filename(filename):
-    # Replace any invalid characters with an underscore
+    """Replace any invalid characters with an underscore."""
     return re.sub(r"[^\w\-_. ]", "_", filename)

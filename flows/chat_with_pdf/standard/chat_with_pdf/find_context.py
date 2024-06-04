@@ -1,3 +1,4 @@
+"""Find context in index."""
 import faiss
 from jinja2 import Environment, FileSystemLoader
 import os
@@ -8,6 +9,7 @@ from utils.logging import log
 
 
 def find_context(question: str, index_path: str):
+    """Find context in faiss index."""
     index = FAISSIndex(index=faiss.IndexFlatL2(1536), embedding=OAIEmbedding())
     index.load(path=index_path)
     snippets = index.query(question, top_k=5)

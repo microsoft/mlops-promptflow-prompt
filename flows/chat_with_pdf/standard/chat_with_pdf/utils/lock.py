@@ -1,3 +1,4 @@
+"""Lock resource."""
 import contextlib
 import os
 import sys
@@ -10,6 +11,7 @@ else:
 
 @contextlib.contextmanager
 def acquire_lock(filename):
+    """Lock resource."""
     if not sys.platform.startswith("win"):
         with open(filename, "a+") as f:
             fcntl.flock(f, fcntl.LOCK_EX)
