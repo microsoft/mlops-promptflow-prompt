@@ -13,7 +13,6 @@ from azure.ai.ml.entities import Data
 from azure.ai.ml.constants import AssetTypes
 from mlops.common.config_utils import MLOpsConfig, DatasetsConfig
 from typing import Dict
-import logging
 
 
 def register_data_asset(ml_client: MLClient, config: Dict) -> Data:
@@ -25,6 +24,7 @@ def register_data_asset(ml_client: MLClient, config: Dict) -> Data:
         name=config['dataset_name'],
     )
     return ml_client.data.create_or_update(aml_dataset)
+
 
 def main():
     """Register all datasets from the config file."""
