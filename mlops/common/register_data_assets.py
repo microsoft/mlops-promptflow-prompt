@@ -26,19 +26,6 @@ def register_data_asset(ml_client: MLClient, config: Dict) -> Data:
     )
     return ml_client.data.create_or_update(aml_dataset)
 
-
-def check_data_asset_registered(ml_client: MLClient, dataset_name: str) -> bool:
-    """Check if a specified datset is registered."""
-    try:
-        data_items = ml_client.data.list(name=dataset_name)
-        data_items_count = sum(1 for _ in data_items)
-        if data_items_count:
-            return True
-    except Exception as e:
-        logging.debug(f"data asset not found: {e}")
-    return False
-
-
 def main():
     """Register all datasets from the config file."""
     config = MLOpsConfig()
