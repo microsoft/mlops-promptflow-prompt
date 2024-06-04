@@ -1,0 +1,26 @@
+# Use this folder to ignore all files and folders that should not go
+# to Azure ML Service
+
+# Allow amlignore file
+!.amlignore
+
+# Folders
+.azure-pipelines
+.devcontainer
+.github
+config
+data
+mlops
+scr
+tests
+
+# Files
+README.md
+setup.cfg
+.env.sample
+SUPPORT.md
+SECURITY.md
+LICENSE
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+conda_environment.md

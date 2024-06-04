@@ -1,5 +1,4 @@
 """Evaluation flow for class_basic_flow."""
-import os
 import argparse
 from pprint import pprint
 from promptflow.evals.evaluate import evaluate
@@ -7,6 +6,9 @@ from mlops.common.config_utils import MLOpsConfig
 from flows.class_basic_flow.standard.extract_entities import EntityExtraction
 from src.evaluators.match_evaluator import MatchEvaluator
 from mlops.common.naming_tools import generate_experiment_name
+from promptflow.client import PFClient
+from promptflow.entities import AzureOpenAIConnection
+from promptflow.core import AzureOpenAIModelConfiguration
 
 
 def main():
@@ -28,10 +30,24 @@ def main():
 
     openai_config = mlops_config.aoai_config
 
-    os.environ["AZURE_OPENAI_API_KEY"] = openai_config["aoai_api_key"]
-    os.environ["AZURE_OPENAI_API_VERSION"] = openai_config["aoai_api_version"]
-    os.environ["AZURE_OPENAI_DEPLOYMENT"] = aoai_deployment
-    os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
+    connection = AzureOpenAIConnection(
+        name=flow_config["connection_name"],
+        api_key=openai_config["aoai_api_key"],
+        api_base=openai_config["aoai_api_base"],
+        api_type="azure",
+        api_version=openai_config["aoai_api_version"],
+    )
+
+    pf = PFClient()
+    pf.connections.create_or_update(connection)
+
+    # create the model config to be used in below flow calls
+    config = AzureOpenAIModelConfiguration(
+        connection=flow_config["connection_name"], azure_deployment=aoai_deployment
+    )
+
+    # Run the flow as a basic function call with no tracing
+    obj_chat = EntityExtraction(model_config=config)
 
     matchevaluator = MatchEvaluator()
 
@@ -43,7 +59,7 @@ def main():
     results = evaluate(
         evaluation_name=generate_experiment_name("class_basic_flow"),
         data=data_eval_path,
-        target=EntityExtraction,
+        target=obj_chat,
         evaluators={
             "matchevaluator": matchevaluator,
         },
