@@ -166,6 +166,7 @@ jobs:
 
       - name: Expose Application
         run: |
+          kubectl delete service basic-flow-app --ignore-not-found 
           kubectl expose pod basic-flow-app --type=LoadBalancer --port=80
           sleep 30  # Wait for the service to become available
           SERVICE_IP=$(kubectl get service basic-flow-app -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
