@@ -163,7 +163,7 @@ jobs:
             kubectl create secret docker-registry acr-auth --docker-server=${{ secrets.ACR_REGISTRY }}.azurecr.io --docker-username=${{ secrets.ACR_USER_NAME }} --docker-password=${{ secrets.ACR_PASSWORD }}
             kubectl run basic-flow-app --image ${{ secrets.ACR_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      - name: Expose application
+      - name: Expose Application
         run: |
           kubectl expose pod basic-flow-app --type=LoadBalancer --port=80
           sleep 30  # Wait for the service to become available
