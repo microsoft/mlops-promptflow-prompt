@@ -159,7 +159,5 @@ jobs:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
             az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
-            docker build -t ${{ secrets.ACR_REGISTRY  }}.azurecr.io/${{ env.IMAGE_NAME }}:latest .
-            docker push ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
             az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
             kubectl run basic-flow-app --image ${{ secrets.ACR_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:latest
