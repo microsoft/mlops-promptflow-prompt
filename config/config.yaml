@@ -65,6 +65,7 @@ flow_configs:
 
   yaml_basic_flow_dev:
     standard_flow_path: flows/yaml_basic_flow/standard
+    connection_name: aoai
     deployment_name: gpt-35-turbo
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
