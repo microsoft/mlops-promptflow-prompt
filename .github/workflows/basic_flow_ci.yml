@@ -160,3 +160,10 @@ jobs:
             az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
             az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
             kubectl run basic-flow-app --image ${{ secrets.ACR_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+
+      - name: Expose application
+        run: |
+          kubectl expose pod basic-flow-app --type=LoadBalancer --port=80
+          sleep 30  # Wait for the service to become available
+          SERVICE_IP=$(kubectl get service basic-flow-app -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "Service IP: $SERVICE_IP"

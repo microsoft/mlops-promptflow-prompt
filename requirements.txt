@@ -23,3 +23,6 @@ pyautogen
 faiss-cpu
 bs4
 wikipedia
+# additional dependencies for application
+fastapi
+uvicorn

@@ -39,3 +39,14 @@ RUN conda init bash \
     && conda clean -a -y
 
 RUN echo "conda activate promptflow-env" >> /home/$USERNAME/.bashrc
+
+# Copy FastAPI application
+COPY ./app /home/$USERNAME/app
+
+COPY ./flows/function_basic_flow/standard /home/$USERNAME/app/flow_code/function_basic_flow
+COPY ./flows/class_basic_flow/standard /home/$USERNAME/app/flow_code/class_basic_flow
+COPY ./flows/yaml_basic_flow/standard /home/$USERNAME/app/flow_code/yaml_basic_flow
+
+WORKDIR /home/$USERNAME/app
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
