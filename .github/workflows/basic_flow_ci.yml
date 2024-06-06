@@ -159,19 +159,10 @@ jobs:
           script_parameter: |
             az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
             az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
-            AKS_ID=$(az aks show --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }} --query "identity.principalId" --output tsv)
-            ACR_ID=$(az acr show --name ${{ secrets.ACR_REGISTRY }} --query "id" --output tsv)
-            ASSIGNMENT_EXISTS=$(az role assignment list --assignee $AKS_ID --role AcrPull --scope $ACR_ID --query "[].id" --output tsv)
-            if [ -z "$ASSIGNMENT_EXISTS" ]; then
-              az role assignment create --assignee $AKS_ID --role AcrPull --scope $ACR_ID
-            fi
             kubectl delete pod basic-flow-app --ignore-not-found
             kubectl run basic-flow-app --image ${{ secrets.ACR_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:latest --image-pull-secrets=acr-auth
 
       - name: Expose Application
         run: |
           kubectl delete service basic-flow-app --ignore-not-found 
-          kubectl expose pod basic-flow-app --type=LoadBalancer --port=80
-          sleep 30  # Wait for the service to become available
-          SERVICE_IP=$(kubectl get service basic-flow-app -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          echo "Service IP: $SERVICE_IP"
+          kubectl expose pod basic-flow-app --type=LoadBalancer --port=443
