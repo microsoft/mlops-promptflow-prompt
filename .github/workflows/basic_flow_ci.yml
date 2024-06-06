@@ -160,9 +160,9 @@ jobs:
             az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
             az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
             kubectl delete pod basic-flow-app --ignore-not-found
-            kubectl run basic-flow-app --image ${{ secrets.ACR_REGISTRY}}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+            kubectl apply -f app/deployment.yaml
 
       - name: Expose Application
         run: |
           kubectl delete service basic-flow-app --ignore-not-found 
-          kubectl expose pod basic-flow-app --type=LoadBalancer --port=80
+          kubectl expose deployment basic-flow-app --type=LoadBalancer --port=80
