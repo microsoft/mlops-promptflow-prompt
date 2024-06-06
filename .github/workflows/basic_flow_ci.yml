@@ -163,4 +163,4 @@ jobs:
 
       - name: Expose Application
         run: |
-          kubectl expose deployment basic-flow-app --type=LoadBalancer --port=80
+          kubectl expose deployment basic-flow-app-deployment --type=LoadBalancer --port=80
