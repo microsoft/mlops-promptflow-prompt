@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basic-flow-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: basic-flow-app
+  template:
+    metadata:
+      labels:
+        app: basic-flow-app
+    spec:
+      containers:
+      - name: basic-flow-app
+        image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "1"
+            memory: "500Mi"
+          requests:
+            cpu: "0.5"
+            memory: "200Mi"
