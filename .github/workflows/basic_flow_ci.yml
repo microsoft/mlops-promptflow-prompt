@@ -168,6 +168,7 @@ jobs:
       - name: Connect to AKS
         uses: azure/aks-set-context@v1
         with:
+          creds: ${{ secrets.azure_credentials }}
           cluster-name: ${{ vars.CLUSTER_NAME }}
           resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
 
