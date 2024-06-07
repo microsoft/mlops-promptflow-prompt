@@ -1,7 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: basic-flow-app-service
+  namespace: basic-flow-app
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    nodePort: 30125
+  selector:
+    app: basic-flow-app
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: basic-flow-app-deployment
+  namespace: basic-flow-app
 spec:
   replicas: 3
   selector:

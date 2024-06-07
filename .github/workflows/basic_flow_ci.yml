@@ -140,7 +140,7 @@ jobs:
       - name: Configure DevOps Agent
         uses: ./.github/actions/configure_devops_agent
 
-      - name: Login to ACR with Azure CLI
+      - name: Login to Azure Container Registry
         run: |
           az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
 
@@ -152,15 +152,32 @@ jobs:
           push: true
           tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      - name: Execute Deployment to Azure Kubernetes Service
-        uses: ./.github/actions/execute_shell_code
-        with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          script_parameter: |
-            az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
-            az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
-            kubectl apply -f app/deployment.yaml
+      # - name: Execute Deployment to Azure Kubernetes Service
+      #   uses: ./.github/actions/execute_shell_code
+      #   with:
+      #     azure_credentials: ${{ secrets.azure_credentials }}
+      #     script_parameter: |
+      #       az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
+      #       az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
+      #       kubectl apply -f app/deployment.yaml
 
-      - name: Expose Application
+      # - name: Expose Application
+      #   run: |
+      #     kubectl expose deployment basic-flow-app-deployment --type=NodePort --port=8080
+
+      - name: Connect to AKS
+        uses: azure/aks-set-context@v1
+        with:
+          cluster-name: ${{ vars.CLUSTER_NAME }}
+          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Deploy to AKS
         run: |
-          kubectl expose deployment basic-flow-app-deployment --type=NodePort --port=8080
+          kubectl apply -f app/deployment.yaml
+          kubectl rollout status deployment/basic-flow-app-deployment
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
