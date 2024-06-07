@@ -176,6 +176,10 @@ jobs:
         id: install-kubectl
         uses: azure/setup-kubectl@v3
 
+      - name: Create Namespace
+        run: |
+          kubectl create namespace basic-flow-app
+
       - name: Deploy to AKS
         run: |
           kubectl apply -f app/deployment.yaml
