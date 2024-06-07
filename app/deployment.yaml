@@ -16,7 +16,7 @@ spec:
       - name: basic-flow-app
         image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           limits:
             cpu: "1"
