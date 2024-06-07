@@ -1,3 +1,4 @@
+"""Invoke chat_with_pdf flow from Azure Function."""
 import os
 import azure.functions as func
 import logging
@@ -8,8 +9,10 @@ from promptflow.entities import AzureOpenAIConnection
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
+
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
+    """Invoke chat_with_pdf flow from Azure Function on HTTP trigger."""
     logging.info('Python HTTP trigger function processed a request.')
 
     try:
@@ -29,12 +32,12 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
             chat_history = []
 
         connection = AzureOpenAIConnection(
-                name="aoai",
-                api_key=os.environ.get("AZURE_OPENAI_API_KEY"),
-                api_base=os.environ.get("AZURE_OPENAI_ENDPOINT"),
-                api_type="azure",
-                api_version=os.environ.get("AZURE_OPENAI_API_VERSION"),
-            )
+            name="aoai",
+            api_key=os.environ.get("AZURE_OPENAI_API_KEY"),
+            api_base=os.environ.get("AZURE_OPENAI_ENDPOINT"),
+            api_type="azure",
+            api_version=os.environ.get("AZURE_OPENAI_API_VERSION"),
+        )
 
         pf = PFClient()
         pf.connections.create_or_update(connection)
@@ -42,11 +45,11 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
         flow_standard_path = os.path.join(os.path.dirname(__file__), "flow_code")
         flow = load_flow(flow_standard_path)
         flow.context = FlowContext(
-                connections={"setup_env": {"connection": connection}}
-            )
+            connections={"setup_env": {"connection": connection}}
+        )
 
         result = flow(chat_history=chat_history, pdf_url=pdf_url, question=question)
-        
+
         return func.HttpResponse(f"{result}", status_code=200)
     else:
         return func.HttpResponse("question and pdf_url parameters have not been provided.", status_code=200)
