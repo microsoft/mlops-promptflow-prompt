@@ -52,7 +52,8 @@ flow_configs:
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:
       text: ${data.text}
-      entity_type: ${data.entity_type} 
+      entity_type: ${data.entity_type}
+
   class_basic_flow_dev:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
@@ -103,13 +104,32 @@ flow_configs:
     standard_flow_path: flows/chat_with_pdf/standard
     EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
     CHAT_MODEL_DEPLOYMENT_NAME: gpt-35-turbo
-    deployment_name: gpt-35-turbo
+    PROMPT_TOKEN_LIMIT: 1900
+    MAX_COMPLETION_TOKENS: 1024
+    VERBOSE: true
+    CHUNK_SIZE: 512
+    CHUNK_OVERLAP: 64
     connection_name: aoai
     data_path: data/bert-paper-qna.jsonl
     eval_data_path: data/bert-paper-qna-3-line.jsonl
     column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
       pdf_url: ${data.pdf_url}
       chat_history: ${data.chat_history}
       question: ${data.question}  
+
+  chat_with_pdf_dev:
+    standard_flow_path: flows/chat_with_pdf/standard
+    EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
+    CHAT_MODEL_DEPLOYMENT_NAME: gpt-35-turbo
+    PROMPT_TOKEN_LIMIT: 1900
+    MAX_COMPLETION_TOKENS: 1024
+    VERBOSE: true
+    CHUNK_SIZE: 512
+    CHUNK_OVERLAP: 64
+    connection_name: aoai
+    data_path: data/bert-paper-qna.jsonl
+    eval_data_path: data/bert-paper-qna-3-line.jsonl
+    column_mapping:
+      pdf_url: ${data.pdf_url}
+      chat_history: ${data.chat_history}
+      question: ${data.question} 

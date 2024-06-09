@@ -1,0 +1,100 @@
+pr: none
+trigger:
+  branches:
+   include:
+     - development
+  paths:
+    include:
+      - .azure-pipelines/chat_with_pdf_ci.yml
+      - flows/chat_with_pdf/*
+      - src/chat_with_pdf_func_impl/*
+
+pool:
+  vmImage: ubuntu-latest
+
+
+variables:
+- group: mlops_platform_dev_vg
+
+
+stages:
+  - stage: evaluation
+    displayName: 'Evaluate Chat With PDF PF Flow'
+    jobs:
+    - job: Execute_pf_Pipeline
+      displayName: 'Execute Evaluation'
+      steps:
+      - template: templates/configure_devops_agent.yml
+
+      - task: AzureCLI@2
+        displayName: 'Run Evaluation for Chat With PDF Flow'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            python -m flows.chat_with_pdf.evaluate.evaluate \
+              --environment_name dev
+
+
+  - stage: deploy_prompts
+    dependsOn: evaluation
+    displayName: Deploy Chat With PDF Flow as Azure Function
+    jobs:
+    - job: deploy_flow
+      steps:
+      - template: templates/configure_devops_agent.yml
+
+      - task: CopyFiles@2
+        displayName: Prepare Chat With PDF Flow to Deploy
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/flows/chat_with_pdf/standard'
+          Contents: '**'
+          TargetFolder: '$(System.DefaultWorkingDirectory)/src/chat_with_pdf_func_impl/flow_code'
+
+      - task: ArchiveFiles@2
+        displayName: "Archive files"
+        inputs:
+          rootFolderOrFile: "$(System.DefaultWorkingDirectory)/src/chat_with_pdf_func_impl"
+          includeRootFolder: false
+          archiveFile: "$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip"
+
+      - task: AzureCLI@2
+        name: deploy_function
+        displayName: Deploy Azure Function
+        continueOnError: false
+        env:
+          AOAI_API_KEY: $(AOAI_API_KEY)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            az functionapp deployment source config-zip -g $(RESOURCE_GROUP_NAME) -n \
+            $(APP_NAME) --src '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip' \
+            --build-remote true
+
+            az functionapp config appsettings set --name $(APP_NAME) --resource-group $(RESOURCE_GROUP_NAME) \
+            --settings "CHAT_MODEL_DEPLOYMENT_NAME=gpt-35-turbo" \
+            "EMBEDDING_MODEL_DEPLOYMENT_NAME=text-embedding-ada-002" \
+            "PROMPT_TOKEN_LIMIT=1900" \
+            "MAX_COMPLETION_TOKENS=1024" \
+            "VERBOSE=true" \
+            "CHUNK_SIZE=512" \
+            "CHUNK_OVERLAP=64" \
+            "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
+            "AZURE_OPENAI_API_KEY=$(AOAI_API_KEY)" \
+            "AZURE_OPENAI_ENDPOINT=$(AOAI_BASE_ENDPOINT)"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
+          artifactName: 'drop'

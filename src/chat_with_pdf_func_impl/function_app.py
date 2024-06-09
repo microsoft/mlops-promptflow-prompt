@@ -10,7 +10,7 @@ from promptflow.entities import AzureOpenAIConnection
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 
-@app.route(route="http_trigger")
+@app.route(route="chatwithpdfinvoke")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
     """Invoke chat_with_pdf flow from Azure Function on HTTP trigger."""
     logging.info('Python HTTP trigger function processed a request.')
@@ -45,10 +45,22 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
         flow_standard_path = os.path.join(os.path.dirname(__file__), "flow_code")
         flow = load_flow(flow_standard_path)
         flow.context = FlowContext(
-            connections={"setup_env": {"connection": connection}}
+            connections={"setup_env": {"connection": connection}},
         )
 
-        result = flow(chat_history=chat_history, pdf_url=pdf_url, question=question)
+        config = req_body.get('config')
+        if config is None:
+            config = {
+                "EMBEDDING_MODEL_DEPLOYMENT_NAME": os.environ.get("EMBEDDING_MODEL_DEPLOYMENT_NAME"),
+                "CHAT_MODEL_DEPLOYMENT_NAME": os.environ.get("CHAT_MODEL_DEPLOYMENT_NAME"),
+                "PROMPT_TOKEN_LIMIT": os.environ.get("PROMPT_TOKEN_LIMIT"),
+                "MAX_COMPLETION_TOKENS": os.environ.get("MAX_COMPLETION_TOKENS"),
+                "VERBOSE": os.environ.get("VERBOSE"),
+                "CHUNK_SIZE": os.environ.get("CHUNK_SIZE"),
+                "CHUNK_OVERLAP": os.environ.get("CHUNK_OVERLAP")
+            }
+
+        result = flow(chat_history=chat_history, pdf_url=pdf_url, question=question, config=config)
 
         return func.HttpResponse(f"{result}", status_code=200)
     else:

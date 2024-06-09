@@ -28,7 +28,7 @@ def main():
     model_config = AzureOpenAIModelConfiguration(
         azure_endpoint=mlops_config.aoai_config['aoai_api_base'],
         api_key=mlops_config.aoai_config['aoai_api_key'],
-        azure_deployment=flow_config["deployment_name"]
+        azure_deployment=flow_config["CHAT_MODEL_DEPLOYMENT_NAME"]
     )
 
     coherence_eval = CoherenceEvaluator(model_config=model_config)
@@ -36,13 +36,11 @@ def main():
     match_eval = MatchEvaluator()
 
     data_eval_path = flow_config['eval_data_path']
-    flow_standard_path = flow_config["standard_flow_path"]
-    aoai_deployment = flow_config["CHAT_MODEL_DEPLOYMENT_NAME"]
 
     aistudio_config = mlops_config.aistudio_config
     openai_config = mlops_config.aoai_config
 
-    flow = ChatWithPdfFlowWrapper(flow_standard_path, flow_config["connection_name"], aoai_deployment, openai_config)
+    flow = ChatWithPdfFlowWrapper(flow_config, openai_config)
 
     results = evaluate(
         evaluation_name=generate_experiment_name("chat_with_pdf"),
