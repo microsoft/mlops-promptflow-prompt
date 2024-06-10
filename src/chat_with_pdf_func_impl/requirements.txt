@@ -1,0 +1,10 @@
+azure-functions
+python-dotenv>=0.10.3
+promptflow>=1.11.0
+promptflow-tools
+
+PyPDF2
+faiss-cpu
+openai
+jinja2
+tiktoken
