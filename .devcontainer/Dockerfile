@@ -49,4 +49,4 @@ COPY ./flows/yaml_basic_flow/standard /home/$USERNAME/app/flow_code/yaml_basic_f
 
 WORKDIR /home/$USERNAME/app
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
