@@ -10,12 +10,11 @@ metadata:
   name: basic-flow-app-service
   namespace: basic-flow-app
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: http
     port: 8080
     targetPort: 8080
-    nodePort: 30125
   selector:
     app: basic-flow-app
 ---

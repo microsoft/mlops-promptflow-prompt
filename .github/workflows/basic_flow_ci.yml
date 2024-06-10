@@ -120,6 +120,7 @@ jobs:
   #           "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
   #           "AZURE_OPENAI_ENDPOINT=${{ secrets.AOAI_BASE_ENDPOINT }}"
 
+
   run-aks-deployment:
     runs-on: ubuntu-latest
     needs: run-evaluation-full
