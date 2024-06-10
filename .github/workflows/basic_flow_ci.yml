@@ -152,19 +152,6 @@ jobs:
           push: true
           tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      # - name: Execute Deployment to Azure Kubernetes Service
-      #   uses: ./.github/actions/execute_shell_code
-      #   with:
-      #     azure_credentials: ${{ secrets.azure_credentials }}
-      #     script_parameter: |
-      #       az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
-      #       az aks get-credentials --resource-group ${{ vars.RESOURCE_GROUP_NAME }} --name ${{ vars.CLUSTER_NAME }}
-      #       kubectl apply -f app/deployment.yaml
-
-      # - name: Expose Application
-      #   run: |
-      #     kubectl expose deployment basic-flow-app-deployment --type=NodePort --port=8080
-
       - name: Connect to AKS
         uses: azure/aks-set-context@v1
         with:
