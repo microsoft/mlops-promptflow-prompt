@@ -183,6 +183,6 @@ jobs:
       - name: Deploy to AKS
         run: |
           kubectl apply -f app/deployment.yaml
-          kubectl rollout status deployment/basic-flow-app-deployment
+          kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
         env:
           AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
