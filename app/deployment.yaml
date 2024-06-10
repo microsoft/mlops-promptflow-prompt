@@ -1,3 +1,9 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: basic-flow-app
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -29,7 +35,7 @@ spec:
         app: basic-flow-app
     spec:
       containers:
-      - name: basic-flow-app
+      - name: basic-flow-app-container
         image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
         ports:
         - containerPort: 8080
