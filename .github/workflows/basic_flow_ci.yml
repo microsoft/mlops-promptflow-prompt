@@ -164,6 +164,11 @@ jobs:
         id: install-kubectl
         uses: azure/setup-kubectl@v3
 
+      - name: Base64 encode secrets # Kubernetes secrets are base64 encoded
+        run: |
+          echo "AOAI_API_KEY=$(echo -n "${{ secrets.AOAI_API_KEY }}" | base64)" >> $GITHUB_ENV
+          echo "AOAI_BASE_ENDPOINT=$(echo -n "${{ secrets.AOAI_BASE_ENDPOINT }}" | base64)" >> $GITHUB_ENV
+
       - name: Update azure-open-ai-connection-deployment
         uses: fjogeleit/yaml-update-action@main
         with:
@@ -185,7 +190,7 @@ jobs:
         with:
           valueFile: 'app/deployment.yaml'
           propertyPath: data['azure-open-ai-connection-api-key']
-          value: ${{ secrets.AOAI_API_KEY }}
+          value: ${{ env.AOAI_API_KEY }} # base64 encoded
           commitChange: false
 
       - name: Update azure-open-ai-connection-api-endpoint
@@ -193,7 +198,7 @@ jobs:
         with:
           valueFile: 'app/deployment.yaml'
           propertyPath: data['azure-open-ai-connection-api-endpoint']
-          value: ${{ secrets.AOAI_BASE_ENDPOINT }}
+          value: ${{ env.AOAI_BASE_ENDPOINT }} # base64 encoded
           commitChange: false
 
       - name: Deploy to AKS
