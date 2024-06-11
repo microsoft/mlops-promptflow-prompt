@@ -80,12 +80,12 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-08-01-preview'
   resource aiSearchConnection 'connections@2024-04-01' = {
     name: '${aiHubName}-connection-AzureAISearch'
     properties: {
-      category: 'AzureAISearch'
+      category: 'CognitiveSearch'
       target: aiSearchTarget
       authType: 'ApiKey'
       isSharedToAll: true
       credentials: {
-        key: '${listKeys(aiSearchId, '2024-03-01-Preview').key1}'
+        key: '${listAdminKeys(aiSearchId, '2024-03-01-Preview').primaryKey}'
       }
       metadata: {
         ApiType : 'Azure'
