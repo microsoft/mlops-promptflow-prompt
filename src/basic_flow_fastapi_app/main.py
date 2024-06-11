@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
-import os
 from .function_basic_flow.extract_entities import EntityExtraction
+import os
 
 app = FastAPI()
 
@@ -35,25 +35,23 @@ def class_basic_flow(entity_type: str = None, text: str = None):
 
         return {"result": result}
     else:
-        return {"result": "entity_type and text parameters have not been provided."}
+        return {"result": "class_basic_flow entity_type and text parameters have not been provided."}
 
 
 @app.get("/function_basic_flow")
 def function_basic_flow(entity_type: str = None, text: str = None):
     """Return a message from the class_basic_flow endpoint."""
-    # return {"message": "Class_basic_flow endpoint"}
     if entity_type and text:
         obj = EntityExtraction()
         result = obj(entity_type=entity_type, text=text)
         return {"result": result}
     else:
-        return {"result": "entity_type and text parameters have not been provided."}
+        return {"result": "function_basic_flow entity_type and text parameters have not been provided."}
 
 
 @app.get("/yaml_basic_flow")
 def yaml_basic_flow(entity_type: str = None, text: str = None):
     """Return a message from the yaml_basic_flow endpoint."""
-    # return {"message": "Yaml_basic_flow endpoint"}
     if entity_type and text:
         connection = AzureOpenAIConnection(
             name="aoai",
@@ -76,4 +74,4 @@ def yaml_basic_flow(entity_type: str = None, text: str = None):
 
         return {"result": result}
     else:
-        return {"result": "entity_type and text parameters have not been provided."}
+        return {"result": "yaml_basic_flow entity_type and text parameters have not been provided."}

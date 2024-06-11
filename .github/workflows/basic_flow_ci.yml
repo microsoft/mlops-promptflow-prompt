@@ -149,7 +149,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./.devcontainer/Dockerfile
+          file: ./src/basic_flow_fastapi_app/Dockerfile
           push: true
           tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
@@ -166,7 +166,12 @@ jobs:
 
 
       - name: Create Secrets
-        run: kubectl create secret generic aoai-secret --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} --from-literal=key2=topsecret
+        run: |
+          kubectl create secret generic aoai-secret \
+            --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} --from-literal=key2=topsecret
+            --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
+            --from-literal=aoai-deployment=gpt-3.5-turbo \
+            --from-literal=aoai-version=2023-07-01-preview
 
       - name: Deploy to AKS
         run: |
