@@ -11,12 +11,17 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 
 @app.route(route="chatwithpdfinvoke")
-def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
+def chat_with_pdf(req: func.HttpRequest) -> func.HttpResponse:
     """Invoke chat_with_pdf flow from Azure Function on HTTP trigger."""
     logging.info('Python HTTP trigger function processed a request.')
 
     try:
         req_body = req.get_json()
+        if not isinstance(req_body, dict):
+            return func.HttpResponse(
+                "String has been passed but json is expected",
+                status_code=400
+            )
     except ValueError:
         return func.HttpResponse(
             "Invalid JSON",
