@@ -167,7 +167,7 @@ jobs:
       - name: Update azure-open-ai-connection-deployment
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'flow-deploy/kubernetes/deployment.yaml'
+          valueFile: 'app/deployment.yaml'
           propertyPath: data['azure-open-ai-connection-deployment']
           value: "gpt-35-turbo"
           commitChange: false
@@ -175,7 +175,7 @@ jobs:
       - name: Update azure-open-ai-connection-version
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'flow-deploy/kubernetes/deployment.yaml'
+          valueFile: 'app/deployment.yaml'
           propertyPath: data['azure-open-ai-connection-version']
           value: "2023-07-01-preview"
           commitChange: false
@@ -183,7 +183,7 @@ jobs:
       - name: Update azure-open-ai-connection-api-key
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'flow-deploy/kubernetes/deployment.yaml'
+          valueFile: 'app/deployment.yaml'
           propertyPath: data['azure-open-ai-connection-api-key']
           value: ${{ secrets.AOAI_API_KEY }}
           commitChange: false
@@ -191,7 +191,7 @@ jobs:
       - name: Update azure-open-ai-connection-api-endpoint
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'flow-deploy/kubernetes/deployment.yaml'
+          valueFile: 'app/deployment.yaml'
           propertyPath: data['azure-open-ai-connection-api-endpoint']
           value: ${{ secrets.AOAI_BASE_ENDPOINT }}
           commitChange: false
