@@ -5,5 +5,5 @@ jinja2
 python-dotenv
 tiktoken
 promptflow==1.11.0
-promptflow[azure]==1.11.0
+promptflow-azure==1.11.0
 promptflow-tools
