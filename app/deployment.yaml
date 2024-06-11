@@ -5,6 +5,42 @@ metadata:
   name: basic-flow-app
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-open-ai-connection-deployment
+  namespace: basic-flow-app
+type: Opaque
+data:
+  azure-open-ai-connection-deployment: <base64 encoded deployment>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-open-ai-connection-version
+  namespace: basic-flow-app
+type: Opaque
+data:
+  azure-open-ai-connection-version: <base64 encoded version>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-open-ai-connection-api-key
+  namespace: basic-flow-app
+type: Opaque
+data:
+  azure-open-ai-connection-api-key: <base64 encoded api key>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-open-ai-connection-api-endpoint
+  namespace: basic-flow-app
+type: Opaque
+data:
+  azure-open-ai-connection-api-endpoint: <base64 encoded endpoint>
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: basic-flow-app-service
