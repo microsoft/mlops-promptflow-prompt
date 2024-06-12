@@ -1,5 +1,6 @@
 """Invoking basic function flow from Azure Function."""
-from logging import WARNING, getLogger
+import logging
+import os
 import azure.functions as func
 from azure.monitor.opentelemetry import configure_azure_monitor
 from class_basic_invoke import bp as bp_class_based_invoke
@@ -10,9 +11,7 @@ from opentelemetry.instrumentation.openai import OpenAIInstrumentor
 
 configure_azure_monitor()
 
-root_logger = getLogger()
-root_logger.setLevel(WARNING)
-
+logging.getLogger("azure").setLevel(os.environ.get("LOGLEVEL_AZURE", "WARN").upper())
 
 OpenAIInstrumentor().instrument()
 
