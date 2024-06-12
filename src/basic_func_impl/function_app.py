@@ -2,9 +2,9 @@
 from logging import WARNING, getLogger
 import azure.functions as func
 from azure.monitor.opentelemetry import configure_azure_monitor
-from class_basic_invoke import bp as bp_class_based_invoke
-from function_basic_invoke import bp as bp_function_based_invoke
-from yaml_basic_invoke import bp as bp_yaml_based_invoke
+from class_basic_invoke.class_function import bp as bp_class_based_invoke
+from function_basic_invoke.function_function import bp as bp_function_based_invoke
+from yaml_basic_invoke.yaml_function import bp as bp_yaml_based_invoke
 from opentelemetry.instrumentation.openai import OpenAIInstrumentor
 
 
