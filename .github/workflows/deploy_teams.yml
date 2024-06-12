@@ -1,10 +1,10 @@
 on:
-  workflow_call:
   push:
     branches:
       - 65-teams-deploy
     paths:
       - 'samples/teamsdep/**'
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
