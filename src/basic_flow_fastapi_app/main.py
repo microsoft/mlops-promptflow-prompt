@@ -1,15 +1,15 @@
 """The FastAPI application."""
 import sys
 import pathlib
+import os
 from fastapi import FastAPI
 from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
 from promptflow.core import AzureOpenAIModelConfiguration
 sys.path.append(str(pathlib.Path(__file__).parent))
-from class_basic_flow.extract_entities import EntityExtraction
-from function_basic_flow.extract_entities import extract_entity
-import os
+from class_basic_flow.extract_entities import EntityExtraction  # noqa: E402
+from function_basic_flow.extract_entities import extract_entity  # noqa: E402
 
 app = FastAPI()
 
