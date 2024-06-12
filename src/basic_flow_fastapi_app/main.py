@@ -1,5 +1,6 @@
 """The FastAPI application."""
 import sys
+import pathlib
 from fastapi import FastAPI
 from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext
