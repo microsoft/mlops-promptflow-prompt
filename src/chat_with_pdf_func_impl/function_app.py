@@ -6,6 +6,8 @@ import logging
 from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
+from opentelemetry.instrumentation.openai import OpenAIInstrumentor
+from azure.monitor.opentelemetry import configure_azure_monitor
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
