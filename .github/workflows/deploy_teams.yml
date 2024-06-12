@@ -1,12 +1,14 @@
 ---
 name: deploy_teams
+
 on:
+  workflow_dispatch:
   push:
     branches:
-      - 65-teams-deploy
+      - '65-teams-deploy'
     paths:
       - 'samples/teamsdep/**'
-  workflow_dispatch:
+      
 jobs:
   build:
     runs-on: ubuntu-latest
