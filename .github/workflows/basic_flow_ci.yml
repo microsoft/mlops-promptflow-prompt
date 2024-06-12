@@ -128,19 +128,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-  
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Export Secrets 
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
-
-      - name: Configure DevOps Agent
-        uses: ./.github/actions/configure_devops_agent
 
       - name: Login to Azure Container Registry
         run: |
