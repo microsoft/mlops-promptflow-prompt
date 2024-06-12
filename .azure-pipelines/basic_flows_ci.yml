@@ -89,21 +89,21 @@ stages:
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)/flows/function_basic_flow/standard'
           Contents: '**'
-          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/function_basic_invoke/flow_code'
+          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/function_basic_invoke'
 
       - task: CopyFiles@2
         displayName: Prepare Class Flow to Deploy
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)/flows/class_basic_flow/standard'
           Contents: '**'
-          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/class_basic_invoke/flow_code'
+          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/class_basic_invoke'
 
       - task: CopyFiles@2
         displayName: Prepare YAML Flow to Deploy
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)/flows/yaml_basic_flow/standard'
           Contents: '**'
-          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/yaml_basic_invoke/flow_code'
+          TargetFolder: '$(System.DefaultWorkingDirectory)/src/basic_func_impl/yaml_basic_invoke'
 
       - task: ArchiveFiles@2
         displayName: "Archive files"

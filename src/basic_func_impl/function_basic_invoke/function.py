@@ -4,7 +4,7 @@ import azure.functions as func
 from opentelemetry import trace
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
-from function_basic_invoke_flow_code.extract_entities import extract_entity
+from function_basic_invoke.extract_entities import extract_entity
 
 tracer = trace.get_tracer(__name__)
 logger = logging.getLogger(__name__)
