@@ -8,10 +8,11 @@ from opentelemetry import trace
 from promptflow.client import PFClient
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
-from .flow_code.extract_entities import EntityExtraction
+from class_basic_invoke_flow_code.extract_entities import EntityExtraction
 
 tracer = trace.get_tracer(__name__)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 bp = func.Blueprint()
 
@@ -22,7 +23,7 @@ def class_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.Htt
     carrier = {'traceparent': req.headers['Traceparent']}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
 
-    with tracer.start_as_current_span("function_based_invoke", context=ctx):
+    with tracer.start_as_current_span("class_basic_invoke", context=ctx):
         logger.info('Python HTTP trigger function processed a request.')
 
         entity_type = req.params.get('entity_type')
