@@ -8,7 +8,7 @@ from opentelemetry import trace
 from promptflow.client import PFClient
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
-from class_basic_invoke_flow_code.extract_entities import EntityExtraction
+from class_basic_invoke.extract_entities import EntityExtraction
 
 tracer = trace.get_tracer(__name__)
 logger = logging.getLogger(__name__)
