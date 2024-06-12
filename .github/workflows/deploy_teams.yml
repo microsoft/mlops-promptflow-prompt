@@ -22,7 +22,7 @@ jobs:
         
       - name: Copy source code
         run: |
-          cp -r samples/teamdev/src ${{github.workspace}}/src
+          cp -r samples/teamsdep/src ${{github.workspace}}/src
 
       - name: Setup Node 20.x
         uses: actions/setup-node@v1
