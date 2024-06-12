@@ -35,12 +35,6 @@ spec:
       containers:
       - name: basic-flow-app-container
         image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
-        env:
-        - name: AZURE_OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aoai-secret
-              key: aoai-key
         ports:
         - containerPort: 8080
         resources:
