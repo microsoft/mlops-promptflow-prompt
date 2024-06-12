@@ -23,7 +23,8 @@
         "Cameron.vscode-pytest",
         "ms-python.isort",
         "ms-toolsai.jupyter",
-        "prompt-flow.prompt-flow"
+        "prompt-flow.prompt-flow",
+        "teamsdevapp.ms-teams-vscode-extension"
       ]
     }
   },
