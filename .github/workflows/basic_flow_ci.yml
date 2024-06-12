@@ -160,12 +160,13 @@ jobs:
 
       - name: Create Secrets
         run: |
-          kubectl delete secret aoai-secret --ignore-not-found=true
+          kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
           kubectl create secret generic aoai-secret \
-            --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} --from-literal=key2=topsecret \
+            --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
             --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
             --from-literal=aoai-deployment=gpt-3.5-turbo \
-            --from-literal=aoai-version=2023-07-01-preview
+            --from-literal=aoai-version=2023-07-01-preview \
+            -n basic-flow-app
 
       - name: Deploy to AKS
         run: |
