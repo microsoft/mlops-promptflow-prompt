@@ -1,13 +1,22 @@
 """Invoke chat_with_pdf flow from Azure Function."""
 import os
 import azure.functions as func
-import logging
-
+from logging import WARNING, getLogger
 from promptflow.client import load_flow, PFClient
+from opentelemetry import trace
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
 from opentelemetry.instrumentation.openai import OpenAIInstrumentor
 from azure.monitor.opentelemetry import configure_azure_monitor
+
+configure_azure_monitor()
+
+tracer = trace.get_tracer(__name__)
+logger = getLogger(__name__)
+logger.setLevel(WARNING)
+
+OpenAIInstrumentor().instrument()
+
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -15,7 +24,7 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 @app.route(route="chatwithpdfinvoke")
 def chat_with_pdf(req: func.HttpRequest) -> func.HttpResponse:
     """Invoke chat_with_pdf flow from Azure Function on HTTP trigger."""
-    logging.info('Python HTTP trigger function processed a request.')
+    logger.info('Python HTTP trigger function processed a request.')
 
     try:
         req_body = req.get_json()
