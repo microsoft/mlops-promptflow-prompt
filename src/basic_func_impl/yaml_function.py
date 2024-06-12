@@ -39,7 +39,7 @@ def yaml_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.Http
             pf = PFClient()
             pf.connections.create_or_update(connection)
 
-            flow_standard_path = os.path.join(os.path.dirname(__file__), "flow_code")
+            flow_standard_path = os.path.join(os.path.dirname(__file__), "yaml_basic_invoke/flow_code")
 
             flow = load_flow(flow_standard_path)
             flow.context = FlowContext(
