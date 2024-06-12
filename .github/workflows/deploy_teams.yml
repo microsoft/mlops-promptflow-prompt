@@ -3,7 +3,7 @@ on:
     branches:
       - 65-teams-deploy
     paths:
-      - 'samples/teamsdep/'
+      - 'samples/teamsdep/**'
 jobs:
   build:
     runs-on: ubuntu-latest
