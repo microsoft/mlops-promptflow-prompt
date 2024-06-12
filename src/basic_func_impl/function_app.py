@@ -16,7 +16,7 @@ root_logger.setLevel(WARNING)
 
 OpenAIInstrumentor().instrument()
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 app.register_functions(bp_class_based_invoke)
 app.register_functions(bp_function_based_invoke)
