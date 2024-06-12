@@ -24,7 +24,6 @@ metadata:
   name: basic-flow-app-deployment
   namespace: basic-flow-app
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: basic-flow-app
