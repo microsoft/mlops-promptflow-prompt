@@ -1,3 +1,5 @@
+---
+name: deploy_teams
 on:
   push:
     branches:
