@@ -41,6 +41,21 @@ spec:
             secretKeyRef:
               name: aoai-secret
               key: aoai-key
+        - name: AZURE_OPENAI_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: aoai-secret
+              key: aoai-endpoint
+        - name: AZURE_OPENAI_API_VERSION
+          valueFrom:
+            secretKeyRef:
+              name: aoai-secret
+              key: aoai-version
+        - name: AZURE_OPENAI_DEPLOYMENT
+          valueFrom:
+            secretKeyRef:
+              name: aoai-secret
+              key: aoai-deployment
         ports:
         - containerPort: 8080
         resources:
