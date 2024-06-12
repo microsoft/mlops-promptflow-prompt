@@ -164,7 +164,6 @@ jobs:
         id: install-kubectl
         uses: azure/setup-kubectl@v3
 
-
       - name: Create Secrets
         run: |
           kubectl delete secret aoai-secret --ignore-not-found=true
