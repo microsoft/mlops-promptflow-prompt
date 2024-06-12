@@ -3,9 +3,9 @@ import logging
 import os
 import azure.functions as func
 from azure.monitor.opentelemetry import configure_azure_monitor
-from class_basic_invoke.function import bp as bp_class_based_invoke
-from function_basic_invoke.function import bp as bp_function_based_invoke
-from yaml_basic_invoke.function import bp as bp_yaml_based_invoke
+from class_basic_invoke_code.function import bp as bp_class_based_invoke
+from function_basic_invoke_code.function import bp as bp_function_based_invoke
+from yaml_basic_invoke_code.function import bp as bp_yaml_based_invoke
 from opentelemetry.instrumentation.openai import OpenAIInstrumentor
 
 
