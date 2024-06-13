@@ -24,6 +24,8 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          path: samples/teamsdep
 
       - name: Setup Node 20.x
         uses: actions/setup-node@v1
@@ -41,10 +43,6 @@ jobs:
           --tenant ${{secrets.AZURE_TENANT_ID}} \
           --password ${{secrets.AZURE_SERVICE_PRINCIPAL_CLIENT_SECRET }} \
           --interactive false
-
-      - name: Set working directory
-        run: |
-          cd ./samples/teamsdep
 
       - name: check current folder
         run: |
