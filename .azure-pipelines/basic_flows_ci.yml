@@ -151,9 +151,9 @@ stages:
         displayName: Build and push an image to container registry
         inputs:
           command: buildAndPush
-          repository: $(ACR_CONNECTION)
+          repository: $(ACR_REGISTRY)
           dockerfile: ./src/basic_flow_fastapi_app/Dockerfile
-          containerRegistry: $(AZURE_RM_SVC_CONNECTION)
+          containerRegistry: $(ACR_CONNECTION)
           tags: |
             $(ACR_REGISTRY).azurecr.io/basic-flow-image:latest
 
