@@ -10,7 +10,7 @@ spec:
       valueFrom:
         secretKeyRef:
           name: appinsights-connection-secret
-          key: connection_string
+          key: connection-string
   config: |
     receivers:
       otlp:
