@@ -5,6 +5,12 @@ metadata:
 spec:
   image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.102.0
   mode: deployment
+  env:
+    - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+      valueFrom:
+        secretKeyRef:
+          name: aoai-secret
+          key: aoai-endpoint
   config: |
     receivers:
       otlp:
@@ -16,7 +22,7 @@ spec:
       batch:
 
     exporters:
-      azuremonitor: $APPLICATIONINSIGHTS_CONNECTION_STRING
+      azuremonitor:
 
     service:
       pipelines:

@@ -172,6 +172,31 @@ stages:
             az aks get-credentials --resource-group $(RESOURCE_GROUP_NAME) --name $(AKS_NAME)
 
       - task: AzureCLI@2
+        name: secrets_create
+        displayName: Create Secrets
+        continueOnError: false
+        env:
+          AOAI_API_KEY: $(AOAI_API_KEY)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          APPLICATIONINSIGHTS_CONNECTION_STRING: $(APPLICATIONINSIGHTS_CONNECTION_STRING)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
+            kubectl create secret generic aoai-secret \
+                --from-literal=aoai-key=$(AOAI_API_KEY) \
+                --from-literal=aoai-endpoint=$(AOAI_BASE_ENDPOINT) \
+                --from-literal=aoai-deployment=gpt-35-turbo \
+                --from-literal=aoai-version=2023-07-01-preview \
+                -n basic-flow-app
+            kubectl delete secret appinsights-connection-secret --ignore-not-found=true
+            kubectl create secret appinsights-connection-secret \
+                --from-literal=connection-string=$(APPLICATIONINSIGHTS_CONNECTION_STRING)
+
+      - task: AzureCLI@2
         name: deploy_service
         displayName: Deploy OTel collector to AKS
         continueOnError: false
@@ -186,27 +211,6 @@ stages:
             kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml
             kubectl wait --for condition=established --timeout=60s crd/opentelemetrycollectors.opentelemetry.io
             kubectl apply -f src/otel_collector/otel-collector.yaml
-
-      - task: AzureCLI@2
-        name: secrets_create
-        displayName: Create Secrets
-        continueOnError: false
-        env:
-          AOAI_API_KEY: $(AOAI_API_KEY)
-          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
-        inputs: 
-          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
-          scriptType: bash
-          workingDirectory: $(System.DefaultWorkingDirectory)
-          scriptLocation: inlineScript
-          inlineScript: |
-            kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
-            kubectl create secret generic aoai-secret \
-                --from-literal=aoai-key=$(AOAI_API_KEY) \
-                --from-literal=aoai-endpoint=$(AOAI_BASE_ENDPOINT) \
-                --from-literal=aoai-deployment=gpt-35-turbo \
-                --from-literal=aoai-version=2023-07-01-preview \
-                -n basic-flow-app
     
       - task: AzureCLI@2
         name: deploy_service
