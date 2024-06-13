@@ -17,12 +17,10 @@ jobs:
       # Add extra environment variables here so that teamsapp cli can use them.
 
     steps:
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@v4
         
       - name: Copy source code
         run: |
-          cp -r samples/teamsdep ${{github.workspace}}
+          cp -r samples/teamsdep ${{github.workspace}} && ls
 
       - name: Setup Node 20.x
         uses: actions/setup-node@v1
@@ -40,6 +38,10 @@ jobs:
           --tenant ${{secrets.AZURE_TENANT_ID}} \
           --password ${{secrets.AZURE_SERVICE_PRINCIPAL_CLIENT_SECRET }} \
           --interactive false
+
+      - name: Set working directory
+        run: |
+          cd ${{github.workspace}}/teamsdep
 
       - name: Deploy to hosting environment
         run: |
