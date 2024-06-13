@@ -17,9 +17,7 @@ jobs:
       # Add extra environment variables here so that teamsapp cli can use them.
 
     steps:
-        
-
-
+    
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -29,10 +27,12 @@ jobs:
           node-version: "20.x"
 
       - name: install cli
+        working-directory: samples/teamsdep
         run: |
           npm install @microsoft/teamsapp-cli@${{env.TEAMSAPP_CLI_VERSION}}
 
       - name: Login Azure by service principal
+        working-directory: samples/teamsdep
         run: |
           npx teamsapp auth login azure --username ${{secrets.AZURE_SERVICE_PRINCIPAL_CLIENT_ID}}  \
           --service-principal true \
@@ -41,29 +41,28 @@ jobs:
           --interactive false
 
       - name: check current folder
+        working-directory: samples/teamsdep
         run: |
           pwd
 
       - name: Check files in current folder
+        working-directory: samples/teamsdep
         run: |
-          cd samples/teamsdep && \
           ls -la   
 
       - name: Deploy to hosting environment
+        working-directory: samples/teamsdep
         run: |
-          cd samples/teamsdep && \
-          ls -la && \ 
           npx teamsapp deploy --ignore-env-file true \
           --interactive false
 
       - name: Package app
+        working-directory: samples/teamsdep
         run: |
-          cd samples/teamsdep && \
-          ls -la && \ 
           npx teamsapp package
 
       - name: upload appPackage
         uses: actions/upload-artifact@v4
         with:
           name: artifact
-          path: appPackage/build/appPackage.zip
+          path: samples/teamsdep/appPackage/build/appPackage.zip
