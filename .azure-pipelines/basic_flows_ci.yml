@@ -172,6 +172,22 @@ stages:
             az aks get-credentials --resource-group $(RESOURCE_GROUP_NAME) --name $(AKS_NAME)
 
       - task: AzureCLI@2
+        name: deploy_service
+        displayName: Deploy OTel collector to AKS
+        continueOnError: false
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+            kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
+            kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml
+            kubectl wait --for condition=established --timeout=60s crd/opentelemetrycollectors.opentelemetry.io
+            kubectl apply -f src/otel_collector/otel-collector.yaml
+
+      - task: AzureCLI@2
         name: secrets_create
         displayName: Create Secrets
         continueOnError: false
