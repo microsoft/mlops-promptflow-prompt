@@ -190,7 +190,7 @@ stages:
                 --from-literal=aoai-endpoint=$(AOAI_BASE_ENDPOINT) \
                 --from-literal=aoai-deployment=gpt-35-turbo \
                 --from-literal=aoai-version=2023-07-01-preview \
-                -n basic-flow-
+                -n basic-flow-app
     
       - task: AzureCLI@2
         name: deploy_service
