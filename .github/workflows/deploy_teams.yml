@@ -18,14 +18,16 @@ jobs:
 
     steps:
         
-      # - name: Copy source code
-      #   run: |
-      #     cp -r samples/teamsdep ${{github.workspace}}
+
 
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           path: samples/teamsdep
+
+      - name: Copy source code
+        run: |
+          cp -r samples/teamsdep/* ${{github.workspace}}
 
       - name: Setup Node 20.x
         uses: actions/setup-node@v1
@@ -53,13 +55,12 @@ jobs:
           ls -la  
 
       - name: Deploy to hosting environment
-        working-directory: samples/teamsdep
         run: |
+          ls && \ 
           npx teamsapp deploy --ignore-env-file true \
           --interactive false
 
       - name: Package app
-        working-directory: samples/teamsdep
         run: |
           npx teamsapp package
 
