@@ -89,9 +89,9 @@ jobs:
 
       - name: Copy Flow Files into Azure Function Folder
         run: |
-            cp -R flows/function_basic_flow/standard src/basic_func_impl/function_basic_invoke/flow_code
-            cp -R flows/class_basic_flow/standard src/basic_func_impl/class_basic_invoke/flow_code
-            cp -R flows/yaml_basic_flow/standard src/basic_func_impl/yaml_basic_invoke/flow_code
+            cp -R flows/function_basic_flow/standard/. src/basic_func_impl/function_basic_invoke_code
+            cp -R flows/class_basic_flow/standard/. src/basic_func_impl/class_basic_invoke_code
+            cp -R flows/yaml_basic_flow/standard/. src/basic_func_impl/yaml_basic_invoke_code
       
       - name: Compress Functions into Zip
         working-directory: ./src/basic_func_impl

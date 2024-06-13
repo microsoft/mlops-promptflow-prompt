@@ -11,6 +11,7 @@ from promptflow.entities import AzureOpenAIConnection
 
 tracer = trace.get_tracer(__name__)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 bp = func.Blueprint()
 
@@ -21,7 +22,7 @@ def yaml_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.Http
     carrier = {'traceparent': req.headers['Traceparent']}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
 
-    with tracer.start_as_current_span("function_based_invoke", context=ctx):
+    with tracer.start_as_current_span("yaml_basic_invoke", context=ctx):
         logger.info('Python HTTP trigger function processed a request.')
 
         entity_type = req.params.get('entity_type')
@@ -39,7 +40,7 @@ def yaml_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.Http
             pf = PFClient()
             pf.connections.create_or_update(connection)
 
-            flow_standard_path = os.path.join(os.path.dirname(__file__), "flow_code")
+            flow_standard_path = os.path.dirname(__file__)
 
             flow = load_flow(flow_standard_path)
             flow.context = FlowContext(
