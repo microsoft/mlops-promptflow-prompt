@@ -50,26 +50,34 @@ def main():
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
-    planner_system_message_path = os.path.basename(flow_config["planner_system_message_path"])
-    solver_system_message_path = os.path.basename(flow_config["solver_system_message_path"])
+    planner_system_message_path = os.path.basename(
+        flow_config["planner_system_message_path"]
+    )
+    solver_system_message_path = os.path.basename(
+        flow_config["solver_system_message_path"]
+    )
 
     pf = PFClient()
     print(
         pf.test(
             flow=flow_standard_path,
-            init={"planner_system_message_path": planner_system_message_path,
-                  "solver_system_message_path": solver_system_message_path},
+            init={
+                "planner_system_message_path": planner_system_message_path,
+                "solver_system_message_path": solver_system_message_path,
+            },
         )
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
-        init={"planner_system_message_path": planner_system_message_path,
-              "solver_system_message_path": solver_system_message_path},
+        init={
+            "planner_system_message_path": planner_system_message_path,
+            "solver_system_message_path": solver_system_message_path,
+        },
         data=data_standard_path,
         column_mapping=column_mapping,
     )

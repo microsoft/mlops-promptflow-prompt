@@ -79,9 +79,11 @@ class OAI:
         """Initialize the OpenAI client."""
         if api_type == "azure":
             from openai import AzureOpenAI as Client
+
             init_params["azure_endpoint"] = os.environ.get("OPENAI_API_BASE")
         else:
             from openai import OpenAI as Client
+
             if os.getenv("OPENAI_API_BASE") is not None:
                 init_params["base_url"] = os.environ.get("OPENAI_API_BASE")
 
@@ -104,11 +106,15 @@ class OAIChat(OAI):
     def generate(self, messages: list, **kwargs) -> List[float]:
         """Generate a response from the chat API."""
         # chat api may return message with no content.
-        message = self.client.chat.completions.create(
-            model=os.environ.get("CHAT_MODEL_DEPLOYMENT_NAME"),
-            messages=messages,
-            **kwargs,
-        ).choices[0].message
+        message = (
+            self.client.chat.completions.create(
+                model=os.environ.get("CHAT_MODEL_DEPLOYMENT_NAME"),
+                messages=messages,
+                **kwargs,
+            )
+            .choices[0]
+            .message
+        )
         return getattr(message, "content", "")
 
     @retry_and_handle_exceptions_for_generator(
@@ -143,9 +149,13 @@ class OAIEmbedding(OAI):
     )
     def generate(self, text: str) -> List[float]:
         """Generate an embedding for the given text."""
-        return self.client.embeddings.create(
-            input=text, model=os.environ.get("EMBEDDING_MODEL_DEPLOYMENT_NAME")
-        ).data[0].embedding
+        return (
+            self.client.embeddings.create(
+                input=text, model=os.environ.get("EMBEDDING_MODEL_DEPLOYMENT_NAME")
+            )
+            .data[0]
+            .embedding
+        )
 
 
 def count_token(text: str) -> int:

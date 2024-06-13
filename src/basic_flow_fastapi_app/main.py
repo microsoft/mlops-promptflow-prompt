@@ -7,6 +7,7 @@ from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
 from promptflow.core import AzureOpenAIModelConfiguration
+
 sys.path.append(str(pathlib.Path(__file__).parent))
 from class_basic_flow.extract_entities import EntityExtraction  # noqa: E402
 from function_basic_flow.extract_entities import extract_entity  # noqa: E402
@@ -31,7 +32,8 @@ def class_basic_flow(entity_type: str = None, text: str = None):
 
         # create the model config to be used in below flow calls
         config = AzureOpenAIModelConfiguration(
-            connection="aoai", azure_deployment=os.environ.get("AZURE_OPENAI_DEPLOYMENT")
+            connection="aoai",
+            azure_deployment=os.environ.get("AZURE_OPENAI_DEPLOYMENT"),
         )
 
         obj = EntityExtraction(model_config=config)
@@ -39,7 +41,9 @@ def class_basic_flow(entity_type: str = None, text: str = None):
 
         return {"result": result}
     else:
-        return {"result": "class_basic_flow entity_type and text parameters have not been provided."}
+        return {
+            "result": "class_basic_flow entity_type and text parameters have not been provided."
+        }
 
 
 @app.get("/function_basic_flow")
@@ -49,7 +53,9 @@ def function_basic_flow(entity_type: str = None, text: str = None):
         result = extract_entity(entity_type=entity_type, text=text)
         return {"result": result}
     else:
-        return {"result": "function_basic_flow entity_type and text parameters have not been provided."}
+        return {
+            "result": "function_basic_flow entity_type and text parameters have not been provided."
+        }
 
 
 @app.get("/yaml_basic_flow")
@@ -71,10 +77,17 @@ def yaml_basic_flow(entity_type: str = None, text: str = None):
 
         flow = load_flow(flow_standard_path)
         flow.context = FlowContext(
-            overrides={"nodes.NER_LLM.inputs.deployment_name": os.environ.get("AZURE_OPENAI_DEPLOYMENT")},
-            connections={"NER_LLM": {"connection": connection}})
+            overrides={
+                "nodes.NER_LLM.inputs.deployment_name": os.environ.get(
+                    "AZURE_OPENAI_DEPLOYMENT"
+                )
+            },
+            connections={"NER_LLM": {"connection": connection}},
+        )
         result = flow(entity_type=entity_type, text=text)
 
         return {"result": result}
     else:
-        return {"result": "yaml_basic_flow entity_type and text parameters have not been provided."}
+        return {
+            "result": "yaml_basic_flow entity_type and text parameters have not been provided."
+        }

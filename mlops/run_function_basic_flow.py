@@ -37,9 +37,12 @@ def main():
     os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
 
     # Run the flow as a basic function call with no tracing
-    print(extract_entities.extract_entity(
-        "job title",
-        "The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(
+        extract_entities.extract_entity(
+            "job title",
+            "The CEO and CFO are discussing the financial forecast for the next quarter.",
+        )
+    )
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
@@ -48,8 +51,8 @@ def main():
     print(pf.test(flow=flow_standard_path))
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,

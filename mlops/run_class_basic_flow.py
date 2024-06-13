@@ -51,26 +51,28 @@ def main():
     # Run the flow as a basic function call with no tracing
     obj_chat = EntityExtraction(model_config=config)
 
-    print(obj_chat(
-        entity_type="job title",
-        text="The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(
+        obj_chat(
+            entity_type="job title",
+            text="The CEO and CFO are discussing the financial forecast for the next quarter.",
+        )
+    )
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
 
     pf = PFClient()
-    print(pf.test(flow=flow_standard_path,
-                  init={"model_config": config}))
+    print(pf.test(flow=flow_standard_path, init={"model_config": config}))
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        init={"model_config": config}
+        init={"model_config": config},
     )
 
     pf.stream(run_instance)

@@ -32,13 +32,13 @@ def main():
     # Run the flow as a function.
     flow_standard_path = flow_config["standard_flow_path"]
 
-   # Azure OpenAI Connection check (aoai):
+    # Azure OpenAI Connection check (aoai):
     credential = DefaultAzureCredential()
     try:
         ml_client = MLClient(
-            subscription_id=aistudio_config['subscription_id'],
-            resource_group_name=aistudio_config['resource_group_name'],
-            workspace_name=aistudio_config['project_name'],
+            subscription_id=aistudio_config["subscription_id"],
+            resource_group_name=aistudio_config["resource_group_name"],
+            workspace_name=aistudio_config["project_name"],
             credential=credential,
         )
         created_connection = ml_client.connections.get(flow_config["connection_name"])
@@ -55,8 +55,8 @@ def main():
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
     column_mapping["config"] = {
         "EMBEDDING_MODEL_DEPLOYMENT_NAME": "text-embedding-ada-002",
         "CHAT_MODEL_DEPLOYMENT_NAME": "gpt-35-turbo",
@@ -71,7 +71,7 @@ def main():
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        stream=True
+        stream=True,
     )
 
     if run_instance.status == "Completed" or run_instance.status == "Finished":

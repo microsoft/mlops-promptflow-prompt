@@ -51,7 +51,7 @@ def main():
 
     matchevaluator = MatchEvaluator()
 
-    data_eval_path = flow_config['eval_data_path']
+    data_eval_path = flow_config["eval_data_path"]
 
     aistudio_config = mlops_config.aistudio_config
     print(aistudio_config["project_name"])
@@ -66,14 +66,14 @@ def main():
         evaluator_config={
             "matchevaluator": {
                 "response": "${target.answer}",
-                "ground_truth": "${data.results}"
+                "ground_truth": "${data.results}",
             },
         },
         azure_ai_project={
             "subscription_id": aistudio_config["subscription_id"],
             "resource_group_name": aistudio_config["resource_group_name"],
-            "project_name": aistudio_config["project_name"]
-        }
+            "project_name": aistudio_config["project_name"],
+        },
     )
 
     pprint(results)
