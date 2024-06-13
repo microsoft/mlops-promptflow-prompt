@@ -82,8 +82,6 @@ stages:
     jobs:
     - job: deploy_flow
       steps:
-      - template: templates/configure_devops_agent.yml
-
       - task: CopyFiles@2
         displayName: Prepare Function Flow to Deploy
         inputs:
@@ -151,11 +149,9 @@ stages:
         displayName: Build and push an image to container registry
         inputs:
           command: buildAndPush
-          repository: $(ACR_REGISTRY)
+          repository: basic-flow-image
           dockerfile: ./src/basic_flow_fastapi_app/Dockerfile
           containerRegistry: $(ACR_CONNECTION)
-          tags: |
-            $(ACR_REGISTRY).azurecr.io/basic-flow-image:latest
 
       - task: KubectlInstaller@0
         displayName: Kubectl installer
