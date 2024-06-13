@@ -139,3 +139,83 @@ stages:
         inputs:
           PathtoPublish: '$(System.DefaultWorkingDirectory)/build$(Build.BuildId).zip'
           artifactName: 'drop'
+
+  - stage: deploy_prompts_aks
+    dependsOn: evaluation
+    displayName: Deploy Promptflow Basic Flows into Kubernetes
+    jobs:
+    - job: deploy_flow
+      steps:
+
+      - task: AzureCLI@2
+        name: acr_login
+        displayName: Login to Azure Container Registry
+        continueOnError: false
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            az acr login --name $(ACR_REGISTRY)
+
+      - task: Docker@2
+        displayName: Build and push an image to container registry
+        inputs:
+          command: buildAndPush
+          repository: $(ACR_REGISTRY)
+          dockerfile: ./src/basic_flow_fastapi_app/Dockerfile
+          containerRegistry: $(AZURE_RM_SVC_CONNECTION)
+          tags: |
+            $(ACR_REGISTRY).azurecr.io/basic-flow-image:latest
+
+      - task: KubectlInstaller@0
+        displayName: Kubectl installer
+        inputs: 
+          kubectlVersion: latest
+
+      - task: AzureCLI@2
+        name: aks_login
+        displayName: Login to Azure Kubernetes
+        continueOnError: false
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            az aks get-credentials --resource-group $(RESOURCE_GROUP_NAME) --name $(AKS_NAME)
+
+      - task: AzureCLI@2
+        name: secrets_create
+        displayName: Create Secrets
+        continueOnError: false
+        env:
+          AOAI_API_KEY: $(AOAI_API_KEY)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
+            kubectl create secret generic aoai-secret \
+                --from-literal=aoai-key=$(AOAI_API_KEY) \
+                --from-literal=aoai-endpoint=$(AOAI_BASE_ENDPOINT) \
+                --from-literal=aoai-deployment=gpt-35-turbo \
+                --from-literal=aoai-version=2023-07-01-preview \
+                -n basic-flow-
+    
+      - task: AzureCLI@2
+        name: deploy_service
+        displayName: Deplot to AKS
+        continueOnError: false
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
+            kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
