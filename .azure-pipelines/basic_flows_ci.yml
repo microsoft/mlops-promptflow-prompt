@@ -149,6 +149,7 @@ stages:
         displayName: Build and push an image to container registry
         inputs:
           command: buildAndPush
+          workingDirectory: $(System.DefaultWorkingDirectory)
           repository: basic-flow-image
           dockerfile: ./src/basic_flow_fastapi_app/Dockerfile
           containerRegistry: $(ACR_CONNECTION)
