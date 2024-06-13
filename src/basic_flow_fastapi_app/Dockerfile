@@ -23,6 +23,9 @@ COPY src/basic_flow_fastapi_app/requirements.txt .
 
 RUN pip install -r requirements.txt
 
+# Installs instrumentation libraries for OpenTelemetry
+RUN opentelemetry-bootstrap -a install
+
 # Copy FastAPI application
 COPY src/basic_flow_fastapi_app/main.py /home/$USERNAME/app/main.py
 
@@ -32,4 +35,6 @@ COPY flows/yaml_basic_flow/standard /home/$USERNAME/app/yaml_basic_flow
 
 WORKDIR /home/$USERNAME/app
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+COPY run.sh .
+
+CMD [ "./run.sh" ]

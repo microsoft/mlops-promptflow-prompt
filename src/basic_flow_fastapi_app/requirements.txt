@@ -7,3 +7,7 @@ keyrings.alt
 # additional dependencies for application
 fastapi
 uvicorn
+# OpenTelemetry
+opentelemetry-distro==0.46b0
+opentelemetry-exporter-otlp==1.25.0
+opentelemetry-instrumentation-openai==0.21.5

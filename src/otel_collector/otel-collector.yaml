@@ -1,0 +1,31 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector
+spec:
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.102.0
+  mode: deployment
+  config: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+
+    processors:
+      batch:
+
+    exporters:
+      azuremonitor: $APPLICATIONINSIGHTS_CONNECTION_STRING
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [azuremonitor]
+        metrics:
+          receivers: [otlp]
+          exporters: [azuremonitor]
+        logs:
+          receivers: [otlp]
+          exporters: [azuremonitor]
