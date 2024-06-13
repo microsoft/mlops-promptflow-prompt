@@ -1,6 +1,7 @@
 """This module implements provisioning of Azure ML online endpoint."""
 import argparse
 from azure.ai.resources.client import AIClient
+
 # from azure.ai.generative.entities.deployment import Deployment
 # from azure.ai.generative.entities.models import PromptflowModel
 from azure.identity import DefaultAzureCredential
@@ -8,11 +9,7 @@ from mlops.common.config_utils import MLOpsConfig
 
 
 def provision_endpoint(
-    subscription_id,
-    resource_group_name,
-    project_name,
-    endpoint_name,
-    flow_path
+    subscription_id, resource_group_name, project_name, endpoint_name, flow_path
 ):
     """
     Create a managed Azure ML online endpoint.
@@ -47,9 +44,7 @@ def provision_endpoint(
 def main():
     """Read command line arguments and invoke provision_endpoint to create AI Studio online endpoint."""
     parser = argparse.ArgumentParser("provision_endpoints")
-    parser.add_argument(
-        "--model_type", type=str, help="PF flow name", required=True
-    )
+    parser.add_argument("--model_type", type=str, help="PF flow name", required=True)
     parser.add_argument(
         "--environment_name",
         type=str,
@@ -62,7 +57,7 @@ def main():
     aistudio_config = mlops_config.aistudio_config
     flow_config = mlops_config.get_flow_config(flow_name=args.model_type)
 
-    flow_standard_path = flow_config['standard_flow_path']
+    flow_standard_path = flow_config["standard_flow_path"]
 
     deployment_config = mlops_config.get_deployment_config(args.model_type, "online")
 
@@ -71,7 +66,7 @@ def main():
         aistudio_config["resource_group_name"],
         aistudio_config["project_name"],
         deployment_config["endpoint_name"],
-        flow_standard_path
+        flow_standard_path,
     )
 
 

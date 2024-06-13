@@ -49,21 +49,30 @@ def main():
     flow = load_flow(flow_standard_path)
     flow.context = FlowContext(
         overrides={"nodes.NER_LLM.inputs.deployment_name": aoai_deployment},
-        connections={"NER_LLM": {"connection": connection}})
+        connections={"NER_LLM": {"connection": connection}},
+    )
 
-    print(flow(
-        entity_type="job title",
-        text="The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(
+        flow(
+            entity_type="job title",
+            text="The CEO and CFO are discussing the financial forecast for the next quarter.",
+        )
+    )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        connections={"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
+        connections={
+            "NER_LLM": {
+                "connection": flow_config["connection_name"],
+                "deployment_name": aoai_deployment,
+            }
+        },
     )
 
     pf.stream(run_instance)

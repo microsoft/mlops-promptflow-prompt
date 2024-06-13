@@ -18,19 +18,20 @@ bp = func.Blueprint()
 
 
 @bp.route(route="classbasicinvoke")
-def class_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+def class_basic_invoke(
+    req: func.HttpRequest, context: func.Context
+) -> func.HttpResponse:
     """Invoke basic class flow from Azure Function."""
-    carrier = {'traceparent': req.headers['Traceparent']}
+    carrier = {"traceparent": req.headers["Traceparent"]}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
 
     with tracer.start_as_current_span("class_basic_invoke", context=ctx):
-        logger.info('Python HTTP trigger function processed a request.')
+        logger.info("Python HTTP trigger function processed a request.")
 
-        entity_type = req.params.get('entity_type')
-        text = req.params.get('text')
+        entity_type = req.params.get("entity_type")
+        text = req.params.get("text")
 
         if entity_type and text:
-
             connection = AzureOpenAIConnection(
                 name="aoai",  # it's just a local name, and it can be any
                 api_key=os.environ.get("AZURE_OPENAI_API_KEY"),
@@ -44,7 +45,8 @@ def class_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.Htt
 
             # create the model config to be used in below flow calls
             config = AzureOpenAIModelConfiguration(
-                connection="aoai", azure_deployment=os.environ.get("AZURE_OPENAI_DEPLOYMENT")
+                connection="aoai",
+                azure_deployment=os.environ.get("AZURE_OPENAI_DEPLOYMENT"),
             )
 
             obj = EntityExtraction(model_config=config)
@@ -52,4 +54,7 @@ def class_basic_invoke(req: func.HttpRequest, context: func.Context) -> func.Htt
 
             return func.HttpResponse(f"{result}", status_code=200)
         else:
-            return func.HttpResponse("entity_type and text parameters have not been provided.", status_code=200)
+            return func.HttpResponse(
+                "entity_type and text parameters have not been provided.",
+                status_code=200,
+            )

@@ -1,7 +1,11 @@
 """Tools definitions for AutoGen."""
 import os
-from flows.class_plan_and_execute.standard.multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
-from flows.class_plan_and_execute.standard.multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
+from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+    MultiProcessedAssistantAgent as AssistantAgent,
+)
+from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+    MultiProcessedUserProxyAgent as UserProxyAgent,
+)
 from typing_extensions import Annotated, Optional
 
 tool_descriptions = {
@@ -11,7 +15,7 @@ tool_descriptions = {
             "answers about a specific topic."
         ),
         "query": "The search query string.",
-        "number_of_results": "The number of search results to return."
+        "number_of_results": "The number of search results to return.",
     },
     "wikipedia_tool": {
         "function": (
@@ -20,7 +24,7 @@ tool_descriptions = {
             "already have identified the entity name, usually after searching for the entity name using web_tool."
         ),
         "query": "The single person name, entity, or concept to be searched.",
-        "number_of_results": "The number of search results to return."
+        "number_of_results": "The number of search results to return.",
     },
     "llm_tool": {
         "function": (
@@ -28,7 +32,7 @@ tool_descriptions = {
             "context. It should never be used to do calculations."
         ),
         "request": "The request to be answered.",
-        "context": "Context with the relevant information to answer the request."
+        "context": "Context with the relevant information to answer the request.",
     },
     "math_tool": {
         "function": (
@@ -37,14 +41,14 @@ tool_descriptions = {
             "You can use it to solve simple or complex math problems."
         ),
         "problem_description": "The problem to be solved.",
-        "context": "Context with the relevant information to solve the problem."
-    }
+        "context": "Context with the relevant information to solve the problem.",
+    },
 }
 
 
 def _llm_tool(
     request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
-    context: Optional[Annotated[str, tool_descriptions["llm_tool"]["context"]]] = None
+    context: Optional[Annotated[str, tool_descriptions["llm_tool"]["context"]]] = None,
 ) -> str:
     """Use an LLM to analyze and extract information from the given context to answer the request."""
     try:
@@ -67,13 +71,13 @@ def _llm_tool(
                         "api_key": os.getenv("aoai_api_key"),
                         "base_url": os.getenv("aoai_base_url"),
                         "api_type": "azure",
-                        "api_version": os.getenv("aoai_api_version")
+                        "api_version": os.getenv("aoai_api_version"),
                     }
                 ],
                 "timeout": 60,
                 "temperature": 0.3,
-                "cache_seed": None
-            }
+                "cache_seed": None,
+            },
         )
     except Exception as e:
         print("LLM_ASSISTANT error:", e)
@@ -89,7 +93,9 @@ def _llm_tool(
     {context}
     """
     try:
-        reply = llm_assistant.generate_reply(messages=[{"content": message, "role": "user"}])
+        reply = llm_assistant.generate_reply(
+            messages=[{"content": message, "role": "user"}]
+        )
         return reply
     except Exception as e:
         return f"Error: {str(e)}"
@@ -97,7 +103,9 @@ def _llm_tool(
 
 def _web_tool(
     query: Annotated[str, tool_descriptions["web_tool"]["query"]],
-    number_of_results: Optional[Annotated[int, tool_descriptions["web_tool"]["number_of_results"]]] = 3
+    number_of_results: Optional[
+        Annotated[int, tool_descriptions["web_tool"]["number_of_results"]]
+    ] = 3,
 ) -> list:
     """Search results from the internet."""
     import requests
@@ -105,8 +113,13 @@ def _web_tool(
 
     headers = {"Ocp-Apim-Subscription-Key": os.getenv("bing_api_key")}
     params = {
-        "q": query, "count": number_of_results, "offset": 0, "mkt": "en-US", "safesearch": "Strict",
-        "textDecorations": False, "textFormat": "HTML"
+        "q": query,
+        "count": number_of_results,
+        "offset": 0,
+        "mkt": "en-US",
+        "safesearch": "Strict",
+        "textDecorations": False,
+        "textFormat": "HTML",
     }
     response = requests.get(os.getenv("bing_endpoint"), headers=headers, params=params)
     response.raise_for_status()
@@ -121,22 +134,26 @@ def _web_tool(
         try:
             response = requests.get(url)
             if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
-                text = soup.get_text(separator=' ', strip=True)
+                soup = BeautifulSoup(response.content, "html.parser")
+                text = soup.get_text(separator=" ", strip=True)
                 text = text[:5000]
             else:
                 text = f"Failed to fetch content, status code: {response.status_code}"
         except Exception as e:
             text = f"Error fetching the page: {str(e)}"
 
-        search_results.append({"title": title, "url": url, "snippet": snippet, "content": text})
+        search_results.append(
+            {"title": title, "url": url, "snippet": snippet, "content": text}
+        )
 
     return _llm_tool(query, search_results)
 
 
 def _wikipedia_tool(
     query: Annotated[str, tool_descriptions["wikipedia_tool"]["query"]],
-    number_of_results: Optional[Annotated[int, tool_descriptions["wikipedia_tool"]["number_of_results"]]] = 3
+    number_of_results: Optional[
+        Annotated[int, tool_descriptions["wikipedia_tool"]["number_of_results"]]
+    ] = 3,
 ) -> list:
     """Search for page contents from Wikipedia."""
     import wikipedia
@@ -149,7 +166,9 @@ def _wikipedia_tool(
     for title in results:
         try:
             page = wikipedia.page(title)
-            search_results.append({"title": page.title, "url": page.url, "content": page.content[:5000]})
+            search_results.append(
+                {"title": page.title, "url": page.url, "content": page.content[:5000]}
+            )
         except wikipedia.exceptions.DisambiguationError:
             continue
         except wikipedia.exceptions.PageError:
@@ -161,8 +180,10 @@ def _wikipedia_tool(
 
 
 def _math_tool(
-    problem_description: Annotated[str, tool_descriptions["math_tool"]["problem_description"]],
-    context: Optional[Annotated[str, tool_descriptions["math_tool"]["context"]]] = None
+    problem_description: Annotated[
+        str, tool_descriptions["math_tool"]["problem_description"]
+    ],
+    context: Optional[Annotated[str, tool_descriptions["math_tool"]["context"]]] = None,
 ) -> str:
     """Solve math problems by computing arithmetic expressions."""
 
@@ -190,12 +211,12 @@ def _math_tool(
                     "api_key": os.getenv("aoai_api_key"),
                     "base_url": os.getenv("aoai_base_url"),
                     "api_type": "azure",
-                    "api_version": os.getenv("aoai_api_version")
+                    "api_version": os.getenv("aoai_api_version"),
                 }
             ],
             "timeout": 60,
-            "cache_seed": None
-        }
+            "cache_seed": None,
+        },
     )
 
     math_executor = UserProxyAgent(
@@ -206,24 +227,29 @@ def _math_tool(
         ),
         code_execution_config=False,
         is_termination_msg=is_termination_msg,
-        human_input_mode="NEVER"
+        human_input_mode="NEVER",
     )
 
     tool_descriptions = {
         "evaluate_math_expression": {
             "function": "Function to evaluate math expressions using Python's numexpr library.",
-            "expression": "The expression to be evaluated. It should be a valid numerical expression."
+            "expression": "The expression to be evaluated. It should be a valid numerical expression.",
         }
     }
 
     @math_executor.register_for_execution()
-    @math_assistant.register_for_llm(description=tool_descriptions["evaluate_math_expression"]["function"])
+    @math_assistant.register_for_llm(
+        description=tool_descriptions["evaluate_math_expression"]["function"]
+    )
     def evaluate_math_expression(
-        expression: Annotated[str, tool_descriptions["evaluate_math_expression"]["expression"]]
+        expression: Annotated[
+            str, tool_descriptions["evaluate_math_expression"]["expression"]
+        ]
     ) -> str:
         import math
         import numexpr
         import re
+
         try:
             local_dict = {"pi": math.pi, "e": math.e}
             output = str(
@@ -251,6 +277,8 @@ def _math_tool(
     math_assistant.clear_history()
     math_executor.clear_history()
 
-    math_executor.initiate_chat(message=message, recipient=math_assistant, silent=True, clear_history=True)
-    result = math_executor.last_message()['content'].split("TERMINATE")[0].strip()
+    math_executor.initiate_chat(
+        message=message, recipient=math_assistant, silent=True, clear_history=True
+    )
+    result = math_executor.last_message()["content"].split("TERMINATE")[0].strip()
     return result

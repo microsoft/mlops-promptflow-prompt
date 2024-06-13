@@ -36,6 +36,6 @@ class ConnectionInfo(object):
 
     def __new__(cls):
         """Store connection information."""
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(ConnectionInfo, cls).__new__(cls)
         return cls.instance

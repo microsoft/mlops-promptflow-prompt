@@ -33,13 +33,17 @@ def main():
 
     connection = CustomConnection(
         name=flow_config["connection_name"],
-        secrets={"aoai_api_key": openai_config["aoai_api_key"],
-                 "bing_api_key": flow_config["bing_api_key"]},
-        configs={"aoai_model_gpt4": flow_config["deployment_name_gpt4"],
-                 "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
-                 "aoai_base_url": openai_config["aoai_api_base"],
-                 "aoai_api_version": flow_config["aoai_api_version"],
-                 "bing_endpoint": flow_config["bing_endpoint"]}
+        secrets={
+            "aoai_api_key": openai_config["aoai_api_key"],
+            "bing_api_key": flow_config["bing_api_key"],
+        },
+        configs={
+            "aoai_model_gpt4": flow_config["deployment_name_gpt4"],
+            "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
+            "aoai_base_url": openai_config["aoai_api_base"],
+            "aoai_api_version": flow_config["aoai_api_version"],
+            "bing_endpoint": flow_config["bing_endpoint"],
+        },
     )
 
     pf = PFClient()
@@ -47,18 +51,18 @@ def main():
 
     flow = load_flow(flow_standard_path)
 
-    print(flow(
-        question="What was the total box office performance of 'Inception' and 'Interstellar' together?")
+    print(
+        flow(
+            question="What was the total box office performance of 'Inception' and 'Interstellar' together?"
+        )
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
-        flow=flow_standard_path,
-        data=data_standard_path,
-        column_mapping=column_mapping
+        flow=flow_standard_path, data=data_standard_path, column_mapping=column_mapping
     )
 
     pf.stream(run_instance)

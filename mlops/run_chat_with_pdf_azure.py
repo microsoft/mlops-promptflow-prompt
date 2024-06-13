@@ -1,4 +1,4 @@
-"""Shows example how to invoke the flow using different ways in Azure."""
+"""Shows example how to invoke the flow using different ways."""
 import argparse
 from promptflow.azure import PFClient
 from mlops.common.config_utils import MLOpsConfig
@@ -12,7 +12,7 @@ def main():
     Execute function_basic_flow using different ways.
 
     The method uses config.yaml as a source for parameters, and
-    it runs the flow in different ways that can be used to test the flow in Azure.
+    it runs the flow in different ways that can be used to test the flow locally.
     """
     # Config parameters
     parser = argparse.ArgumentParser("config_parameters")
@@ -23,10 +23,13 @@ def main():
         help="env_name from config.yaml",
     )
     args = parser.parse_args()
+
     mlops_config = MLOpsConfig(environemnt=args.environment_name)
-    flow_config = mlops_config.get_flow_config(flow_name="yaml_basic_flow")
-    aoai_deployment = flow_config["deployment_name"]
+    flow_config = mlops_config.get_flow_config(flow_name="chat_with_pdf")
+
     aistudio_config = mlops_config.aistudio_config
+
+    # Run the flow as a function.
     flow_standard_path = flow_config["standard_flow_path"]
 
     # Azure OpenAI Connection check (aoai):
@@ -54,29 +57,28 @@ def main():
     # Run the flow as a PromptFlow batch on a data frame.
     data_standard_path = flow_config["data_path"]
     column_mapping = flow_config["column_mapping"]
+    column_mapping["config"] = {
+        "EMBEDDING_MODEL_DEPLOYMENT_NAME": "text-embedding-ada-002",
+        "CHAT_MODEL_DEPLOYMENT_NAME": "gpt-35-turbo",
+        "PROMPT_TOKEN_LIMIT": 1900,
+        "MAX_COMPLETION_TOKENS": 1024,
+        "VERBOSE": "true",
+        "CHUNK_SIZE": 512,
+        "CHUNK_OVERLAP": 64,
+    }
+
     run_instance = pf.run(
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        connections={
-            "NER_LLM": {
-                "connection": flow_config["connection_name"],
-                "deployment_name": aoai_deployment,
-            }
-        },
         stream=True,
     )
 
-    print(f"Current status is: {run_instance.status}")
-
     if run_instance.status == "Completed" or run_instance.status == "Finished":
         print("Experiment has been completed")
-    elif run_instance.status == "Preparing":
-        print("Preparing flow run for the experiment")
-    elif run_instance.status == "NotStarted":
-        print("Flow run for the experiment not started")
     else:
         raise Exception("Sorry, exiting job with failure..")
+
     print(run_instance.name)
 
 

@@ -25,17 +25,20 @@ class ChatWithPdfFlowWrapper:
         self.flow.context = FlowContext(
             connections={"setup_env": {"connection": connection}},
             overrides={
-                "inputs.config.default":
-                {
-                    "EMBEDDING_MODEL_DEPLOYMENT_NAME": flow_config["EMBEDDING_MODEL_DEPLOYMENT_NAME"],
-                    "CHAT_MODEL_DEPLOYMENT_NAME": flow_config["CHAT_MODEL_DEPLOYMENT_NAME"],
+                "inputs.config.default": {
+                    "EMBEDDING_MODEL_DEPLOYMENT_NAME": flow_config[
+                        "EMBEDDING_MODEL_DEPLOYMENT_NAME"
+                    ],
+                    "CHAT_MODEL_DEPLOYMENT_NAME": flow_config[
+                        "CHAT_MODEL_DEPLOYMENT_NAME"
+                    ],
                     "PROMPT_TOKEN_LIMIT": flow_config["PROMPT_TOKEN_LIMIT"],
                     "MAX_COMPLETION_TOKENS": flow_config["MAX_COMPLETION_TOKENS"],
                     "VERBOSE": flow_config["VERBOSE"],
                     "CHUNK_SIZE": flow_config["CHUNK_SIZE"],
                     "CHUNK_OVERLAP": flow_config["CHUNK_OVERLAP"],
                 }
-            }
+            },
         )
 
     def __call__(self, *, chat_history: str, pdf_url: str, question: str, **kwargs):

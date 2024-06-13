@@ -26,9 +26,9 @@ def main():
     # MLClient can help manage your runs and connections.
     client = MLClient(
         DefaultAzureCredential(),
-        aistudio_config['subscription_id'],
-        aistudio_config['resource_group_name'],
-        aistudio_config['project_name'],
+        aistudio_config["subscription_id"],
+        aistudio_config["resource_group_name"],
+        aistudio_config["project_name"],
     )
 
     try:
@@ -39,9 +39,9 @@ def main():
         print("connection not found. creating a new one.")
         connection = AzureOpenAIConnection(
             name=conn_name,
-            api_key=aoai_config['aoai_api_key'],
-            api_version=aoai_config['aoai_api_version'],
-            azure_endpoint=aoai_config['aoai_api_base']
+            api_key=aoai_config["aoai_api_key"],
+            api_version=aoai_config["aoai_api_version"],
+            azure_endpoint=aoai_config["aoai_api_base"],
         )
         result = client.connections.create_or_update(connection)
         print("connection has been created")

@@ -51,10 +51,7 @@ class JsonEvaluator:
         :param json_string: The JSON string to evaluate.
         :return: A dictionary with 'valid_json' and 'valid_schema' indicating the validity.
         """
-        result = {
-            "valid_json": 0,
-            "valid_schema": 0
-        }
+        result = {"valid_json": 0, "valid_schema": 0}
 
         try:
             json_object = self.load_json(json_string)

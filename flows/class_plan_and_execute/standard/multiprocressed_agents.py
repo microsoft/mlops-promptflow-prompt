@@ -18,7 +18,7 @@ class MultiProcessedAssistantAgent(AssistantAgent):
 
     def __init__(self, *args, **kwargs):
         """Extract is_termination_msg if provided."""
-        is_termination_msg = kwargs.pop('is_termination_msg', None)
+        is_termination_msg = kwargs.pop("is_termination_msg", None)
         super().__init__(*args, **kwargs)
         self._is_termination_msg = (
             is_termination_msg
@@ -29,8 +29,10 @@ class MultiProcessedAssistantAgent(AssistantAgent):
     def __getstate__(self):
         """Create a state dictionary, excluding unpickleable objects."""
         state = self.__dict__.copy()
-        if 'client' in state:
-            state['client'] = None  # Exclude the client (and its SSLContext) from being pickled
+        if "client" in state:
+            state[
+                "client"
+            ] = None  # Exclude the client (and its SSLContext) from being pickled
         return state
 
     def __setstate__(self, state):
@@ -47,7 +49,7 @@ class MultiProcessedUserProxyAgent(UserProxyAgent):
 
     def __init__(self, *args, **kwargs):
         """Extract is_termination_msg if provided."""
-        is_termination_msg = kwargs.pop('is_termination_msg', None)
+        is_termination_msg = kwargs.pop("is_termination_msg", None)
         super().__init__(*args, **kwargs)
         self._is_termination_msg = (
             is_termination_msg
@@ -58,8 +60,10 @@ class MultiProcessedUserProxyAgent(UserProxyAgent):
     def __getstate__(self):
         """Create a state dictionary, excluding unpickleable objects."""
         state = self.__dict__.copy()
-        if 'client' in state:
-            state['client'] = None  # Exclude the client (and its SSLContext) from being pickled
+        if "client" in state:
+            state[
+                "client"
+            ] = None  # Exclude the client (and its SSLContext) from being pickled
         return state
 
     def __setstate__(self, state):

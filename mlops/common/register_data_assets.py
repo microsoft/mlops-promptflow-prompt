@@ -18,10 +18,10 @@ from typing import Dict
 def register_data_asset(ml_client: MLClient, config: Dict) -> Data:
     """Create or update data asset in AML workspace for a given dataset configuration."""
     aml_dataset = Data(
-        path=config['data_path'],
+        path=config["data_path"],
         type=AssetTypes.URI_FILE,
-        description=config['dataset_desc'],
-        name=config['dataset_name'],
+        description=config["dataset_desc"],
+        name=config["dataset_name"],
     )
     return ml_client.data.create_or_update(aml_dataset)
 
@@ -39,12 +39,10 @@ def main():
     )
 
     for dataset_config in datasets_config:
-        dataset_name = dataset_config['dataset_name']
-        print(f'Registering {dataset_name}')
+        dataset_name = dataset_config["dataset_name"]
+        print(f"Registering {dataset_name}")
         register_data_asset(ml_client=ml_client, config=dataset_config)
-        aml_dataset_unlabeled = ml_client.data.get(
-            name=dataset_name, label="latest"
-        )
+        aml_dataset_unlabeled = ml_client.data.get(name=dataset_name, label="latest")
         print(aml_dataset_unlabeled.id)
 
 

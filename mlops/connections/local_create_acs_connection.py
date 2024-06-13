@@ -31,9 +31,9 @@ def main():
     except ConnectionNotFoundError:
         connection = CognitiveSearchConnection(
             name=conn_name,
-            api_key=acs_config['acs_api_key'],
-            api_base=acs_config['acs_api_base'],
-            api_version=acs_config['acs_api_version'],
+            api_key=acs_config["acs_api_key"],
+            api_base=acs_config["acs_api_base"],
+            api_version=acs_config["acs_api_version"],
         )
 
         pf.connections.create_or_update(connection)

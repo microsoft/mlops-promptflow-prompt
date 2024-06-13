@@ -49,8 +49,7 @@ def main():
     flow.context = FlowContext(
         connections={"setup_env": {"connection": connection}},
         overrides={
-            "inputs.config.default":
-            {
+            "inputs.config.default": {
                 "EMBEDDING_MODEL_DEPLOYMENT_NAME": "text-embedding-ada-002",
                 "CHAT_MODEL_DEPLOYMENT_NAME": "gpt-35-turbo",
                 "PROMPT_TOKEN_LIMIT": 1900,
@@ -59,25 +58,25 @@ def main():
                 "CHUNK_SIZE": 512,
                 "CHUNK_OVERLAP": 64,
             }
-        }
+        },
     )
 
-    print(flow(pdf_url="https://arxiv.org/pdf/1810.04805.pdf", question="What is BERT?"))
+    print(
+        flow(pdf_url="https://arxiv.org/pdf/1810.04805.pdf", question="What is BERT?")
+    )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     flow_obj = ChatWithPdfFlowWrapper(
         flow_standard_path=flow_standard_path,
         connection_name=flow_config,
-        openai_config=openai_config
+        openai_config=openai_config,
     )
 
     run_instance = pf.run(
-        flow=flow_obj,
-        data=data_standard_path,
-        column_mapping=column_mapping
+        flow=flow_obj, data=data_standard_path, column_mapping=column_mapping
     )
 
     pf.stream(run_instance)
