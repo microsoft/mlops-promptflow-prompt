@@ -22,8 +22,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          path: samples/teamsdep
 
       - name: Setup Node 20.x
         uses: actions/setup-node@v1
