@@ -150,7 +150,8 @@ stages:
         inputs:
           command: buildAndPush
           repository: basic-flow-image
-          dockerfile: ./src/basic_flow_fastapi_app/Dockerfile
+          buildContext: '$(Build.SourcesDirectory)' 
+          dockerFile: '$(Build.SourcesDirectory)/src/basic_flow_fastapi_app/Dockerfile'
           containerRegistry: $(ACR_CONNECTION)
 
       - task: KubectlInstaller@0
