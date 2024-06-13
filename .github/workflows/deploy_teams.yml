@@ -18,9 +18,12 @@ jobs:
 
     steps:
         
-      - name: Copy source code
-        run: |
-          cp -r samples/teamsdep ${{github.workspace}} && ls
+      # - name: Copy source code
+      #   run: |
+      #     cp -r samples/teamsdep ${{github.workspace}}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Setup Node 20.x
         uses: actions/setup-node@v1
@@ -41,7 +44,15 @@ jobs:
 
       - name: Set working directory
         run: |
-          cd ${{github.workspace}}/teamsdep
+          cd ./samples/teamsdep
+
+      - name: check current folder
+        run: |
+          pwd
+
+      - name: Check files in current folder
+        run: |
+          ls -la  
 
       - name: Deploy to hosting environment
         run: |
