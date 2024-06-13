@@ -147,23 +147,11 @@ stages:
     - job: deploy_flow
       steps:
 
-      - task: AzureCLI@2
-        name: acr_login
-        displayName: Login to Azure Container Registry
-        continueOnError: false
-        inputs: 
-          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
-          scriptType: bash
-          workingDirectory: $(System.DefaultWorkingDirectory)
-          scriptLocation: inlineScript
-          inlineScript: |
-            az acr login --name $(ACR_REGISTRY)
-
       - task: Docker@2
         displayName: Build and push an image to container registry
         inputs:
           command: buildAndPush
-          repository: $(ACR_REGISTRY)
+          repository: $(ACR_CONNECTION)
           dockerfile: ./src/basic_flow_fastapi_app/Dockerfile
           containerRegistry: $(AZURE_RM_SVC_CONNECTION)
           tags: |
