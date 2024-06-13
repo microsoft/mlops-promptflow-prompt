@@ -53,11 +53,13 @@ jobs:
           ls -la  
 
       - name: Deploy to hosting environment
+        working-directory: samples/teamsdep
         run: |
           npx teamsapp deploy --ignore-env-file true \
           --interactive false
 
       - name: Package app
+        working-directory: samples/teamsdep
         run: |
           npx teamsapp package
 
