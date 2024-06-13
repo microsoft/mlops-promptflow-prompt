@@ -9,8 +9,8 @@ spec:
     - name: APPLICATIONINSIGHTS_CONNECTION_STRING
       valueFrom:
         secretKeyRef:
-          name: aoai-secret
-          key: aoai-endpoint
+          name: appinsights-connection-secret
+          key: connection_string
   config: |
     receivers:
       otlp:
