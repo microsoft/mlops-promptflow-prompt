@@ -49,7 +49,7 @@ jobs:
       - name: Check files in current folder
         run: |
           cd samples/teamsdep && \
-          ls -la \   
+          ls -la   
 
       - name: Deploy to hosting environment
         run: |
