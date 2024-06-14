@@ -209,7 +209,7 @@ stages:
             kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
             kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
             kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml
-            kubectl wait --for condition=established --timeout=60s crd/opentelemetrycollectors.opentelemetry.io
+            kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
             kubectl apply -f src/otel_collector/otel-collector.yaml
     
       - task: AzureCLI@2

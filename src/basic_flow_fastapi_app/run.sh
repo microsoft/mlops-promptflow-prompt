@@ -1,3 +1,4 @@
+#!/bin/bash
 PORT=${PORT:-8080}
 HOST=${HOST:-"0.0.0.0"}
 OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME:-"promptflow.fastapi"}
@@ -14,6 +15,6 @@ opentelemetry-instrument \
     --traces_exporter otlp \
     --metrics_exporter otlp \
     --logs_exporter otlp \
-    --service_name "${$OTEL_SERVICE_NAME}" \
+    --service_name "${OTEL_SERVICE_NAME}" \
     --exporter_otlp_endpoint "${OTEL_EXPORTER_OTLP_ENDPOINT}" \
     uvicorn main:app --host "${HOST}" --port "${PORT}"
