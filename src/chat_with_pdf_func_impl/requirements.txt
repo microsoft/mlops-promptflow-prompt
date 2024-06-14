@@ -1,4 +1,5 @@
 azure-functions
+azure-functions-durable
 python-dotenv>=0.10.3
 promptflow>=1.11.0
 promptflow-tools
