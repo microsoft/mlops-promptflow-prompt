@@ -14,6 +14,6 @@ opentelemetry-instrument \
     --traces_exporter otlp \
     --metrics_exporter otlp \
     --logs_exporter otlp \
-    --service_name "{$OTEL_SERVICE_NAME}" \
+    --service_name "${$OTEL_SERVICE_NAME}" \
     --exporter_otlp_endpoint "${OTEL_EXPORTER_OTLP_ENDPOINT}" \
     uvicorn main:app --host "${HOST}" --port "${PORT}"
