@@ -17,4 +17,5 @@ opentelemetry-instrument \
     --logs_exporter otlp \
     --service_name "${OTEL_SERVICE_NAME}" \
     --exporter_otlp_endpoint "${OTEL_EXPORTER_OTLP_ENDPOINT}" \
+    --disabled_instrumentations sqlalchemy,sqlite3 \
     uvicorn main:app --host "${HOST}" --port "${PORT}"
