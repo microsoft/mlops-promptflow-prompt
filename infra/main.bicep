@@ -13,6 +13,12 @@ param aiHubFriendlyName string = 'Demo AI resource'
 @description('Description of your Azure AI resource dispayed in AI studio')
 param aiHubDescription string = 'This is an example AI resource for use in Azure AI Studio.'
 
+@description('Name for the AI Hub Project name.')
+param aiHubProjectName string = 'demoproject'
+
+@description('Friendly name for your Azure AI Hub Project resource')
+param aiHubProjectFriendlyName string = 'Demo AI Project for experimentation and evaluation'
+
 @description('Azure region used for the deployment of all resources.')
 param location string = resourceGroup().location
 
@@ -72,6 +78,8 @@ module aiHub 'modules/ai-hub.bicep' = {
     aiHubName: 'aih-${name}-${uniqueSuffix}'
     aiHubFriendlyName: aiHubFriendlyName
     aiHubDescription: aiHubDescription
+    aiHubProjectName: aiHubProjectName
+    aiHubProjectFriendlyName: aiHubProjectFriendlyName
     location: location
     tags: tags
 

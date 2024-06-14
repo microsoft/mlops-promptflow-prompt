@@ -15,6 +15,12 @@ param aiHubFriendlyName string = aiHubName
 @description('AI hub description')
 param aiHubDescription string
 
+@description('AI hub project name')
+param aiHubProjectName string
+
+@description('AI hub project display name')
+param aiHubProjectFriendlyName string = aiHubName
+
 @description('Resource ID of the application insights resource for storing diagnostics logs')
 param applicationInsightsId string
 
@@ -92,6 +98,29 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-08-01-preview'
         ResourceId: aiSearchId
       }
     }
+  }
+}
+
+resource project 'Microsoft.MachineLearningServices/workspaces@2024-01-01-preview' = {
+  name: aiHubProjectName
+  location: location
+  tags: tags
+  sku: {
+    name: 'P3'
+    tier: 'Basic'
+  }
+  kind: 'Project'
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    friendlyName: aiHubProjectFriendlyName
+    hbiWorkspace: false
+    v1LegacyMode: false
+    publicNetworkAccess: 'Enabled'
+    discoveryUrl: 'https://${location}.api.azureml.ms/discovery'
+    // most properties are not allowed for a project workspace: "Project workspace shouldn't define ..."
+    hubResourceId: aiHub.id
   }
 }
 

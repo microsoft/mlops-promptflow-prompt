@@ -41,10 +41,8 @@ SUCCESS: Your application was provisioned in Azure in 1 minute 4 seconds.
 You can view the resources created under the resource group <> in Azure Portal:
 
 
-## Create Project in AI Studio 
+## Check Project in AI Studio 
 az login -t <tenantid>
 az account set --subscription <subscriptionid>
-az ml workspace create --kind project --hub-id <hub id from above deployment> --resource-group <resource group name> --name <project name>
-
 confirm the project settings
 az ml workspace show --name <project name> --resource-group <resourcegroup name>
