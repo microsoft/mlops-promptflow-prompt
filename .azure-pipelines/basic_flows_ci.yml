@@ -197,7 +197,7 @@ stages:
                 --from-literal=connection-string=$(APPLICATIONINSIGHTS_CONNECTION_STRING)
 
       - task: AzureCLI@2
-        name: deploy_service
+        name: deploy_otel_service
         displayName: Deploy OTel collector to AKS
         continueOnError: false
         inputs: 
