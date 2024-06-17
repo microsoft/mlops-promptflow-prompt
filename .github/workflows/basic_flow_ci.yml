@@ -163,6 +163,7 @@ jobs:
           kubectl delete secret appinsights-connection-secret -n basic-flow-app --ignore-not-found=true
           kubectl create secret generic appinsights-connection-secret \
             --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }} \
+            -n basic-flow-app
 
       - name: Deploy OTel collector to AKS
         run: |
