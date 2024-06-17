@@ -4,7 +4,7 @@ import azure.functions as func
 import azure.durable_functions as df
 from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext, AzureOpenAIConnection
-from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
+# from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
 app = df.DFApp(http_auth_level=func.AuthLevel.FUNCTION)
 

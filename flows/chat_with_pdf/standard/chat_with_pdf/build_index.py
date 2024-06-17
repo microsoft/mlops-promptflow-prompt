@@ -10,6 +10,9 @@ from utils.index import FAISSIndex
 from utils.logging import log
 from utils.lock import acquire_lock
 from constants import INDEX_DIR
+from constants import PDF_DIR, CONNECTION_STRING, CONTAINER_NAME
+from azure.storage.blob import BlobServiceClient, BlobClient
+from io import BytesIO
 
 
 def create_faiss_index(pdf_path: str) -> str:
@@ -32,25 +35,39 @@ def create_faiss_index(pdf_path: str) -> str:
             if not os.path.exists(index_persistent_path):
                 os.makedirs(index_persistent_path)
 
-        log("Building index")
-        pdf_reader = PyPDF2.PdfReader(pdf_path)
+        try:
+            blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+            blob_client = blob_service_client.get_blob_client(container=CONTAINER_NAME, blob=pdf_path)
+        
+            # Download the file content
+            blob_data = blob_client.download_blob().readall()
+        
+            # Read the PDF content
+            pdf_reader = PyPDF2.PdfReader(BytesIO(blob_data))
 
-        text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+            log("Building index")
+            # pdf_reader = PyPDF2.PdfReader(pdf_path)
 
-        # Chunk the words into segments of X words with Y-word overlap, X=CHUNK_SIZE, Y=OVERLAP_SIZE
-        segments = split_text(text, chunk_size, chunk_overlap)
+            text = ""
+            for page in pdf_reader.pages:
+                text += page.extract_text()
 
-        log(f"Number of segments: {len(segments)}")
+            # Chunk the words into segments of X words with Y-word overlap, X=CHUNK_SIZE, Y=OVERLAP_SIZE
+            segments = split_text(text, chunk_size, chunk_overlap)
 
-        index = FAISSIndex(index=faiss.IndexFlatL2(1536), embedding=OAIEmbedding())
-        index.insert_batch(segments)
+            log(f"Number of segments: {len(segments)}")
 
-        index.save(index_persistent_path)
+            index = FAISSIndex(index=faiss.IndexFlatL2(1536), embedding=OAIEmbedding())
+            index.insert_batch(segments)
 
-        log("Index built: " + index_persistent_path)
-        return index_persistent_path
+            index.save(index_persistent_path)
+
+            log("Index built: " + index_persistent_path)
+            return index_persistent_path
+   
+        except Exception as e:
+            log(f"Error reading file: {e}")
+            raise(f"Error reading file: {e}")
 
 
 # Split the text into chunks with CHUNK_SIZE and CHUNK_OVERLAP as character count
