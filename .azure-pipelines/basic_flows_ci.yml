@@ -76,6 +76,30 @@ stages:
             python -m flows.yaml_basic_flow.evaluate.evaluate \
               --environment_name dev
 
+  - stage: deploy_prompts_online
+    dependsOn: evaluation
+    displayName: Deploy Promptflow Basic Flow as Azure Functions
+    jobs:
+    - job: deploy_flow_online
+      - template: templates/configure_devops_agent.yml
+
+      - task: AzureCLI@2
+        displayName: 'Run Deployment for Function Flow'
+        continueOnError: false
+        env:
+          SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          AOAI_API_KEY: $(AOAI_API_KEY)
+          APPLICATIONINSIGHTS_CONNECTION_STRING: $(APPLICATIONINSIGHTS_CONNECTION_STRING)
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            python -m mlops.deployment.deploy_online_endpoint \
+              --environment_name dev --flow_type function_basic_flow      
+
   - stage: deploy_prompts
     dependsOn: evaluation
     displayName: Deploy Promptflow Basic Flows as Azure Functions
