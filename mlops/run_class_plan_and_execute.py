@@ -4,6 +4,7 @@ import argparse
 from promptflow.client import PFClient
 from flows.class_plan_and_execute.standard.plan_and_execute import PlanAndExecute
 from mlops.common.config_utils import MLOpsConfig
+from mlops.common.trace_destination import get_destination_url
 
 
 def main():
@@ -21,10 +22,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="class_plan_and_execute")
     openai_config = mlops_config.aoai_config
 
@@ -57,7 +59,11 @@ def main():
         flow_config["solver_system_message_path"]
     )
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
     print(
         pf.test(
             flow=flow_standard_path,

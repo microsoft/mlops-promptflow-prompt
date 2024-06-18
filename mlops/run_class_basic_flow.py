@@ -5,6 +5,7 @@ from flows.class_basic_flow.standard.extract_entities import EntityExtraction
 from mlops.common.config_utils import MLOpsConfig
 from promptflow.entities import AzureOpenAIConnection
 from promptflow.core import AzureOpenAIModelConfiguration
+from mlops.common.trace_destination import get_destination_url
 
 
 def main():
@@ -22,10 +23,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="class_basic_flow")
 
     aoai_deployment = flow_config["deployment_name"]
@@ -40,7 +42,11 @@ def main():
         api_version=openai_config["aoai_api_version"],
     )
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
     pf.connections.create_or_update(connection)
 
     # create the model config to be used in below flow calls

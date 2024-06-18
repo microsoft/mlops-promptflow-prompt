@@ -12,11 +12,11 @@ class MLOpsConfig:
     _raw_config: Any
 
     def __init__(
-        self, environemnt: str = "pr", config_path: Path = "./config/config.yaml"
+        self, environment: str = "pr", config_path: Path = "./config/config.yaml"
     ):
         """Intialize MLConfig with yaml config data."""
         self.config_path = config_path
-        self._environment = environemnt
+        self._environment = environment
         self._flow_name = None
         load_dotenv()
         with open(config_path, "r", encoding="utf-8") as stream:
@@ -46,11 +46,11 @@ class DatasetsConfig:
     _raw_config: Any
 
     def __init__(
-        self, environemnt: str = "pr", config_path: Path = "./config/data_config.yaml"
+        self, environment: str = "pr", config_path: Path = "./config/data_config.yaml"
     ):
         """Intialize MLConfig with yaml config data."""
         self.config_path = config_path
-        self._environment = environemnt
+        self._environment = environment
         load_dotenv()
         with open(config_path, "r", encoding="utf-8") as stream:
             self._raw_config = yaml.safe_load(os.path.expandvars(stream.read()))
