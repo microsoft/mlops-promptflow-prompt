@@ -150,6 +150,7 @@ stages:
         inputs:
           command: buildAndPush
           repository: basic-flow-image
+          tags: latest
           buildContext: '$(Build.SourcesDirectory)' 
           dockerFile: '$(Build.SourcesDirectory)/src/basic_flow_fastapi_app/Dockerfile'
           containerRegistry: $(ACR_CONNECTION)
@@ -178,6 +179,7 @@ stages:
         env:
           AOAI_API_KEY: $(AOAI_API_KEY)
           AOAI_BASE_ENDPOINT: $(AOAI_BASE_ENDPOINT)
+          APPLICATIONINSIGHTS_CONNECTION_STRING: $(APPLICATIONINSIGHTS_CONNECTION_STRING)
         inputs: 
           azureSubscription: $(AZURE_RM_SVC_CONNECTION)
           scriptType: bash
@@ -191,6 +193,25 @@ stages:
                 --from-literal=aoai-deployment=gpt-35-turbo \
                 --from-literal=aoai-version=2023-07-01-preview \
                 -n basic-flow-app
+            kubectl delete secret appinsights-connection-secret --ignore-not-found=true
+            kubectl create secret generic appinsights-connection-secret \
+                --from-literal=connection-string=$(APPLICATIONINSIGHTS_CONNECTION_STRING)
+
+      - task: AzureCLI@2
+        name: deploy_otel_service
+        displayName: Deploy OTel collector to AKS
+        continueOnError: false
+        inputs: 
+          azureSubscription: $(AZURE_RM_SVC_CONNECTION)
+          scriptType: bash
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          scriptLocation: inlineScript
+          inlineScript: |
+            kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+            kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
+            kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml
+            kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
+            kubectl apply -f src/otel_collector/otel-collector.yaml
     
       - task: AzureCLI@2
         name: deploy_service

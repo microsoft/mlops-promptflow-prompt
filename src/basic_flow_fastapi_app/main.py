@@ -1,4 +1,5 @@
 """The FastAPI application."""
+import logging
 import sys
 import pathlib
 import os
@@ -14,10 +15,14 @@ from function_basic_flow.extract_entities import extract_entity  # noqa: E402
 
 app = FastAPI()
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 @app.get("/class_basic_flow")
 def class_basic_flow(entity_type: str = None, text: str = None):
     """Return a message from the function_basic_flow endpoint."""
+    logger.info("class_basic_flow endpoint called.")
     if entity_type and text:
         connection = AzureOpenAIConnection(
             name="aoai",
@@ -49,6 +54,7 @@ def class_basic_flow(entity_type: str = None, text: str = None):
 @app.get("/function_basic_flow")
 def function_basic_flow(entity_type: str = None, text: str = None):
     """Return a message from the class_basic_flow endpoint."""
+    logger.info("function_basic_flow endpoint called.")
     if entity_type and text:
         result = extract_entity(entity_type=entity_type, text=text)
         return {"result": result}
@@ -61,6 +67,7 @@ def function_basic_flow(entity_type: str = None, text: str = None):
 @app.get("/yaml_basic_flow")
 def yaml_basic_flow(entity_type: str = None, text: str = None):
     """Return a message from the yaml_basic_flow endpoint."""
+    logger.info("yaml_basic_flow endpoint called.")
     if entity_type and text:
         connection = AzureOpenAIConnection(
             name="aoai",
