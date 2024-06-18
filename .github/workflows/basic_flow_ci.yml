@@ -5,8 +5,7 @@ on:
   workflow_call:
   push:
     branches:
-      # - "development"
-      - "agromova/features/k8s-otel-collector-git"
+      - "development"
     paths:
       - '.github/**'
       - 'flows/function_basic_flow/**'
