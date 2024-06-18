@@ -161,6 +161,7 @@ jobs:
             --from-literal=aoai-version=2023-07-01-preview \
             -n basic-flow-app
           kubectl delete secret appinsights-connection-secret -n basic-flow-app --ignore-not-found=true
+          sleep 10
           kubectl create secret generic appinsights-connection-secret \
             --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }} \
             -n basic-flow-app
