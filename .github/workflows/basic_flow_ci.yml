@@ -74,6 +74,31 @@ jobs:
             python -m flows.yaml_basic_flow.evaluate.evaluate \
               --environment_name dev
 
+  run-online-deployment
+    runs-on: ubuntu-latest
+    needs: run-evaluation-full
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Export Secrets 
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+          convert: upper
+
+      - name: Configure DevOps Agent
+        uses: ./.github/actions/configure_devops_agent
+
+      - name: Execute Online Deployment Script
+        uses: ./.github/actions/execute_shell_code
+        with:
+          azure_credentials: ${{ secrets.azure_credentials }}
+          script_parameter: |
+            python -m mlops.deployment.deploy_online_endpoint \
+              --environment_name dev --flow_type function_basic_flow
+
+
   run-function-deployment:
     runs-on: ubuntu-latest
     needs: run-evaluation-full
