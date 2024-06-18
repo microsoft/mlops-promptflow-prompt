@@ -27,7 +27,7 @@ def main():
     )
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="plan_and_execute")
 
     json_schema_path = flow_config["json_schema_path"]

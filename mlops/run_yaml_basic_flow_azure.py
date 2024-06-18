@@ -23,7 +23,7 @@ def main():
         help="env_name from config.yaml",
     )
     args = parser.parse_args()
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_basic_flow")
     aoai_deployment = flow_config["deployment_name"]
     aistudio_config = mlops_config.aistudio_config
