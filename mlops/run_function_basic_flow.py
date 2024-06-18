@@ -5,6 +5,7 @@ from promptflow.client import PFClient
 from flows.function_basic_flow.standard import extract_entities
 from mlops.common.config_utils import MLOpsConfig
 from mlops.common.trace_destination import get_destination_url
+from mlops.common.naming_tools import generate_experiment_name
 
 
 def main():
@@ -62,6 +63,7 @@ def main():
 
     run_instance = pf.run(
         flow=flow_standard_path,
+        display_name=generate_experiment_name("trace_function_basic_flow"),
         data=data_standard_path,
         column_mapping=column_mapping,
     )

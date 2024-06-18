@@ -3,6 +3,7 @@
 import subprocess
 import os
 import uuid
+from datetime import datetime
 
 
 def generate_experiment_name(experiment_type: str):
@@ -24,7 +25,9 @@ def generate_experiment_name(experiment_type: str):
         ).strip()
 
     git_branch = git_branch.split("/")[-1]
-    return f"{experiment_type}_{git_branch}"
+    now = datetime.now()
+    date_time = now.strftime("%Y%m%d_%H%M%S")
+    return f"{experiment_type}_{git_branch}_{date_time}"
 
 
 def generate_run_name():
