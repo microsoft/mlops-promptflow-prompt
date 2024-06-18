@@ -78,7 +78,7 @@ stages:
 
   - stage: deploy_prompts_online
     dependsOn: evaluation
-    displayName: Deploy Promptflow Basic Flow as Azure Functions
+    displayName: Deploy Promptflow Basic Flow as Online Endpoint
     jobs:
     - job: deploy_flow_online
       displayName: 'Execute Online Deployment'
@@ -86,7 +86,7 @@ stages:
       - template: templates/configure_devops_agent.yml
 
       - task: AzureCLI@2
-        displayName: 'Run Deployment for Function Flow'
+        displayName: 'Run Deployment for Online Endpoint'
         continueOnError: false
         env:
           SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
