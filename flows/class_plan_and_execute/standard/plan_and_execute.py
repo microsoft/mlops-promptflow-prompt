@@ -11,6 +11,7 @@ from flows.class_plan_and_execute.standard.tools import (
 )
 from typing import Any
 from autogen.agentchat import register_function
+from promptflow.tracing import start_trace
 
 
 class PlanAndExecute:
@@ -50,6 +51,7 @@ class PlanAndExecute:
         self, planner_system_message_path: str, solver_system_message_path: str
     ):
         """Initialize the environment."""
+        start_trace(collection="plan_and_execute")
         self.planner = Planner(system_message_path=planner_system_message_path)
         self.executor = Executor()
         self.solver = Solver(system_message_path=solver_system_message_path)

@@ -8,6 +8,7 @@ from flows.class_plan_and_execute.standard.multiprocressed_agents import (
 from flows.class_plan_and_execute.standard.multiprocressed_agents import (
     MultiProcessedAssistantAgent as AssistantAgent,
 )
+from promptflow.tracing import trace
 
 
 class Executor:
@@ -223,6 +224,7 @@ class Executor:
                 config_list,
             )
 
+    @trace
     def execute_plan_parallel(self, plan):
         """Execute the plan in parallel."""
         plan = plan["Functions"]

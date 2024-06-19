@@ -4,6 +4,7 @@ from flows.class_plan_and_execute.standard.multiprocressed_agents import (
     MultiProcessedAssistantAgent as AssistantAgent,
 )
 import json
+from promptflow.tracing import trace
 
 
 class Planner:
@@ -39,6 +40,7 @@ class Planner:
 
         # register_tools(self.planner)
 
+    @trace
     def generate_plan(self, question: str) -> str:
         """Generate a step-by-step execution plan to solve the user's request."""
         planner_reply = self.planner.generate_reply(
