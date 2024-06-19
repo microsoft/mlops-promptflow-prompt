@@ -139,16 +139,16 @@ flow_configs:
 
 deployment_configs:
     function_basic_flow_online_dev:
-      endpoint_name: function-basic-online-endpoint
+      endpoint_name: function-basic-endpoint
       endpoint_desc: An online endpoint serving an Promptflow
       deployment_desc: Function basic flow is hosting here
-      deployment_name: function-basic-online-deployment
+      deployment_name: function-basic-deployment
       deployment_traffic_allocation: 100
       deployment_vm_size: Standard_F4s_v2
       deployment_instance_count: 1
       app_insight: ${APPLICATIONINSIGHTS_CONNECTION_STRING}
       environment_variables:
-        "AZURE_OPENAI_API_KEY": ${AOAI_API_KEY},
-        "AZURE_OPENAI_ENDPOINT": ${AOAI_BASE_ENDPOINT},
-        "AZURE_OPENAI_DEPLOYMENT": gpt-35-turbo,
+        "AZURE_OPENAI_API_KEY": ${AOAI_API_KEY}
+        "AZURE_OPENAI_ENDPOINT": ${AOAI_BASE_ENDPOINT}
+        "AZURE_OPENAI_DEPLOYMENT": gpt-35-turbo
         "AZURE_OPENAI_API_VERSION": 2023-07-01-preview
