@@ -1,4 +1,4 @@
-# """Faiss index class."""
+"""Faiss index class."""
 import os
 from typing import Iterable, List, Optional
 from dataclasses import dataclass
@@ -11,17 +11,21 @@ from utils.logging import log
 from .oai import OAIEmbedding as Embedding
 from constants import CONNECTION_STRING, INDEX_CONTAINER_NAME
 
+
 @dataclass
 class SearchResultEntity:
     """Data class for search results."""
+
     text: str = None
     vector: List[float] = None
     score: float = None
     original_entity: dict = None
     metadata: dict = None
 
+
 INDEX_FILE_NAME = "index.faiss"
 DATA_FILE_NAME = "index.pkl"
+
 
 class FAISSIndex:
     """Faiss index class."""

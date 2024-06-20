@@ -20,15 +20,19 @@ OpenAIInstrumentor().instrument()
 
 app = df.DFApp(http_auth_level=func.AuthLevel.FUNCTION)
 
+
 @app.orchestration_trigger(context_name="context")
 def orchestrator_function(context):
+    """Orchestrate fucntions."""
     req_body = context.get_input()
     result = yield context.call_activity("ChatWithPdf_ProcessRequest", req_body)
     return result
 
+
 @app.function_name(name="ChatWithPdf_ProcessRequest")
 @app.activity_trigger(input_name="reqbody")
 def process_request(reqbody):
+    """Process request."""
     config = reqbody.get("config")
     if config is None:
         config = {
@@ -40,7 +44,7 @@ def process_request(reqbody):
             "CHUNK_SIZE": os.environ.get("CHUNK_SIZE"),
             "CHUNK_OVERLAP": os.environ.get("CHUNK_OVERLAP"),
         }
-    
+
     chat_history = reqbody.get("chat_history") or []
     pdf_url = reqbody.get("pdf_url")
     question = reqbody.get("question")
@@ -62,10 +66,12 @@ def process_request(reqbody):
     result = flow(chat_history=chat_history, pdf_url=pdf_url, question=question, config=config)
     return result
 
+
 @app.function_name(name="chatwithpdfinvoke")
 @app.route(route="chatwithpdfinvoke")
 @app.durable_client_input(client_name="starter")
 async def chat_with_pdf(req: func.HttpRequest, starter: df.DurableOrchestrationClient) -> func.HttpResponse:
+    """Trigger durable function."""
     carrier = {"traceparent": req.headers["Traceparent"]}
     ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
 

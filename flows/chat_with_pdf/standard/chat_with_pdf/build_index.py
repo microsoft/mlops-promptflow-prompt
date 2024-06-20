@@ -18,11 +18,11 @@ def create_faiss_index(pdf_path: str) -> str:
     """Create faiss index from pdfs."""
     # Ensure the containerы exists
     create_container_if_not_exists(INDEX_CONTAINER_NAME)
-    
+
     chunk_size = int(os.environ.get("CHUNK_SIZE"))
     chunk_overlap = int(os.environ.get("CHUNK_OVERLAP"))
     log(f"Chunk size: {chunk_size}, chunk overlap: {chunk_overlap}")
-    
+
     file_name = Path(pdf_path).name + f".index_{chunk_size}_{chunk_overlap}"
 
     try:
@@ -31,13 +31,13 @@ def create_faiss_index(pdf_path: str) -> str:
         if index.index_blob_client.exists():
             log("Index already exists in Blob Storage, bypassing index creation")
             return file_name
-            
+
         blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
         blob_client = blob_service_client.get_blob_client(container=PDFS_CONTAINER_NAME, blob=pdf_path)
-        
+
         # Download the file content
         blob_data = blob_client.download_blob().readall()
-        
+
         # Read the PDF content
         pdf_reader = PyPDF2.PdfReader(BytesIO(blob_data))
 
@@ -60,7 +60,7 @@ def create_faiss_index(pdf_path: str) -> str:
         return file_name
     except Exception as e:
         log(f"Error reading file: {e}")
-        raise(f"Error reading file: {e}")
+        raise (f"Error reading file: {e}")
 
 
 # Split the text into chunks with CHUNK_SIZE and CHUNK_OVERLAP as character count
