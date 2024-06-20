@@ -30,7 +30,7 @@ Additionally, the root folder contains some important files:
 The repository shows three different flows; some are implemented using various approaches. Comparing implementations of the same flow should help you see differences.
 
 -	**Entity extraction flow**: This basic flow can be implemented using all three methods (class, function, and YAML). So, implementations are separated into three folders: class_basic_flow, function_basic_flow, and yaml_basic_flow. We are using these flows as a primary “toy” example.
--	**Plan and execute flow**: This flow contains several steps that use autogen to build a chat flow. The flow is implemented as a class-based and YAML, and the folders class_plan_and_execute and plan_and_execute contain appropriate implementations.
+-	**Plan and execute flow**: This flow contains several steps that use autogen to build an agentic flow with external tool calling for question answering.
 -	**Chat with PDF**: The flow implements a chat flow with a document and is implemented as a DAG. It is located in the chat_with_pdf folder.
 Each flow folder contains the flow itself, found in the standard folder, and the evaluation script in the evaluate folder.
 
