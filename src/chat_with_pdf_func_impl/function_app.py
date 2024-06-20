@@ -2,9 +2,21 @@
 import os
 import azure.functions as func
 import azure.durable_functions as df
+from logging import WARNING, getLogger
 from promptflow.client import load_flow, PFClient
 from promptflow.entities import FlowContext, AzureOpenAIConnection
-# from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
+from opentelemetry import trace
+from opentelemetry.instrumentation.openai import OpenAIInstrumentor
+from azure.monitor.opentelemetry import configure_azure_monitor
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
+
+configure_azure_monitor()
+
+tracer = trace.get_tracer(__name__)
+logger = getLogger(__name__)
+logger.setLevel(WARNING)
+
+OpenAIInstrumentor().instrument()
 
 app = df.DFApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -54,18 +66,23 @@ def process_request(reqbody):
 @app.route(route="chatwithpdfinvoke")
 @app.durable_client_input(client_name="starter")
 async def chat_with_pdf(req: func.HttpRequest, starter: df.DurableOrchestrationClient) -> func.HttpResponse:
-    try:
-        req_body = req.get_json()
-        if not isinstance(req_body, dict):
-            return func.HttpResponse("Invalid JSON format", status_code=400)
-    except ValueError:
-        return func.HttpResponse("Invalid JSON", status_code=400)
+    carrier = {"traceparent": req.headers["Traceparent"]}
+    ctx = TraceContextTextMapPropagator().extract(carrier=carrier)
 
-    if not (req_body.get("question") and req_body.get("pdf_url")):
-        return func.HttpResponse("Missing 'question' or 'pdf_url' parameter", status_code=400)
+    with tracer.start_as_current_span("chatwithpdfinvoke", context=ctx):
+        logger.info("Python HTTP trigger function processed a request.")
+        try:
+            req_body = req.get_json()
+            if not isinstance(req_body, dict):
+                return func.HttpResponse("Invalid JSON format", status_code=400)
+        except ValueError:
+            return func.HttpResponse("Invalid JSON", status_code=400)
 
-    try:
-        instance_id = await starter.start_new("orchestrator_function", None, req_body)
-        return starter.create_check_status_response(req, instance_id)
-    except Exception as e:
-        return func.HttpResponse(f"Error starting orchestration: {e}", status_code=500)
+        if not (req_body.get("question") and req_body.get("pdf_url")):
+            return func.HttpResponse("Missing 'question' or 'pdf_url' parameter", status_code=400)
+
+        try:
+            instance_id = await starter.start_new("orchestrator_function", None, req_body)
+            return starter.create_check_status_response(req, instance_id)
+        except Exception as e:
+            return func.HttpResponse(f"Error starting orchestration: {e}", status_code=500)

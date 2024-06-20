@@ -2,8 +2,7 @@
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PDF_DIR = os.path.join(BASE_DIR, ".pdfs")
-INDEX_DIR = os.path.join(BASE_DIR, ".index/.pdfs/")
 
-CONNECTION_STRING = os.getenv("AzureWebJobsStorage")
-CONTAINER_NAME = "pdf-container"
+CONNECTION_STRING = os.getenv("AZURE_BLOB_CONNECTION")
+PDFS_CONTAINER_NAME = "pdf-container"
+INDEX_CONTAINER_NAME = "faiss-index"
