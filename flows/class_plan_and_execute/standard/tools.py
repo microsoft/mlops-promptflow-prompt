@@ -7,6 +7,7 @@ from flows.class_plan_and_execute.standard.multiprocressed_agents import (
     MultiProcessedUserProxyAgent as UserProxyAgent,
 )
 from typing_extensions import Annotated, Optional
+from promptflow.tracing import trace
 
 tool_descriptions = {
     "web_tool": {
@@ -46,6 +47,7 @@ tool_descriptions = {
 }
 
 
+@trace
 def _llm_tool(
     request: Annotated[str, tool_descriptions["llm_tool"]["request"]],
     context: Optional[Annotated[str, tool_descriptions["llm_tool"]["context"]]] = None,
@@ -101,6 +103,7 @@ def _llm_tool(
         return f"Error: {str(e)}"
 
 
+@trace
 def _web_tool(
     query: Annotated[str, tool_descriptions["web_tool"]["query"]],
     number_of_results: Optional[
@@ -149,6 +152,7 @@ def _web_tool(
     return _llm_tool(query, search_results)
 
 
+@trace
 def _wikipedia_tool(
     query: Annotated[str, tool_descriptions["wikipedia_tool"]["query"]],
     number_of_results: Optional[
@@ -179,6 +183,7 @@ def _wikipedia_tool(
     return search_results
 
 
+@trace
 def _math_tool(
     problem_description: Annotated[
         str, tool_descriptions["math_tool"]["problem_description"]
@@ -241,6 +246,7 @@ def _math_tool(
     @math_assistant.register_for_llm(
         description=tool_descriptions["evaluate_math_expression"]["function"]
     )
+    @trace
     def evaluate_math_expression(
         expression: Annotated[
             str, tool_descriptions["evaluate_math_expression"]["expression"]

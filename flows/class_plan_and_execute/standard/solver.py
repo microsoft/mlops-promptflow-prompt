@@ -3,6 +3,7 @@ import os
 from flows.class_plan_and_execute.standard.multiprocressed_agents import (
     MultiProcessedAssistantAgent as AssistantAgent,
 )
+from promptflow.tracing import trace
 
 
 class Solver:
@@ -35,6 +36,7 @@ class Solver:
             },
         )
 
+    @trace
     def generate_response(self, question: str, results: str) -> str:
         """Generate a final response to the user's request."""
         solver_message = f"""
