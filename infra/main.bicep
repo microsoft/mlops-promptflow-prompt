@@ -53,6 +53,18 @@ var deployments = [
       capacity: 30
     }
   }
+  {
+    name: 'text-embedding-ada-002'
+    model: {
+      format: 'OpenAI'
+      name: 'text-embedding-ada-002'
+      version: '2'
+    }
+    sku: {
+      name: 'Standard'
+      capacity: 30
+    }
+  }
 ]
 
 // Dependent resources for the Azure Machine Learning workspace
