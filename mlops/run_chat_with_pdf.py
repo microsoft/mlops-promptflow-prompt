@@ -5,7 +5,6 @@ from mlops.common.config_utils import MLOpsConfig
 from promptflow.client import load_flow
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
-from flows.chat_with_pdf.evaluate.flow_wrapper import ChatWithPdfFlowWrapper
 from mlops.common.trace_destination import get_destination_url
 
 
