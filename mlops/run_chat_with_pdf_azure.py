@@ -58,13 +58,13 @@ def main():
     data_standard_path = flow_config["data_path"]
     column_mapping = flow_config["column_mapping"]
     column_mapping["config"] = {
-        "EMBEDDING_MODEL_DEPLOYMENT_NAME": "text-embedding-ada-002",
-        "CHAT_MODEL_DEPLOYMENT_NAME": "gpt-35-turbo",
-        "PROMPT_TOKEN_LIMIT": 1900,
-        "MAX_COMPLETION_TOKENS": 1024,
-        "VERBOSE": "true",
-        "CHUNK_SIZE": 512,
-        "CHUNK_OVERLAP": 64,
+        "EMBEDDING_MODEL_DEPLOYMENT_NAME": flow_config["EMBEDDING_MODEL_DEPLOYMENT_NAME"],
+        "CHAT_MODEL_DEPLOYMENT_NAME": flow_config["CHAT_MODEL_DEPLOYMENT_NAME"],
+        "PROMPT_TOKEN_LIMIT": flow_config["PROMPT_TOKEN_LIMIT"],
+        "MAX_COMPLETION_TOKENS": flow_config["MAX_COMPLETION_TOKENS"],
+        "VERBOSE": flow_config["VERBOSE"],
+        "CHUNK_SIZE": flow_config["CHUNK_SIZE"],
+        "CHUNK_OVERLAP": flow_config["CHUNK_OVERLAP"],
     }
 
     run_instance = pf.run(
