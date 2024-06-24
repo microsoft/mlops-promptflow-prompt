@@ -74,15 +74,20 @@ def main():
     # Run the flow as a PromptFlow batch on a data frame.
     data_standard_path = flow_config["data_path"]
     column_mapping = flow_config["column_mapping"]
-
-    flow_obj = ChatWithPdfFlowWrapper(
-        flow_standard_path=flow_standard_path,
-        connection_name=flow_config,
-        openai_config=openai_config,
-    )
+    column_mapping["config"] = {
+        "EMBEDDING_MODEL_DEPLOYMENT_NAME": flow_config["EMBEDDING_MODEL_DEPLOYMENT_NAME"],
+        "CHAT_MODEL_DEPLOYMENT_NAME": flow_config["CHAT_MODEL_DEPLOYMENT_NAME"],
+        "PROMPT_TOKEN_LIMIT": flow_config["PROMPT_TOKEN_LIMIT"],
+        "MAX_COMPLETION_TOKENS": flow_config["MAX_COMPLETION_TOKENS"],
+        "VERBOSE": flow_config["VERBOSE"],
+        "CHUNK_SIZE": flow_config["CHUNK_SIZE"],
+        "CHUNK_OVERLAP": flow_config["CHUNK_OVERLAP"],
+    }
 
     run_instance = pf.run(
-        flow=flow_obj, data=data_standard_path, column_mapping=column_mapping
+        flow=flow_standard_path,
+        data=data_standard_path,
+        column_mapping=column_mapping,
     )
 
     pf.stream(run_instance)
