@@ -39,13 +39,7 @@ param aiServicesId string
 @description('Resource ID of the AI Services endpoint')
 param aiServicesTarget string
 
-@description('Resource ID of the Azure AI Search resource')
-param aiSearchId string
-
-@description('Resource ID of the Azure AI Search endpoint')
-param aiSearchTarget string
-
-resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-08-01-preview' = {
+resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   name: aiHubName
   location: location
   tags: tags
@@ -73,32 +67,15 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-08-01-preview'
       authType: 'ApiKey'
       isSharedToAll: true
       credentials: {
-        key: '${listKeys(aiServicesId, '2021-10-01').key1}'
+        key: '${listKeys(aiServicesId, '2023-05-01').key1}'
       }
       metadata: {
         ApiType: 'Azure'
         ResourceId: aiServicesId
       }
-      
-    }
-  }
 
-  resource aiSearchConnection 'connections@2024-04-01' = {
-    name: '${aiHubName}-connection-AzureAISearch'
-    properties: {
-      category: 'CognitiveSearch'
-      target: aiSearchTarget
-      authType: 'ApiKey'
-      isSharedToAll: true
-      credentials: {
-        key: '${listAdminKeys(aiSearchId, '2024-03-01-Preview').primaryKey}'
-      }
-      metadata: {
-        ApiType : 'Azure'
-        ResourceId: aiSearchId
-      }
     }
-  }
+  }  
 }
 
 resource project 'Microsoft.MachineLearningServices/workspaces@2024-01-01-preview' = {
@@ -125,3 +102,5 @@ resource project 'Microsoft.MachineLearningServices/workspaces@2024-01-01-previe
 }
 
 output aiHubID string = aiHub.id
+output aihubName string = aiHub.name
+output aiHubProjectName string = project.name

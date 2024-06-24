@@ -5,16 +5,16 @@ targetScope = 'resourceGroup'
 @minLength(2)
 @maxLength(12)
 @description('Name for the AI resource and used to derive name of dependent resources.')
-param aiHubName string = 'demo'
+param aiHubName string = 'mlopspfaihub'
 
 @description('Friendly name for your Azure AI resource')
-param aiHubFriendlyName string = 'Demo AI resource'
+param aiHubFriendlyName string = 'MLOps Prompflow template resources for AI Studio.'
 
 @description('Description of your Azure AI resource dispayed in AI studio')
 param aiHubDescription string = 'This is an example AI resource for use in Azure AI Studio.'
 
 @description('Name for the AI Hub Project name.')
-param aiHubProjectName string = 'demoproject'
+param aiHubProjectName string = 'mlopspfproject'
 
 @description('Friendly name for your Azure AI Hub Project resource')
 param aiHubProjectFriendlyName string = 'Demo AI Project for experimentation and evaluation'
@@ -78,7 +78,6 @@ module aiDependencies 'modules/dependent-resources.bicep' = {
     containerRegistryName: 'cr${name}${uniqueSuffix}'
     aiServicesName: 'ais${name}${uniqueSuffix}'
     modeldeployments: deployments
-    aiSearchName: 'aisearch${name}${uniqueSuffix}'
     tags: tags
   }
 }
@@ -98,11 +97,16 @@ module aiHub 'modules/ai-hub.bicep' = {
     // dependent resources
     aiServicesId: aiDependencies.outputs.aiservicesID
     aiServicesTarget: aiDependencies.outputs.aiservicesTarget
-    aiSearchId: aiDependencies.outputs.aisearchID
-    aiSearchTarget: aiDependencies.outputs.aisearchTarget
     applicationInsightsId: aiDependencies.outputs.applicationInsightsId
     containerRegistryId: aiDependencies.outputs.containerRegistryId
     keyVaultId: aiDependencies.outputs.keyvaultId
     storageAccountId: aiDependencies.outputs.storageId
   }
 }
+
+output AOAI_BASE_ENDPOINT string = aiDependencies.outputs.aiservicesTarget
+output APPINSIGHTS_CONNECTION_STRING string = aiDependencies.outputs.applicationInsightsConnectionString
+output AOAI_API_KEY string = aiDependencies.outputs.aiservicesKey
+output PROJECT_NAME string = aiHub.outputs.aiHubProjectName
+output WORKSPACE_NAME string = aiHub.name
+

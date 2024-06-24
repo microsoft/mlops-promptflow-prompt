@@ -12,9 +12,6 @@ param aiServicesName string
 @description('Model deployments')
 param modeldeployments array = []
 
-@description('AI search name')
-param aiSearchName string
-
 @description('Application Insights resource name')
 param applicationInsightsName string
 
@@ -25,6 +22,7 @@ param containerRegistryName string
 param keyvaultName string
 
 var containerRegistryNameCleaned = replace(containerRegistryName, '-', '')
+
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: applicationInsightsName
@@ -121,7 +119,7 @@ param storageSkuName string = 'Standard_LRS'
 
 var storageNameCleaned = replace(storageName, '-', '')
 
-resource aiServices 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
+resource aiServices 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: aiServicesName
   location: location
   sku: {
@@ -148,23 +146,6 @@ resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01
     capacity: 30
   }
 }]
-
-resource aiSearch 'Microsoft.Search/searchServices@2024-03-01-Preview' = {
-  name: aiSearchName
-  location: location
-  sku : {name: 'standard'}
-  identity: {
-    type : 'SystemAssigned'
-  }
-  properties: {
-    replicaCount: 1
-    partitionCount: 1
-    hostingMode: 'default'
-    authOptions: {
-      apiKeyOnly: {}
-    }
-  }
-}
 
 resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageNameCleaned
@@ -217,10 +198,10 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
 }
 
 output aiservicesID string = aiServices.id
-output aiservicesTarget string = aiServices.properties.endpoint
-output aisearchTarget string = 'https://${aiSearch.name}.search.windows.net/'
-output aisearchID string = aiSearch.id
+output aiservicesTarget string = 'https://${aiServices.name}.openai.azure.com/'
+output aiservicesKey string = aiServices.listKeys('2023-05-01').key1
 output storageId string = storage.id
 output keyvaultId string = keyVault.id
 output containerRegistryId string = containerRegistry.id
 output applicationInsightsId string = applicationInsights.id
+output applicationInsightsConnectionString string = applicationInsights.properties.ConnectionString
