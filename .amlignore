@@ -11,7 +11,7 @@
 config
 data
 mlops
-scr
+src
 tests
 
 # Files

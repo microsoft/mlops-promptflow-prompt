@@ -5,6 +5,7 @@ from flows.class_basic_flow.standard.extract_entities import EntityExtraction
 from mlops.common.config_utils import MLOpsConfig
 from promptflow.entities import AzureOpenAIConnection
 from promptflow.core import AzureOpenAIModelConfiguration
+from mlops.common.trace_destination import get_destination_url
 
 
 def main():
@@ -22,10 +23,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="class_basic_flow")
 
     aoai_deployment = flow_config["deployment_name"]
@@ -40,7 +42,11 @@ def main():
         api_version=openai_config["aoai_api_version"],
     )
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
     pf.connections.create_or_update(connection)
 
     # create the model config to be used in below flow calls
@@ -51,26 +57,28 @@ def main():
     # Run the flow as a basic function call with no tracing
     obj_chat = EntityExtraction(model_config=config)
 
-    print(obj_chat(
-        entity_type="job title",
-        text="The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(
+        obj_chat(
+            entity_type="job title",
+            text="The CEO and CFO are discussing the financial forecast for the next quarter.",
+        )
+    )
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
 
     pf = PFClient()
-    print(pf.test(flow=flow_standard_path,
-                  init={"model_config": config}))
+    print(pf.test(flow=flow_standard_path, init={"model_config": config}))
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
         data=data_standard_path,
         column_mapping=column_mapping,
-        init={"model_config": config}
+        init={"model_config": config},
     )
 
     pf.stream(run_instance)

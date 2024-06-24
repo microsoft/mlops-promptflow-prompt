@@ -15,7 +15,7 @@ aoai_config:
 # flow config names are formatted as <flow_name>_<environment>
 flow_configs:
   function_basic_flow_pr:
-    standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
+    standard_flow_path: flows/function_basic_flow/standard
     deployment_name: gpt-35-turbo
     connection_name: aoai
     data_path: data/basic_flow_data.jsonl
@@ -45,14 +45,15 @@ flow_configs:
       entity_type: ${data.entity_type}
 
   function_basic_flow_dev:
-    standard_flow_path: flows/function_basic_flow/standard/flow.flex.yaml
+    standard_flow_path: flows/function_basic_flow/standard
     deployment_name: gpt-35-turbo
     connection_name: aoai
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
     column_mapping:
       text: ${data.text}
-      entity_type: ${data.entity_type} 
+      entity_type: ${data.entity_type}
+
   class_basic_flow_dev:
     standard_flow_path: flows/class_basic_flow/standard/flow.flex.yaml
     deployment_name: gpt-35-turbo
@@ -69,6 +70,9 @@ flow_configs:
     deployment_name: gpt-35-turbo
     data_path: data/basic_flow_data.jsonl
     eval_data_path: data/basic_flow_eval_data.jsonl
+    column_mapping:
+      text: ${data.text}
+      entity_type: ${data.entity_type}
 
   plan_and_execute_pr:
     standard_flow_path: flows/plan_and_execute/standard
@@ -103,13 +107,48 @@ flow_configs:
     standard_flow_path: flows/chat_with_pdf/standard
     EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
     CHAT_MODEL_DEPLOYMENT_NAME: gpt-35-turbo
-    deployment_name: gpt-35-turbo
+    PROMPT_TOKEN_LIMIT: 1900
+    MAX_COMPLETION_TOKENS: 1024
+    VERBOSE: true
+    CHUNK_SIZE: 512
+    CHUNK_OVERLAP: 64
     connection_name: aoai
     data_path: data/bert-paper-qna.jsonl
     eval_data_path: data/bert-paper-qna-3-line.jsonl
     column_mapping:
-      text: ${data.text}
-      entity_type: ${data.entity_type}
       pdf_url: ${data.pdf_url}
       chat_history: ${data.chat_history}
       question: ${data.question}  
+
+  chat_with_pdf_dev:
+    standard_flow_path: flows/chat_with_pdf/standard
+    EMBEDDING_MODEL_DEPLOYMENT_NAME: text-embedding-ada-002
+    CHAT_MODEL_DEPLOYMENT_NAME: gpt-35-turbo
+    PROMPT_TOKEN_LIMIT: 1900
+    MAX_COMPLETION_TOKENS: 1024
+    VERBOSE: true
+    CHUNK_SIZE: 512
+    CHUNK_OVERLAP: 64
+    connection_name: aoai
+    data_path: data/bert-paper-qna.jsonl
+    eval_data_path: data/bert-paper-qna-3-line.jsonl
+    column_mapping:
+      pdf_url: ${data.pdf_url}
+      chat_history: ${data.chat_history}
+      question: ${data.question} 
+
+deployment_configs:
+    function_basic_flow_online_dev:
+      endpoint_name: function-basic-endpoint
+      endpoint_desc: An online endpoint serving an Promptflow
+      deployment_desc: Function basic flow is hosting here
+      deployment_name: function-basic-deployment
+      deployment_traffic_allocation: 100
+      deployment_vm_size: Standard_F4s_v2
+      deployment_instance_count: 1
+      app_insight: ${APPLICATIONINSIGHTS_CONNECTION_STRING}
+      environment_variables:
+        "AZURE_OPENAI_API_KEY": ${AOAI_API_KEY}
+        "AZURE_OPENAI_ENDPOINT": ${AOAI_BASE_ENDPOINT}
+        "AZURE_OPENAI_DEPLOYMENT": gpt-35-turbo
+        "AZURE_OPENAI_API_VERSION": 2023-07-01-preview

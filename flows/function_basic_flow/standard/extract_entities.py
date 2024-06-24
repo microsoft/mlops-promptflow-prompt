@@ -4,6 +4,7 @@ import sys
 import os
 from promptflow.tracing import trace
 from promptflow.core import Prompty
+
 sys.path.append(str(pathlib.Path(__file__).parent))
 import cleansing  # noqa: E402
 
@@ -16,7 +17,7 @@ def extract_entity(entity_type: str, text: str):
             "azure_deployment": "${env:AZURE_OPENAI_DEPLOYMENT}",
             "api_key": "${env:AZURE_OPENAI_API_KEY}",
             "api_version": "${env:AZURE_OPENAI_API_VERSION}",
-            "azure_endpoint": "${env:AZURE_OPENAI_ENDPOINT}"
+            "azure_endpoint": "${env:AZURE_OPENAI_ENDPOINT}",
         }
     }
     rootpath = pathlib.Path(__file__).parent.resolve()
@@ -34,7 +35,9 @@ def extract_entity(entity_type: str, text: str):
 
 
 if __name__ == "__main__":
-    print(extract_entity(
-        "people's full name",
-        "The novel 'The Great Gatsby' was written by F. Scott Fitzgerald.")
+    print(
+        extract_entity(
+            "people's full name",
+            "The novel 'The Great Gatsby' was written by F. Scott Fitzgerald.",
+        )
     )

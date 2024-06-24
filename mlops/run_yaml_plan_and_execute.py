@@ -4,6 +4,7 @@ from promptflow.client import PFClient
 from mlops.common.config_utils import MLOpsConfig
 from promptflow.client import load_flow
 from promptflow.entities import CustomConnection
+from mlops.common.trace_destination import get_destination_url
 
 
 def main():
@@ -21,10 +22,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_plan_and_execute")
     openai_config = mlops_config.aoai_config
 
@@ -33,32 +35,41 @@ def main():
 
     connection = CustomConnection(
         name=flow_config["connection_name"],
-        secrets={"aoai_api_key": openai_config["aoai_api_key"],
-                 "bing_api_key": flow_config["bing_api_key"]},
-        configs={"aoai_model_gpt4": flow_config["deployment_name_gpt4"],
-                 "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
-                 "aoai_base_url": openai_config["aoai_api_base"],
-                 "aoai_api_version": flow_config["aoai_api_version"],
-                 "bing_endpoint": flow_config["bing_endpoint"]}
+        secrets={
+            "aoai_api_key": openai_config["aoai_api_key"],
+            "bing_api_key": flow_config["bing_api_key"],
+        },
+        configs={
+            "aoai_model_gpt4": flow_config["deployment_name_gpt4"],
+            "aoai_model_gpt35": flow_config["deployment_name_gpt35"],
+            "aoai_base_url": openai_config["aoai_api_base"],
+            "aoai_api_version": flow_config["aoai_api_version"],
+            "bing_endpoint": flow_config["bing_endpoint"],
+        },
     )
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
+
     pf.connections.create_or_update(connection)
 
     flow = load_flow(flow_standard_path)
 
-    print(flow(
-        question="What was the total box office performance of 'Inception' and 'Interstellar' together?")
+    print(
+        flow(
+            question="What was the total box office performance of 'Inception' and 'Interstellar' together?"
+        )
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
-        flow=flow_standard_path,
-        data=data_standard_path,
-        column_mapping=column_mapping
+        flow=flow_standard_path, data=data_standard_path, column_mapping=column_mapping
     )
 
     pf.stream(run_instance)

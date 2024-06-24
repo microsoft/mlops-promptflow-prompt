@@ -29,6 +29,4 @@ class ExecutorEvaluator:
         # Determine missing steps
         missing_steps = expected_steps - found_steps
 
-        return {
-            "missing_steps": list(missing_steps)
-        }
+        return {"missing_steps": list(missing_steps)}

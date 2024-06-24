@@ -4,6 +4,8 @@ import argparse
 from promptflow.client import PFClient
 from flows.function_basic_flow.standard import extract_entities
 from mlops.common.config_utils import MLOpsConfig
+from mlops.common.trace_destination import get_destination_url
+from mlops.common.naming_tools import generate_experiment_name, generate_run_name
 
 
 def main():
@@ -21,10 +23,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="function_basic_flow")
 
     aoai_deployment = flow_config["deployment_name"]
@@ -37,22 +40,31 @@ def main():
     os.environ["AZURE_OPENAI_ENDPOINT"] = openai_config["aoai_api_base"]
 
     # Run the flow as a basic function call with no tracing
-    print(extract_entities.extract_entity(
-        "job title",
-        "The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(
+        extract_entities.extract_entity(
+            "job title",
+            "The CEO and CFO are discussing the financial forecast for the next quarter.",
+        )
+    )
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
     print(pf.test(flow=flow_standard_path))
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
+        display_name=generate_experiment_name("function_basic_flow"),
+        name=generate_run_name("function_basic_flow"),
         data=data_standard_path,
         column_mapping=column_mapping,
     )

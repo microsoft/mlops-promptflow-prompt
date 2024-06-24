@@ -1,6 +1,9 @@
 """Solver node for the plan_and_execute flow."""
 import os
-from flows.class_plan_and_execute.standard.multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
+from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+    MultiProcessedAssistantAgent as AssistantAgent,
+)
+from promptflow.tracing import trace
 
 
 class Solver:
@@ -14,7 +17,7 @@ class Solver:
                 "api_key": os.getenv("aoai_api_key"),
                 "base_url": os.getenv("aoai_base_url"),
                 "api_type": "azure",
-                "api_version": os.getenv("aoai_api_version")
+                "api_version": os.getenv("aoai_api_version"),
             }
         ]
 
@@ -29,10 +32,11 @@ class Solver:
             llm_config={
                 "config_list": self.config_list,
                 "timeout": 60,
-                "cache_seed": None
-            }
+                "cache_seed": None,
+            },
         )
 
+    @trace
     def generate_response(self, question: str, results: str) -> str:
         """Generate a final response to the user's request."""
         solver_message = f"""
@@ -43,4 +47,6 @@ class Solver:
         {results}
         """
 
-        return self.solver.generate_reply(messages=[{"content": solver_message, "role": "user"}])
+        return self.solver.generate_reply(
+            messages=[{"content": solver_message, "role": "user"}]
+        )

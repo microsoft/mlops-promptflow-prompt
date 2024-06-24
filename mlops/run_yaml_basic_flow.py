@@ -5,7 +5,8 @@ from mlops.common.config_utils import MLOpsConfig
 from promptflow.client import load_flow
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
-
+from mlops.common.trace_destination import get_destination_url
+from mlops.common.naming_tools import generate_experiment_name, generate_run_name
 
 def main():
     """
@@ -22,10 +23,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="yaml_basic_flow")
 
     aoai_deployment = flow_config["deployment_name"]
@@ -43,27 +45,43 @@ def main():
         api_version=openai_config["aoai_api_version"],
     )
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
+
     pf.connections.create_or_update(connection)
 
     flow = load_flow(flow_standard_path)
     flow.context = FlowContext(
         overrides={"nodes.NER_LLM.inputs.deployment_name": aoai_deployment},
-        connections={"NER_LLM": {"connection": connection}})
+        connections={"NER_LLM": {"connection": connection}},
+    )
 
-    print(flow(
-        entity_type="job title",
-        text="The CEO and CFO are discussing the financial forecast for the next quarter."))
+    print(
+        flow(
+            entity_type="job title",
+            text="The CEO and CFO are discussing the financial forecast for the next quarter.",
+        )
+    )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
+        display_name=generate_experiment_name("yaml_basic_flow"),
+        name=generate_run_name("yaml_basic_flow"),
         data=data_standard_path,
         column_mapping=column_mapping,
-        connections={"NER_LLM": {"connection": flow_config["connection_name"], "deployment_name": aoai_deployment}}
+        connections={
+            "NER_LLM": {
+                "connection": flow_config["connection_name"],
+                "deployment_name": aoai_deployment,
+            }
+        },
     )
 
     pf.stream(run_instance)

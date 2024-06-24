@@ -2,8 +2,13 @@
 import os
 import concurrent.futures
 import json
-from flows.class_plan_and_execute.standard.multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
-from flows.class_plan_and_execute.standard.multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
+from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+    MultiProcessedUserProxyAgent as UserProxyAgent,
+)
+from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+    MultiProcessedAssistantAgent as AssistantAgent,
+)
+from promptflow.tracing import trace
 
 
 class Executor:
@@ -17,7 +22,7 @@ class Executor:
                 "api_key": os.getenv("aoai_api_key"),
                 "base_url": os.getenv("aoai_base_url"),
                 "api_type": "azure",
-                "api_version": os.getenv("aoai_api_version")
+                "api_version": os.getenv("aoai_api_version"),
             }
         ]
 
@@ -31,9 +36,9 @@ class Executor:
             llm_config={
                 "config_list": self.config_list,
                 "timeout": 60,
-                "cache_seed": None
+                "cache_seed": None,
             },
-            human_input_mode="NEVER"
+            human_input_mode="NEVER",
         )
 
         # register_tools(self.executor)
@@ -58,8 +63,8 @@ class Executor:
                 "config_list": config_list,
                 "timeout": 60,
                 "temperature": 0.3,
-                "cache_seed": None
-            }
+                "cache_seed": None,
+            },
         )
 
         llm_assistant.clear_history()
@@ -79,7 +84,9 @@ class Executor:
         except Exception as e:
             return f"Error: {str(e)}"
 
-    def _substitute_dependency(self, id, original_argument_value, dependency_value, config_list):
+    def _substitute_dependency(
+        self, id, original_argument_value, dependency_value, config_list
+    ):
         """Substitute dependencies in the execution plan."""
         instruction = (
             "Extract the entity name or fact from the dependency value in a way "
@@ -104,13 +111,14 @@ class Executor:
     def _has_unresolved_dependencies(self, item, resolved_ids, plan_ids):
         """Check for unresolved dependencies in a plan step."""
         try:
-            args = json.loads(item['function']['arguments'])
+            args = json.loads(item["function"]["arguments"])
         except json.JSONDecodeError:
             return False
 
         for arg in args.values():
             if isinstance(arg, str) and any(
-                ref_id for ref_id in plan_ids
+                ref_id
+                for ref_id in plan_ids
                 if ref_id not in resolved_ids and ref_id in arg
             ):
                 return True
@@ -118,55 +126,86 @@ class Executor:
 
     def _submit_task(self, item_id, item, thread_executor, executor_agent, futures):
         """Submit a task for execution."""
-        arguments = item['function']['arguments']
+        arguments = item["function"]["arguments"]
         future = thread_executor.submit(
             executor_agent.execute_function,
-            {'name': item['function']['name'], 'arguments': arguments}
+            {"name": item["function"]["name"], "arguments": arguments},
         )
         futures[item_id] = future
 
     def _update_and_submit_task(
-        self, item_id, item, thread_executor, executor_agent, futures, results, config_list
+        self,
+        item_id,
+        item,
+        thread_executor,
+        executor_agent,
+        futures,
+        results,
+        config_list,
     ):
         """Update the arguments of a task with dependency results and submit it for execution."""
-        updated_arguments = json.loads(item['function']['arguments'])
+        updated_arguments = json.loads(item["function"]["arguments"])
         for arg_key, arg_value in updated_arguments.items():
             if isinstance(arg_value, str):
                 for res_id, res in results.items():
                     if arg_key == "context":
-                        arg_value = arg_value.replace(res_id, res['content'])
+                        arg_value = arg_value.replace(res_id, res["content"])
                     else:
                         arg_value = arg_value.replace(
                             res_id,
-                            self._substitute_dependency(res_id, arg_value, res['content'], config_list)
+                            self._substitute_dependency(
+                                res_id, arg_value, res["content"], config_list
+                            ),
                         )
                     updated_arguments[arg_key] = arg_value
         future = thread_executor.submit(
             executor_agent.execute_function,
             {
-                'name': item['function']['name'],
-                'arguments': json.dumps(updated_arguments)
-            }
+                "name": item["function"]["name"],
+                "arguments": json.dumps(updated_arguments),
+            },
         )
         futures[item_id] = future
 
     def _submit_ready_tasks(
-        self, plan_ids, resolved_ids, futures, results, thread_executor, executor_agent, config_list
+        self,
+        plan_ids,
+        resolved_ids,
+        futures,
+        results,
+        thread_executor,
+        executor_agent,
+        config_list,
     ):
         """Submit plan tasks that have all dependencies resolved and are ready to be executed."""
         for next_item_id, next_item in plan_ids.items():
             if (
                 next_item_id not in resolved_ids
                 and next_item_id not in futures
-                and not self._has_unresolved_dependencies(next_item, resolved_ids, plan_ids)
+                and not self._has_unresolved_dependencies(
+                    next_item, resolved_ids, plan_ids
+                )
             ):
                 self._update_and_submit_task(
-                    next_item_id, next_item, thread_executor,
-                    executor_agent, futures, results, config_list
+                    next_item_id,
+                    next_item,
+                    thread_executor,
+                    executor_agent,
+                    futures,
+                    results,
+                    config_list,
                 )
 
     def _process_done_future(
-        self, future, futures, results, resolved_ids, plan_ids, thread_executor, executor_agent, config_list
+        self,
+        future,
+        futures,
+        results,
+        resolved_ids,
+        plan_ids,
+        thread_executor,
+        executor_agent,
+        config_list,
     ):
         """Process a completed future and trigger the submission of ready tasks."""
         item_id = next((id for id, f in futures.items() if f == future), None)
@@ -176,14 +215,20 @@ class Executor:
             resolved_ids.add(item_id)
             del futures[item_id]
             self._submit_ready_tasks(
-                plan_ids, resolved_ids, futures, results,
-                thread_executor, executor_agent, config_list
+                plan_ids,
+                resolved_ids,
+                futures,
+                results,
+                thread_executor,
+                executor_agent,
+                config_list,
             )
 
+    @trace
     def execute_plan_parallel(self, plan):
         """Execute the plan in parallel."""
         plan = plan["Functions"]
-        plan_ids = {item['id']: item for item in plan}
+        plan_ids = {item["id"]: item for item in plan}
         results = {}
         resolved_ids = set()
         futures = {}
@@ -191,7 +236,9 @@ class Executor:
         with concurrent.futures.ThreadPoolExecutor() as thread_executor:
             for item_id, item in plan_ids.items():
                 if not self._has_unresolved_dependencies(item, resolved_ids, plan_ids):
-                    self._submit_task(item_id, item, thread_executor, self.executor, futures)
+                    self._submit_task(
+                        item_id, item, thread_executor, self.executor, futures
+                    )
 
             while futures:
                 done, _ = concurrent.futures.wait(
@@ -199,11 +246,17 @@ class Executor:
                 )
                 for future in done:
                     self._process_done_future(
-                        future, futures, results, resolved_ids, plan_ids,
-                        thread_executor, self.executor, self.config_list
+                        future,
+                        futures,
+                        results,
+                        resolved_ids,
+                        plan_ids,
+                        thread_executor,
+                        self.executor,
+                        self.config_list,
                     )
 
-        result_str = '\n'.join(
+        result_str = "\n".join(
             [f"{key} = {value['content']}" for key, value in results.items()]
         )
         return result_str

@@ -8,7 +8,13 @@ from promptflow.client import PFClient
 class StandardFlowWrapper:
     """Implement the flow."""
 
-    def __init__(self, flow_standard_path: str, connection_name: str, aoai_deployment: str, aoai_config: dict):
+    def __init__(
+        self,
+        flow_standard_path: str,
+        connection_name: str,
+        aoai_deployment: str,
+        aoai_config: dict,
+    ):
         """Initialize environment and load prompty into the memory."""
         connection = AzureOpenAIConnection(
             name=connection_name,
@@ -24,7 +30,7 @@ class StandardFlowWrapper:
         self.flow = load_flow(flow_standard_path)
         self.flow.context = FlowContext(
             overrides={"nodes.NER_LLM.inputs.deployment_name": aoai_deployment},
-            connections={"NER_LLM": {"connection": connection}}
+            connections={"NER_LLM": {"connection": connection}},
         )
 
     def __call__(self, *, entity_type: str, text: str, **kwargs):

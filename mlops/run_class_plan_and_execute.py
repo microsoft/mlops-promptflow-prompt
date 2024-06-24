@@ -4,6 +4,7 @@ import argparse
 from promptflow.client import PFClient
 from flows.class_plan_and_execute.standard.plan_and_execute import PlanAndExecute
 from mlops.common.config_utils import MLOpsConfig
+from mlops.common.trace_destination import get_destination_url
 
 
 def main():
@@ -21,10 +22,11 @@ def main():
         required=True,
         help="env_name from config.yaml",
     )
+    parser.add_argument("--deploy_traces", default=False, action="store_true")
     parser.add_argument("--visualize", default=False, action="store_true")
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="class_plan_and_execute")
     openai_config = mlops_config.aoai_config
 
@@ -50,26 +52,38 @@ def main():
 
     # Run the flow as a PromptFlow flow with tracing on a single row.
     flow_standard_path = flow_config["standard_flow_path"]
-    planner_system_message_path = os.path.basename(flow_config["planner_system_message_path"])
-    solver_system_message_path = os.path.basename(flow_config["solver_system_message_path"])
+    planner_system_message_path = os.path.basename(
+        flow_config["planner_system_message_path"]
+    )
+    solver_system_message_path = os.path.basename(
+        flow_config["solver_system_message_path"]
+    )
 
-    pf = PFClient()
+    if args.deploy_traces is True:
+        trace_destination = get_destination_url(mlops_config.aistudio_config)
+    else:
+        trace_destination = None
+    pf = PFClient(config={"trace.destination": trace_destination})
     print(
         pf.test(
             flow=flow_standard_path,
-            init={"planner_system_message_path": planner_system_message_path,
-                  "solver_system_message_path": solver_system_message_path},
+            init={
+                "planner_system_message_path": planner_system_message_path,
+                "solver_system_message_path": solver_system_message_path,
+            },
         )
     )
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
-        init={"planner_system_message_path": planner_system_message_path,
-              "solver_system_message_path": solver_system_message_path},
+        init={
+            "planner_system_message_path": planner_system_message_path,
+            "solver_system_message_path": solver_system_message_path,
+        },
         data=data_standard_path,
         column_mapping=column_mapping,
     )

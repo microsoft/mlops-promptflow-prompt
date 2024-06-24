@@ -32,10 +32,10 @@ def main():
     except ConnectionNotFoundError:
         connection = AzureOpenAIConnection(
             name=conn_name,
-            api_key=aoai_config['aoai_api_key'],
-            api_base=aoai_config['aoai_api_base'],
-            api_type=aoai_config['aoai_api_type'],
-            api_version=aoai_config['aoai_api_version'],
+            api_key=aoai_config["aoai_api_key"],
+            api_base=aoai_config["aoai_api_base"],
+            api_type=aoai_config["aoai_api_type"],
+            api_version=aoai_config["aoai_api_version"],
         )
 
         pf.connections.create_or_update(connection)

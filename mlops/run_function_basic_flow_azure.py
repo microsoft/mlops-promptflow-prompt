@@ -24,7 +24,7 @@ def main():
     )
     args = parser.parse_args()
 
-    mlops_config = MLOpsConfig(environemnt=args.environment_name)
+    mlops_config = MLOpsConfig(environment=args.environment_name)
     flow_config = mlops_config.get_flow_config(flow_name="function_basic_flow")
 
     aoai_deployment = flow_config["deployment_name"]
@@ -36,9 +36,9 @@ def main():
     credential = DefaultAzureCredential()
     try:
         ml_client = MLClient(
-            subscription_id=aistudio_config['subscription_id'],
-            resource_group_name=aistudio_config['resource_group_name'],
-            workspace_name=aistudio_config['project_name'],
+            subscription_id=aistudio_config["subscription_id"],
+            resource_group_name=aistudio_config["resource_group_name"],
+            workspace_name=aistudio_config["project_name"],
             credential=credential,
         )
         created_connection = ml_client.connections.get(flow_config["connection_name"])
@@ -57,8 +57,8 @@ def main():
     flow_standard_path = flow_config["standard_flow_path"]
 
     # Run the flow as a PromptFlow batch on a data frame.
-    data_standard_path = flow_config['data_path']
-    column_mapping = flow_config['column_mapping']
+    data_standard_path = flow_config["data_path"]
+    column_mapping = flow_config["column_mapping"]
 
     run_instance = pf.run(
         flow=flow_standard_path,
@@ -69,8 +69,8 @@ def main():
             "AZURE_OPENAI_API_KEY": f"${{{flow_config['connection_name']}.api_key}}",
             "AZURE_OPENAI_ENDPOINT": f"${{{flow_config['connection_name']}.api_base}}",
             "AZURE_OPENAI_DEPLOYMENT": aoai_deployment,
-            "AZURE_OPENAI_API_VERSION": openai_config["aoai_api_version"]
-        }
+            "AZURE_OPENAI_API_VERSION": openai_config["aoai_api_version"],
+        },
     )
 
     if run_instance.status == "Completed" or run_instance.status == "Finished":

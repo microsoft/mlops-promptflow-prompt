@@ -8,14 +8,15 @@ class PlanAndExecuteFlowWrapper:
     """Implement the flow."""
 
     def __init__(
-            self, flow_standard_path: str, connection_name: str,
-            connection_secrets: dict, connection_configs: dict
+        self,
+        flow_standard_path: str,
+        connection_name: str,
+        connection_secrets: dict,
+        connection_configs: dict,
     ):
         """Initialize environment and load prompty into the memory."""
         connection = CustomConnection(
-            name=connection_name,
-            secrets=connection_secrets,
-            configs=connection_configs
+            name=connection_name, secrets=connection_secrets, configs=connection_configs
         )
 
         pf = PFClient()

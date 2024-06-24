@@ -28,10 +28,7 @@ class MatchEvaluator:
         ):
             partial_match = 1
 
-        return {
-            "exact_match": exact_match,
-            "partial_match": partial_match
-        }
+        return {"exact_match": exact_match, "partial_match": partial_match}
 
     def is_match(
         self,

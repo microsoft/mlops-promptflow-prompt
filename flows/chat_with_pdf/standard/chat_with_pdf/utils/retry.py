@@ -14,6 +14,7 @@ def retry_and_handle_exceptions(
     extract_delay_from_error_message: Optional[any] = None,
 ):
     """Create decorator to retry a function call with exponential backoff in case of specified exceptions."""
+
     def deco_retry(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -58,6 +59,7 @@ def retry_and_handle_exceptions_for_generator(
     extract_delay_from_error_message: Optional[any] = None,
 ):
     """Create decorator to retry a generator function call with exponential backoff in case of specified exceptions."""
+
     def deco_retry(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
