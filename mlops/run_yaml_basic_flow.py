@@ -6,7 +6,7 @@ from promptflow.client import load_flow
 from promptflow.entities import FlowContext
 from promptflow.entities import AzureOpenAIConnection
 from mlops.common.trace_destination import get_destination_url
-
+from mlops.common.naming_tools import generate_experiment_name, generate_run_name
 
 def main():
     """
@@ -72,6 +72,8 @@ def main():
 
     run_instance = pf.run(
         flow=flow_standard_path,
+        display_name=generate_experiment_name("yaml_basic_flow"),
+        name=generate_run_name("yaml_basic_flow"),
         data=data_standard_path,
         column_mapping=column_mapping,
         connections={
