@@ -17,7 +17,7 @@ jobs:
       # Add extra environment variables here so that teamsapp cli can use them.
       BOT_AZURE_APP_SERVICE_RESOURCE_ID: ${{vars.BOT_AZURE_APP_SERVICE_RESOURCE_ID}}
       BOT_ID: ${{vars.BOT_ID}}
-      APP_NAME_SUFFIX:  "c0885f"
+      APP_NAME_SUFFIX:  ${{vars.RESOURCE_SUFFIX}}
 
     steps:
     
