@@ -8,7 +8,7 @@ pr:
       - .azure-pipelines/*
       - mlops/common/*
       - mlops/*
-      - flows/plan_and_execute/*
+      - flows/yaml_plan_and_execute/*
       - src/*
       - tests
 
@@ -24,7 +24,7 @@ parameters:
    default: "pr"
  - name: model_type
    displayName: "model type"
-   default: "plan_and_execute"
+   default: "yaml_plan_and_execute"
 
 stages:
   - stage: build_validation

@@ -1,5 +1,5 @@
 ---
-name: plan_and_execute PR Workflow
+name: yaml_plan_and_execute PR Workflow
 
 on:
   workflow_call:
@@ -10,7 +10,7 @@ on:
       - '.github/**'
       - 'mlops/common/**'
       - 'mlops/**'
-      - 'flows/plan_and_execute/**'
+      - 'flows/yaml_plan_and_execute/**'
       - 'src/**'
       - 'tests/**'
 
@@ -49,5 +49,5 @@ jobs:
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
           script_parameter: |
-            python -m flows.plan_and_execute.evaluate.evaluate \
+            python -m flows.yaml_plan_and_execute.evaluate.evaluate \
               --environment_name pr
