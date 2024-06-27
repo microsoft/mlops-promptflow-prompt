@@ -1,11 +1,15 @@
 """Tools definitions for AutoGen."""
-import os
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+try:
+    from flows.class_plan_and_execute.standard.multiprocressed_agents import (
     MultiProcessedAssistantAgent as AssistantAgent,
-)
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedUserProxyAgent as UserProxyAgent,
-)
+    )
+    from flows.class_plan_and_execute.standard.multiprocressed_agents import (
+        MultiProcessedUserProxyAgent as UserProxyAgent,
+    )
+except ImportError:
+    from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
+    from multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
+import os
 from typing_extensions import Annotated, Optional
 from promptflow.tracing import trace
 

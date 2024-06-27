@@ -1,41 +1,48 @@
 """Implement plan_and_execute flow as a class."""
-from flows.class_plan_and_execute.standard.planner import Planner
-from flows.class_plan_and_execute.standard.executor import Executor
-from flows.class_plan_and_execute.standard.solver import Solver
-from flows.class_plan_and_execute.standard.tools import (
-    tool_descriptions,
-    _web_tool,
-    _llm_tool,
-    _wikipedia_tool,
-    _math_tool,
-)
+try:
+    from flows.class_plan_and_execute.standard.planner import Planner
+    from flows.class_plan_and_execute.standard.executor import Executor
+    from flows.class_plan_and_execute.standard.solver import Solver
+    from flows.class_plan_and_execute.standard.tools import (
+        tool_descriptions,
+        _web_tool,
+        _llm_tool,
+        _wikipedia_tool,
+        _math_tool,
+    )
+except ImportError:
+    from planner import Planner
+    from executor import Executor
+    from solver import Solver
+    from tools import (
+        tool_descriptions,
+        _web_tool,
+        _llm_tool,
+        _wikipedia_tool,
+        _math_tool,
+    )
 from typing import Any
 from autogen.agentchat import register_function
 from promptflow.tracing import start_trace
+import json
+import os
 
 
 class PlanAndExecute:
     """Implement the flow."""
 
-    # tool wrappers for the agents
-    # need to be staticmethod to have _name attribute
-
-    @staticmethod
     def web_tool(*args: Any, **kwargs: Any) -> Any:
         """Wrap the web_tool function."""
         return _web_tool(*args, **kwargs)
 
-    @staticmethod
     def llm_tool(*args: Any, **kwargs: Any) -> Any:
         """Wrap the llm_tool function."""
         return _llm_tool(*args, **kwargs)
 
-    @staticmethod
     def wikipedia_tool(*args: Any, **kwargs: Any) -> Any:
         """Wrap the wikipedia_tool function."""
         return _wikipedia_tool(*args, **kwargs)
 
-    @staticmethod
     def math_tool(*args: Any, **kwargs: Any) -> Any:
         """Wrap the math_tool function."""
         return _math_tool(*args, **kwargs)
@@ -73,7 +80,8 @@ class PlanAndExecute:
         plan = self.planner.generate_plan(question=question)
         execution = self.executor.execute_plan_parallel(plan=plan)
         response = self.solver.generate_response(question=question, results=execution)
-        number_of_steps = len(plan["Plan"])
+        plan_json = json.loads(plan)
+        number_of_steps = len(plan_json["Plan"])
 
         return {
             "plan": plan,
@@ -81,3 +89,4 @@ class PlanAndExecute:
             "answer": response,
             "number_of_steps": number_of_steps,
         }
+
