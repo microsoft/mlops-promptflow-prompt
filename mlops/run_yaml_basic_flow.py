@@ -8,6 +8,7 @@ from promptflow.entities import AzureOpenAIConnection
 from mlops.common.trace_destination import get_destination_url
 from mlops.common.naming_tools import generate_experiment_name, generate_run_name
 
+
 def main():
     """
     Execute function_basic_flow using different ways.

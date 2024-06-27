@@ -1,7 +1,7 @@
 """Executor node of the plan_and_execute flow."""
 try:
     from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedUserProxyAgent as UserProxyAgent,
+        MultiProcessedUserProxyAgent as UserProxyAgent,
     )
     from flows.class_plan_and_execute.standard.multiprocressed_agents import (
         MultiProcessedAssistantAgent as AssistantAgent,

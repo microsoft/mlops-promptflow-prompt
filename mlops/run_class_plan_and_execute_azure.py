@@ -17,7 +17,7 @@ def main():
     it runs the flow in different ways that can be used to test the flow locally.
     """
     # Config parameters
-    parser = argparse.ArgumentParser("config_parameters") 
+    parser = argparse.ArgumentParser("config_parameters")
     parser.add_argument(
         "--environment_name",
         type=str,

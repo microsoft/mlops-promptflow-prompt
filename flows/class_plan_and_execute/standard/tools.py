@@ -1,7 +1,7 @@
 """Tools definitions for AutoGen."""
 try:
     from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedAssistantAgent as AssistantAgent,
+        MultiProcessedAssistantAgent as AssistantAgent,
     )
     from flows.class_plan_and_execute.standard.multiprocressed_agents import (
         MultiProcessedUserProxyAgent as UserProxyAgent,

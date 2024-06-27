@@ -25,7 +25,6 @@ from typing import Any
 from autogen.agentchat import register_function
 from promptflow.tracing import start_trace
 import json
-import os
 
 
 class PlanAndExecute:
@@ -89,4 +88,3 @@ class PlanAndExecute:
             "answer": response,
             "number_of_steps": number_of_steps,
         }
-

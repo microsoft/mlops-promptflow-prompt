@@ -1,12 +1,11 @@
 """Planner node for the plan_and_execute flow."""
 try:
     from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedAssistantAgent as AssistantAgent,
+        MultiProcessedAssistantAgent as AssistantAgent,
     )
 except ImportError:
     from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
 import os
-import json
 from promptflow.tracing import trace
 
 
