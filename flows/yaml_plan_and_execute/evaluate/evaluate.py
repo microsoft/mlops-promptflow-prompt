@@ -11,7 +11,7 @@ from promptflow.evals.evaluators import (
     RelevanceEvaluator,
     SimilarityEvaluator,
 )
-from flows.plan_and_execute.evaluate.flow_wrapper import PlanAndExecuteFlowWrapper
+from flows.yaml_plan_and_execute.evaluate.flow_wrapper import PlanAndExecuteFlowWrapper
 from mlops.common.naming_tools import generate_experiment_name
 
 
@@ -71,7 +71,7 @@ def main():
     )
 
     results = evaluate(
-        evaluation_name=generate_experiment_name("plan_and_execute"),
+        evaluation_name=generate_experiment_name("yaml_plan_and_execute"),
         data=data_eval_path,
         target=flow,
         evaluators={
