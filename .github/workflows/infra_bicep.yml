@@ -1,6 +1,7 @@
 name: Infra-Bicep-Deployment
 on:
   workflow_dispatch:
+environment: infra
 env:
   APPINSIGHTS_NAME: ${{ vars.APPINSIGHTS_NAME }}
   CONTAINER_REGISTRY_NAME: ${{ vars.CONTAINER_REGISTRY_NAME }}
