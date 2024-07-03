@@ -1,9 +1,6 @@
 name: Infra-Bicep-Deployment
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - 'development'
 jobs:
   run-infra-provision:
     runs-on: ubuntu-latest
