@@ -4,17 +4,15 @@ param aiServicesName string
 @description('The location into which your Azure resources should be deployed.')
 param location string
 
-resource aiServices 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
+resource open_ai 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
   name: aiServicesName
   location: location
+  kind: 'OpenAI'
   sku: {
     name: 'S0'
   }
-  kind: 'OpenAI' // or 'AIServices' for all the services
   properties: {
-    apiProperties: {
-      statisticsEnabled: false
-    }
+    customSubDomainName: toLower(aiServicesName)
   }
 }
 
