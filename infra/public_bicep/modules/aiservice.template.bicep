@@ -10,7 +10,7 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   sku: {
     name: 'S0'
   }
-  kind: 'AIServices' // or 'OpenAI' for OpenAI only
+  kind: 'OpenAI' // or 'AIServices' for all the services
   properties: {
     apiProperties: {
       statisticsEnabled: false
