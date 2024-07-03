@@ -19,4 +19,4 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
 }
 
 output aiservicesID string = aiServices.id
-output aiservicesTarget string = 'https://${aiServices.name}.openai.azure.com/'
+output aiservicesTarget string = 'https://${aiServicesName}.openai.azure.com/'
