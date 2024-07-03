@@ -114,7 +114,6 @@ module aiHub 'modules/ai-hub.bicep' = {
     aiHubProjectName: aiHubProjectName
     aiHubProjectFriendlyName: aiHubProjectFriendlyName
     location: location
-    tags: tags
 
     // dependent resources
     aiServicesId: ai.outputs.aiservicesID
