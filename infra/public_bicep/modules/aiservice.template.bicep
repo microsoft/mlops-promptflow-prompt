@@ -16,5 +16,5 @@ resource open_ai 'Microsoft.CognitiveServices/accounts@2022-03-01' = {
   }
 }
 
-output aiservicesID string = aiServices.id
+output aiservicesID string = open_ai.id
 output aiservicesTarget string = 'https://${aiServicesName}.openai.azure.com/'
