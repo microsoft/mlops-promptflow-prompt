@@ -4,20 +4,20 @@ on:
   pull_request:
     branches:
       - 'development'
-environment: infra
-env:
-  APPINSIGHTS_NAME: ${{ vars.APPINSIGHTS_NAME }}
-  CONTAINER_REGISTRY_NAME: ${{ vars.CONTAINER_REGISTRY_NAME }}
-  KEYVAULT_NAME: ${{ vars.KEYVAULT_NAME }}
-  LOCATION: ${{ vars.LOCATION }}
-  RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
-  STORAGE_ACCT_NAME: ${{ vars.STORAGE_ACCT_NAME }}
-  AIHUB_NAME: ${{ vars.AIHUB_NAME }}
-  AIHUB_PROJECT_NAME: ${{ vars.AIHUB_PROJECT_NAME }}
-  AISERVICE_NAME: ${{ vars.AISERVICE_NAME }}
 jobs:
   run-infra-provision:
     runs-on: ubuntu-latest
+    environment: infra
+    env:
+        APPINSIGHTS_NAME: ${{ vars.APPINSIGHTS_NAME }}
+        CONTAINER_REGISTRY_NAME: ${{ vars.CONTAINER_REGISTRY_NAME }}
+        KEYVAULT_NAME: ${{ vars.KEYVAULT_NAME }}
+        LOCATION: ${{ vars.LOCATION }}
+        RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+        STORAGE_ACCT_NAME: ${{ vars.STORAGE_ACCT_NAME }}
+        AIHUB_NAME: ${{ vars.AIHUB_NAME }}
+        AIHUB_PROJECT_NAME: ${{ vars.AIHUB_PROJECT_NAME }}
+        AISERVICE_NAME: ${{ vars.AISERVICE_NAME }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
