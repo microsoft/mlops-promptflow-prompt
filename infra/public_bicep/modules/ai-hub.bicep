@@ -60,7 +60,7 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   kind: 'hub'
 
   resource aiServicesConnection 'connections@2024-01-01-preview' = {
-    name: '${aiHubName}-connection-AzureOpenAI'
+    name: 'aoai'
     properties: {
       category: 'AzureOpenAI'
       target: aiServicesTarget
@@ -100,7 +100,3 @@ resource project 'Microsoft.MachineLearningServices/workspaces@2024-01-01-previe
     hubResourceId: aiHub.id
   }
 }
-
-output aiHubID string = aiHub.id
-output aihubName string = aiHub.name
-output aiHubProjectName string = project.name

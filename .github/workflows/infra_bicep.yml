@@ -1,0 +1,53 @@
+name: Infra-Bicep-Deployment
+on:
+  workflow_dispatch:
+env:
+  APPINSIGHTS_NAME: ${{ vars.APPINSIGHTS_NAME }}
+  CONTAINER_REGISTRY_NAME: ${{ vars.CONTAINER_REGISTRY_NAME }}
+  KEYVAULT_NAME: ${{ vars.KEYVAULT_NAME }}
+  LOCATION: ${{ vars.LOCATION }}
+  RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+  STORAGE_ACCT_NAME: ${{ vars.STORAGE_ACCT_NAME }}
+  AIHUB_NAME: ${{ vars.AIHUB_NAME }}
+  AIHUB_PROJECT_NAME: ${{ vars.AIHUB_PROJECT_NAME }}
+  AISERVICE_NAME: ${{ vars.AISERVICE_NAME }}
+jobs:
+  run-infra-provision:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Display parameters
+        run: |
+          echo 'See the contents of parameters passed in'
+          echo $APPINSIGHTS_NAME
+          echo $CONTAINER_REGISTRY_NAME
+          echo $KEYVAULT_NAME
+          echo $LOCATION
+          echo $RESOURCE_GROUP_NAME
+          echo $STORAGE_ACCT_NAME
+          echo $AIHUB_NAME
+          echo $AIHUB_PROJECT_NAME
+          echo $AISERVICE_NAME
+          echo ${{ github.workspace }}
+      
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.azure_credentials }}       
+          
+      - name: Provision AI Studio Infrastructure
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az --version
+            az deployment sub create --location=$LOCATION \
+            --template-file '${{ github.workspace }}/infra/public_bicep/main.bicep' \
+            --parameters resourceGroupName=$RESOURCE_GROUP_NAME location=$LOCATION \
+            storageAccount=$STORAGE_ACCT_NAME \
+            keyVaultName=$KEYVAULT_NAME \
+            appInsightsName=$APPINSIGHTS_NAME \
+            containerRegistryName=$CONTAINER_REGISTRY_NAME \
+            aiHubName=$AIHUB_NAME \
+            aiHubProjectName=$AIHUB_PROJECT_NAME \
+            aiServiceName=$AISERVICE_NAME
