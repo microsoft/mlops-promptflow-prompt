@@ -48,7 +48,6 @@ param aiHubProjectFriendlyName string = 'AI Project for experimentation and eval
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   name: resourceGroupName
   location: location
-  tags: {}
 }
 
 // storage
@@ -106,6 +105,7 @@ module appInsightsResource './modules/appinsights.template.bicep' = {
 
 module aiHub 'modules/ai-hub.bicep' = {
   name: 'aihubresource'
+  scope: resourceGroup(rg.name)
   params: {
     // workspace organization
     aiHubName: aiHubName

@@ -77,7 +77,6 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
 resource project 'Microsoft.MachineLearningServices/workspaces@2024-01-01-preview' = {
   name: aiHubProjectName
   location: location
-  tags: tags
   sku: {
     name: 'P3'
     tier: 'Basic'
