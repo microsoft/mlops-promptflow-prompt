@@ -96,6 +96,8 @@ def main():
         print("Experiment has been completed")
     elif run_instance.status == "Preparing":
         print("Preparing flow run for the experiment")
+    elif run_instance.status == "Running":
+        print("Running flow run for the experiment")
     elif run_instance.status == "NotStarted":
         print("Flow run for the experiment not started")
     else:
