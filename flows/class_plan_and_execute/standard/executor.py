@@ -2,13 +2,9 @@
 import os
 import concurrent.futures
 import json
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedUserProxyAgent as UserProxyAgent,
-)
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedAssistantAgent as AssistantAgent,
-)
 from promptflow.tracing import trace
+from multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
+from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
 
 
 class Executor:
@@ -227,6 +223,7 @@ class Executor:
     @trace
     def execute_plan_parallel(self, plan):
         """Execute the plan in parallel."""
+        plan = json.loads(plan)
         plan = plan["Functions"]
         plan_ids = {item["id"]: item for item in plan}
         results = {}

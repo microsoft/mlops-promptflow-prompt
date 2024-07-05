@@ -1,13 +1,9 @@
 """Tools definitions for AutoGen."""
 import os
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedAssistantAgent as AssistantAgent,
-)
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedUserProxyAgent as UserProxyAgent,
-)
 from typing_extensions import Annotated, Optional
 from promptflow.tracing import trace
+from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
+from multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
 
 tool_descriptions = {
     "web_tool": {

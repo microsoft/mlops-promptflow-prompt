@@ -1,9 +1,7 @@
 """Solver node for the plan_and_execute flow."""
 import os
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedAssistantAgent as AssistantAgent,
-)
 from promptflow.tracing import trace
+from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
 
 
 class Solver:

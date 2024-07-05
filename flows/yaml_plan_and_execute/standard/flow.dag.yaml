@@ -1,8 +1,8 @@
 inputs:
   question:
     type: string
-    default: What was the total box office performance of 'Inception' and
-      'Interstellar' together?
+    default: What was the total box office performance of 'Inception' and 'Interstellar'
+      together?
 outputs:
   plan:
     type: string

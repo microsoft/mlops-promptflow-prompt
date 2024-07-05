@@ -1,10 +1,7 @@
 """Planner node for the plan_and_execute flow."""
 import os
-from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-    MultiProcessedAssistantAgent as AssistantAgent,
-)
-import json
 from promptflow.tracing import trace
+from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
 
 
 class Planner:
@@ -47,9 +44,10 @@ class Planner:
             messages=[{"content": question, "role": "user"}]
         )
         planner_reply = planner_reply.replace("```json", "").replace("```", "").strip()
-        try:
-            plan = json.loads(planner_reply)
-        except json.JSONDecodeError:
-            plan = {}
+        # try:
+        #     plan = json.loads(planner_reply)
+        # except json.JSONDecodeError:
+        #     plan = {}
 
-        return plan
+        # return plan
+        return planner_reply
