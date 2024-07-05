@@ -1,30 +1,21 @@
 """Implement plan_and_execute flow as a class."""
-try:
-    from flows.class_plan_and_execute.standard.planner import Planner
-    from flows.class_plan_and_execute.standard.executor import Executor
-    from flows.class_plan_and_execute.standard.solver import Solver
-    from flows.class_plan_and_execute.standard.tools import (
-        tool_descriptions,
-        _web_tool,
-        _llm_tool,
-        _wikipedia_tool,
-        _math_tool,
-    )
-except ImportError:
-    from planner import Planner
-    from executor import Executor
-    from solver import Solver
-    from tools import (
-        tool_descriptions,
-        _web_tool,
-        _llm_tool,
-        _wikipedia_tool,
-        _math_tool,
-    )
+import json
+import sys
+import os
 from typing import Any
 from autogen.agentchat import register_function
 from promptflow.tracing import start_trace
-import json
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from planner import Planner  # noqa: E402
+from executor import Executor  # noqa: E402
+from solver import Solver  # noqa: E402
+from tools import (  # noqa: E402
+    tool_descriptions,
+    _web_tool,
+    _llm_tool,
+    _wikipedia_tool,
+    _math_tool,
+)
 
 
 class PlanAndExecute:

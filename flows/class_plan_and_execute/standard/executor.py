@@ -1,18 +1,10 @@
 """Executor node of the plan_and_execute flow."""
-try:
-    from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-        MultiProcessedUserProxyAgent as UserProxyAgent,
-    )
-    from flows.class_plan_and_execute.standard.multiprocressed_agents import (
-        MultiProcessedAssistantAgent as AssistantAgent,
-    )
-except ImportError:
-    from multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
-    from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
 import os
 import concurrent.futures
 import json
 from promptflow.tracing import trace
+from multiprocressed_agents import MultiProcessedUserProxyAgent as UserProxyAgent
+from multiprocressed_agents import MultiProcessedAssistantAgent as AssistantAgent
 
 
 class Executor:
