@@ -199,9 +199,9 @@ jobs:
           kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
           kubectl apply -f src/otel_collector/otel-collector.yaml
 
-      - name: Image Placeholder
-        run: |
-          sed -i 's|IMAGE_PLACEHOLDER|${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest|g' src/basic_flow_fastapi_app/deployment.yaml
+      # - name: Image Placeholder
+      #   run: |
+      #     sed -i 's|IMAGE_PLACEHOLDER|${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest|g' src/basic_flow_fastapi_app/deployment.yaml
 
       - name: Deploy to AKS
         run: |
