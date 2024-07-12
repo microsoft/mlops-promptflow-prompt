@@ -7,7 +7,7 @@ from azure.identity import DefaultAzureCredential
 
 def create_container_if_not_exists(container_name: str):
     """Create container in Azure Blob Storage."""
-    blob_service_client =  BlobServiceClient(STORAGE_ACCOUNT_URL, DefaultAzureCredential())
+    blob_service_client = BlobServiceClient(STORAGE_ACCOUNT_URL, DefaultAzureCredential())
     container_client = blob_service_client.get_container_client(container_name)
     try:
         container_client.create_container()
