@@ -9,8 +9,9 @@ from utils.oai import OAIEmbedding
 from utils.index import FAISSIndex
 from utils.logging import log
 from utils.create_container import create_container_if_not_exists
-from constants import CONNECTION_STRING, PDFS_CONTAINER_NAME, INDEX_CONTAINER_NAME
+from constants import ACCOUNT_URL, PDFS_CONTAINER_NAME, INDEX_CONTAINER_NAME
 from azure.storage.blob import BlobServiceClient
+from azure.identity import DefaultAzureCredential
 from io import BytesIO
 
 
@@ -32,7 +33,9 @@ def create_faiss_index(pdf_path: str) -> str:
             log("Index already exists in Blob Storage, bypassing index creation")
             return file_name
 
-        blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+        default_credential = DefaultAzureCredential()
+        blob_service_client =  BlobServiceClient(ACCOUNT_URL, credential=default_credential)
+
         blob_client = blob_service_client.get_blob_client(container=PDFS_CONTAINER_NAME, blob=pdf_path)
 
         # Download the file content
