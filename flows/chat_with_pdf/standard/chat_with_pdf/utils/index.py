@@ -11,7 +11,6 @@ from azure.identity import DefaultAzureCredential
 from utils.logging import log
 from .oai import OAIEmbedding as Embedding
 from constants import STORAGE_ACCOUNT_URL, INDEX_CONTAINER_NAME
-from utils.create_container import create_container_if_not_exists
 
 
 @dataclass

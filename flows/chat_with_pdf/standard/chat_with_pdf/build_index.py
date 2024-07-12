@@ -33,7 +33,7 @@ def create_faiss_index(pdf_path: str) -> str:
             log("Index already exists in Blob Storage, bypassing index creation")
             return file_name
 
-        blob_service_client =  BlobServiceClient(STORAGE_ACCOUNT_URL, credential=DefaultAzureCredential())
+        blob_service_client = BlobServiceClient(STORAGE_ACCOUNT_URL, credential=DefaultAzureCredential())
         blob_client = blob_service_client.get_blob_client(container=PDFS_CONTAINER_NAME, blob=pdf_path)
 
         # Download the file content
