@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: basic-flow-app-container
-        image: mlopspromptflowacrw.azurecr.io/basic-flow-image:latest
+        image: IMAGE_PLACEHOLDER
         imagePullPolicy: Always
         env:
         - name: AZURE_OPENAI_API_KEY
