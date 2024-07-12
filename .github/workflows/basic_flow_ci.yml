@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - "development"
-      - "agromova/features/deployment_fix"
     paths:
       - '.github/**'
       - 'flows/function_basic_flow/**'
