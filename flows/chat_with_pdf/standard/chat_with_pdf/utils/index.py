@@ -7,9 +7,11 @@ import pickle
 import tempfile
 import numpy as np
 from azure.storage.blob import BlobServiceClient, BlobClient
+from azure.identity import DefaultAzureCredential
 from utils.logging import log
 from .oai import OAIEmbedding as Embedding
-from constants import CONNECTION_STRING, INDEX_CONTAINER_NAME
+from constants import STORAGE_ACCOUNT_URL, INDEX_CONTAINER_NAME
+from utils.create_container import create_container_if_not_exists
 
 
 @dataclass
@@ -37,7 +39,7 @@ class FAISSIndex:
         self.embedding = embedding
         self.index_persistent_path = index_persistent_path + INDEX_FILE_NAME
         self.docs_persistent_path = index_persistent_path + DATA_FILE_NAME
-        self.blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+        self.blob_service_client = BlobServiceClient(STORAGE_ACCOUNT_URL, DefaultAzureCredential())
         self.index_blob_client = self._get_blob_client(self.index_persistent_path)
         self.docs_blob_client = self._get_blob_client(self.docs_persistent_path)
 

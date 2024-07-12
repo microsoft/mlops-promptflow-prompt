@@ -4,8 +4,10 @@ import os
 import re
 from urllib.parse import urlparse
 from utils.logging import log
-from constants import CONNECTION_STRING, PDFS_CONTAINER_NAME
+from constants import STORAGE_ACCOUNT_URL, PDFS_CONTAINER_NAME
 from azure.storage.blob import BlobServiceClient
+from utils.create_container import create_container_if_not_exists
+from azure.identity import DefaultAzureCredential
 from utils.create_container import create_container_if_not_exists
 
 
@@ -21,7 +23,7 @@ def download(url: str) -> str:
         parsed_url = urlparse(url)
         file_name = normalize_filename(os.path.basename(parsed_url.path))
 
-        blob_service_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+        blob_service_client =  BlobServiceClient(STORAGE_ACCOUNT_URL, DefaultAzureCredential())
         blob_client = blob_service_client.get_blob_client(container=PDFS_CONTAINER_NAME, blob=file_name)
 
         # Upload the file content
