@@ -46,8 +46,10 @@ param aiHubProjectName string = 'mlopspfproject'
 param aiHubProjectFriendlyName string = 'AI Project for experimentation and evaluation'
 
 @description('Id of the user or app to assign application roles')
-param principalId string = ''
+param principalId string 
 param principalType string = 'User'
+
+param nodeResourceGroupName string
 
 var llmsconfig = loadYamlContent('./llms.yaml')
 var llmDeployments = array(contains(llmsconfig, 'deployments') ? llmsconfig.deployments : [])
@@ -111,7 +113,7 @@ module appInsightsResource './modules/appinsights.template.bicep' = {
   }
  }
 
-module aiHub 'modules/ai-hub.bicep' = {
+module aiHub './modules/ai-hub.bicep' = {
   name: 'aihubresource'
   scope: resourceGroup(rg.name)
   params: {
@@ -133,6 +135,8 @@ module aiHub 'modules/ai-hub.bicep' = {
   }
 }
 
+// Assign roles to the specified principal
+
 module userAcrRolePush './modules/role.bicep' = {
   name: 'user-acr-role-push'
   scope: rg
@@ -153,6 +157,16 @@ module userAcrRolePull './modules/role.bicep' = {
   }
 }
 
-
+module aks './modules/aks.template.bicep' = {
+  name: 'aks'
+  scope: rg
+  params: {
+    name: 'aks-cluster'
+    location: location
+    acrname: containerRegistryName
+    pId: principalId
+    nodeResourceGroupName: nodeResourceGroupName
+  }
+}
 
 

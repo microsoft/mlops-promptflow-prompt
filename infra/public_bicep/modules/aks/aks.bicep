@@ -16,6 +16,14 @@ param sku string = 'Free'
 @description('Configuration of AKS add-ons')
 param addOns object = {}
 
+@description('Id of the user or app to assign application roles')
+param principalId string = ''
+
+@description('The name of the Azure Container Registry (ACR) to grant access to')
+param containerRegistryName string = ''
+
+var aksClusterAdminRole = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b1ff04bb-8a4e-4dc4-8eb5-8693973ce19b')
+var acrPullRole = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
 
 resource aks_cluster 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
   name: aks_cluster_name
@@ -107,6 +115,31 @@ resource agentpool 'Microsoft.ContainerService/managedClusters/agentPools@2024-0
   }
 }
 
+// Grant ACR Pull access from cluster managed identity to container registry
+resource aksAcrPull 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: containerRegistry // Use when specifying a scope that is different than the deployment scope
+  name: guid(subscription().id, resourceGroup().id, principalId, acrPullRole)
+  properties: {
+    roleDefinitionId: acrPullRole
+    principalType: 'ServicePrincipal'
+    principalId: principalId
+  }
+}
+
+
+resource aksRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: aks_cluster // Use when specifying a scope that is different than the deployment scope
+  name: guid(subscription().id, resourceGroup().id, principalId, aksClusterAdminRole)
+  properties: {
+    roleDefinitionId: aksClusterAdminRole
+    principalType: 'User'
+    principalId: principalId
+  }
+}
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: containerRegistryName
+}
 
 @description('The resource name of the AKS cluster')
 output clusterName string = aks_cluster.name
