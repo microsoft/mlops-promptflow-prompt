@@ -1,3 +1,5 @@
+# update the version of the models based on the region availability for selected SKU
+# refer to the following URL https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models
 deployments:
   - name: gpt-35-turbo
     model:
