@@ -18,6 +18,13 @@ param aiHubProjectName string
 @description('AI hub project display name')
 param aiHubProjectFriendlyName string = aiHubName
 
+@description('The SKU name to use for the AI Studio Hub Resource')
+param skuName string = 'Basic'
+
+@description('The SKU tier to use for the AI Studio Hub Resource')
+@allowed(['Basic', 'Free', 'Premium', 'Standard'])
+param skuTier string = 'Basic'
+
 @description('Resource ID of the application insights resource for storing diagnostics logs')
 param applicationInsightsId string
 
@@ -36,12 +43,17 @@ param aiServicesId string
 @description('Resource ID of the AI Services endpoint')
 param aiServicesTarget string
 
-resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
+resource aiHub 'Microsoft.MachineLearningServices/workspaces@2024-01-01-preview' = {
   name: aiHubName
   location: location
   identity: {
     type: 'SystemAssigned'
   }
+  sku: {
+    name: skuName
+    tier: skuTier
+  }
+
   properties: {
     // organization
     friendlyName: aiHubFriendlyName
@@ -95,3 +107,8 @@ resource project 'Microsoft.MachineLearningServices/workspaces@2024-01-01-previe
     hubResourceId: aiHub.id
   }
 }
+
+
+output name string = aiHub.name
+output id string = aiHub.id
+output principalId string = aiHub.identity.principalId

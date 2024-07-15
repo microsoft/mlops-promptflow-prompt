@@ -45,6 +45,15 @@ param aiHubProjectName string = 'mlopspfproject'
 @description('Friendly name for your Azure AI Hub Project resource')
 param aiHubProjectFriendlyName string = 'AI Project for experimentation and evaluation'
 
+@description('Id of the user or app to assign application roles')
+param principalId string 
+param principalType string = 'ServicePrincipal'  //'User'
+
+param nodeResourceGroupName string
+
+var llmsconfig = loadYamlContent('./llms.yaml')
+var llmDeployments = array(contains(llmsconfig, 'deployments') ? llmsconfig.deployments : [])
+
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   name: resourceGroupName
   location: location
@@ -100,10 +109,11 @@ module appInsightsResource './modules/appinsights.template.bicep' = {
   params: {
     aiServicesName: aiServiceName
     location: rg.location
+    llm_deployments: llmDeployments
   }
  }
 
-module aiHub 'modules/ai-hub.bicep' = {
+module aiHub './modules/ai-hub.bicep' = {
   name: 'aihubresource'
   scope: resourceGroup(rg.name)
   params: {
@@ -124,3 +134,39 @@ module aiHub 'modules/ai-hub.bicep' = {
     storageAccountId: stg.outputs.storageId
   }
 }
+
+// Assign roles to the specified principal
+
+module userAcrRolePush './modules/role.bicep' = {
+  name: 'user-acr-role-push'
+  scope: rg
+  params: {
+    principalId: principalId
+    roleDefinitionId: '8311e382-0749-4cb8-b61a-304f252e45ec'
+    principalType: principalType
+  }
+}
+
+module userAcrRolePull './modules/role.bicep' = {
+  name: 'user-acr-role-pull'
+  scope: rg
+  params: {
+    principalId: principalId
+    roleDefinitionId: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+    principalType: principalType
+  }
+}
+
+module aks './modules/aks.template.bicep' = {
+  name: 'aks'
+  scope: rg
+  params: {
+    name: 'aks-cluster'
+    location: location
+    acrname: containerRegistryName
+    pId: principalId
+    nodeResourceGroupName: nodeResourceGroupName
+  }
+}
+
+
