@@ -132,7 +132,7 @@ resource aksRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().id, resourceGroup().id, principalId, aksClusterAdminRole)
   properties: {
     roleDefinitionId: aksClusterAdminRole
-    principalType: 'User'
+    principalType: 'ServicePrincipal'
     principalId: principalId
   }
 }
