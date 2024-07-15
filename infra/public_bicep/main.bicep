@@ -47,7 +47,7 @@ param aiHubProjectFriendlyName string = 'AI Project for experimentation and eval
 
 @description('Id of the user or app to assign application roles')
 param principalId string 
-param principalType string = 'User'
+param principalType string = 'ServicePrincipal'  //'User'
 
 param nodeResourceGroupName string
 

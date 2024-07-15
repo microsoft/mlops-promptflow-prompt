@@ -33,15 +33,15 @@ steps:
   - task: AzureCLI@2
     displayName: Provision Infrastructure
     inputs:
-      
       # azconnection is the service connection created by azd. 
       azureSubscription: azconnection
+      # azureSubscription: '${{ parameters.azureServiceConnection }}'
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
          az --version
-            az deployment sub create --location=$LOCATION \
-            --template-file '${{ github.workspace }}/infra/public_bicep/main.bicep' \
+          az deployment sub create --location=$LOCATION \
+            --template-file '/infra/public_bicep/main.bicep' \
             --parameters resourceGroupName=$RESOURCE_GROUP_NAME location=$LOCATION \
             storageAccount=$STORAGE_ACCT_NAME \
             keyVaultName=$KEYVAULT_NAME \
@@ -50,6 +50,8 @@ steps:
             aiHubName=$AIHUB_NAME \
             aiHubProjectName=$AIHUB_PROJECT_NAME \
             aiServiceName=$AISERVICE_NAME
+            principalId=$PRINCIPAL_ID \
+            nodeResourceGroupName= $NODE_RESOURCE_GROUP_NAME \
     env:
       APPINSIGHTS_NAME: $(APPINSIGHTS_NAME)
       CONTAINER_REGISTRY_NAME: $(CONTAINER_REGISTRY_NAME)
@@ -61,3 +63,5 @@ steps:
       AIHUB_PROJECT_NAME: $(AIHUB_PROJECT_NAME)
       AISERVICE_NAME: $(AISERVICE_NAME)
       AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
+      PRINCIPAL_ID: $(PRINCIPAL_ID)
+      NODE_RESOURCE_GROUP_NAME: $(NODE_RESOURCE_GROUP_NAME)S
