@@ -18,9 +18,6 @@ on:
       subscription-id:
         description: "the subscription ID hosting the AML instance."
         required: true
-      azure_credentials:
-        description: "the credentials to use to authenticate with Azure."
-        required: true
       aoai_api_key:
         description: "the API key to use to authenticate with AOAI."
         required: true
