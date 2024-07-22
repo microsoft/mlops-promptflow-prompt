@@ -34,7 +34,7 @@ jobs:
           pytest --junitxml=junit/test-results.xml --cov=. --cov-report=xml
 
       - name: Publish Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: "**/test-*.xml"
