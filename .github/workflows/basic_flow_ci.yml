@@ -21,6 +21,9 @@ env:
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
   IMAGE_NAME: "basic-flow-image"
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
   run-evaluation-full:
     runs-on: ubuntu-latest

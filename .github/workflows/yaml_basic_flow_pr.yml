@@ -25,6 +25,9 @@ on:
       - 'src/**'
       - 'tests/**'
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
   run-pr-workflow:
     uses: ./.github/workflows/platform_pr_dev_workflow.yml

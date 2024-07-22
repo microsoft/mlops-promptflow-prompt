@@ -35,6 +35,9 @@ env:
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
   build-validation:
     name: Build Validation
