@@ -23,9 +23,9 @@ runs:
     - name: Azure CLI login
       uses: azure/login@v2
       with:
-        client_id: ${{ inputs.client_id }}
-        tenant_id: ${{ inputs.tenant_id }}
-        subscription_id: ${{ inputs.subscription_id }}
+        client-id: ${{ inputs.client_id }}
+        tenant-id: ${{ inputs.tenant_id }}
+        subscription-id: ${{ inputs.subscription_id }}
 
     - name: Execute code
       shell: bash
