@@ -51,9 +51,9 @@ jobs:
 
       - name: Execute PF Evaluation Pipeline
         uses: ./.github/actions/execute_shell_code
-        env:
-          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
-          BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
+        # env:
+        #   BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+        #   BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
           client_id: ${{ env.CLIENT_ID }}
           tenant_id: ${{ env.TENANT_ID }}
