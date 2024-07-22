@@ -32,7 +32,9 @@ jobs:
       exec_environment: ${{ inputs.exec_environment || 'pr' }}
       model_type: ${{ inputs.model_type || 'chat_with_pdf' }}
     secrets:
-      subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
       aoai_api_key: ${{ secrets.AOAI_API_KEY }}
       aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}
+      client_id: ${{ secrets.AZURE_CLIENT_ID }}
+      tenant_id: ${{ secrets.AZURE_TENANT_ID }}

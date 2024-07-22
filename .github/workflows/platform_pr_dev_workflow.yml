@@ -27,6 +27,12 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
+      client_id: 
+        description: "Federated Client ID to use to authenticate with Azure."
+        required: true
+      tenant_id: 
+        description: "Federated Tenant ID to use to authenticate with Azure."
+        required: true
 env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
@@ -61,6 +67,9 @@ jobs:
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
           azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
