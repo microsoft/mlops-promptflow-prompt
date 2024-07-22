@@ -47,7 +47,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           script_parameter: |
             python -m flows.function_basic_flow.evaluate.evaluate \
               --environment_name dev
@@ -58,7 +60,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           script_parameter: |
             python -m flows.class_basic_flow.evaluate.evaluate \
               --environment_name dev
@@ -69,7 +73,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           script_parameter: |
             python -m flows.yaml_basic_flow.evaluate.evaluate \
               --environment_name dev
@@ -93,7 +99,9 @@ jobs:
       - name: Execute Online Deployment Script
         uses: ./.github/actions/execute_shell_code
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           script_parameter: |
             python -m mlops.deployment.deploy_online_endpoint \
               --environment_name dev --flow_type function_basic_flow
@@ -126,7 +134,9 @@ jobs:
       - name: Execute Azure Functions Deployment
         uses: ./.github/actions/execute_shell_code
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           script_parameter: |
             az functionapp deployment source config-zip -g ${{ vars.RESOURCE_GROUP_NAME }} -n \
             ${{ vars.APP_NAME }} --src 'src/basic_func_impl/build.zip' \

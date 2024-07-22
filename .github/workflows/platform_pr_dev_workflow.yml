@@ -15,7 +15,7 @@ on:
         required: true
         default: "function_basic_flow"
     secrets:
-      subscription_id:
+      subscription-id:
         description: "the subscription ID hosting the AML instance."
         required: true
       azure_credentials:
@@ -27,10 +27,10 @@ on:
       aoai_base_endpoint:
         required: true
         description: "Azure OpenAI base endpoint."
-      client_id: 
+      client-id: 
         description: "Federated Client ID to use to authenticate with Azure."
         required: true
-      tenant_id: 
+      tenant-id: 
         description: "Federated Tenant ID to use to authenticate with Azure."
         required: true
 env:
@@ -66,10 +66,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
-          client_id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           script_parameter: |
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
