@@ -14,26 +14,15 @@ on:
         description: "type of model to execute"
         required: true
         default: "function_basic_flow"
-    secrets:
-      subscription-id:
-        description: "the subscription ID hosting the AML instance."
-        required: true
-      aoai_api_key:
-        description: "the API key to use to authenticate with AOAI."
-        required: true
-      aoai_base_endpoint:
-        required: true
-        description: "Azure OpenAI base endpoint."
-      client-id: 
-        description: "Federated Client ID to use to authenticate with Azure."
-        required: true
-      tenant-id: 
-        description: "Federated Tenant ID to use to authenticate with Azure."
-        required: true
 env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+  SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+  CLIENT_ID: ${{ vars.CLIENT_ID }}
+  TENANT_ID: ${{ vars.TENANT_ID }}
+  AOAI_API_KEY: ${{ vars.AOAI_API_KEY }}
+  AOAI_BASE_ENDPOINT: ${{ vars.AOAI_BASE_ENDPOINT }}
 
 permissions:
   id-token: write
@@ -66,9 +55,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}
