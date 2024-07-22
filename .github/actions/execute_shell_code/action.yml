@@ -3,13 +3,13 @@ name: execute_shell_code
 description: execute a shell script given in the inputs
 
 inputs:
-  client-id: 
+  client_id: 
     description: "client id of service principal used to authenticate with azure"
     required: true
-  tenant-id: 
+  tenant_id: 
     description: "tenant id of service principal used to authenticate with azure"
     required: true
-  subscription-id:
+  subscription_id:
     description: "subscription id of service principal used to authenticate with azure"
     required: true
   script_parameter:
