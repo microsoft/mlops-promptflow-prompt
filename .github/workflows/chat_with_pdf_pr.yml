@@ -34,3 +34,7 @@ jobs:
     with:
       exec_environment: ${{ inputs.exec_environment || 'pr' }}
       model_type: ${{ inputs.model_type || 'chat_with_pdf' }}
+    secrets:
+      subscription_id: ${{ secrets.SUBSCRIPTION_ID }}
+      aoai_api_key: ${{ secrets.AOAI_API_KEY }}
+      aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}
