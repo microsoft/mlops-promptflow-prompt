@@ -14,6 +14,19 @@ on:
         description: "type of model to execute"
         required: true
         default: "function_basic_flow"
+    secrets:
+      subscription_id:
+        description: "the subscription ID hosting the AML instance."
+        required: true
+      azure_credentials:
+        description: "the credentials to use to authenticate with Azure."
+        required: true
+      aoai_api_key:
+        description: "the API key to use to authenticate with AOAI."
+        required: true
+      aoai_base_endpoint:
+        required: true
+        description: "Azure OpenAI base endpoint."
 env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
@@ -49,9 +62,9 @@ jobs:
 
       - name: Execute PF Evaluation Pipeline
         uses: ./.github/actions/execute_shell_code
-        # env:
-        #   BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
-        #   BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
+        env:
+          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+          BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
           client_id: ${{ env.CLIENT_ID }}
           tenant_id: ${{ env.TENANT_ID }}
