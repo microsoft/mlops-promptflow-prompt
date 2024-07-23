@@ -7,6 +7,9 @@ env:
   PYTHON_VERSION: "3.9"
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+  SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+  CLIENT_ID: ${{ vars.CLIENT_ID }}
+  TENANT_ID: ${{ vars.TENANT_ID }}
 
 permissions:
   id-token: write
@@ -21,11 +24,10 @@ jobs:
         uses: ./.github/actions/configure_devops_agent
       - name: Execute Dataset Registration
         uses: ./.github/actions/execute_shell_code
-        env: 
-            SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         with:
-            client-id: ${{ secrets.AZURE_CLIENT_ID }}
-            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            client_id: ${{ env.CLIENT_ID }}
+            tenant_id: ${{ env.TENANT_ID }}
+            subscription_id: ${{ env.SUBSCRIPTION_ID }}
             script_parameter: |
                 python -m mlops.common.register_data_assets \
                     --data_config_path config/data_config.json
