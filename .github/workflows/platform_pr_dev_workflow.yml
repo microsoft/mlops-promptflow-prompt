@@ -21,8 +21,6 @@ env:
   SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
   CLIENT_ID: ${{ vars.CLIENT_ID }}
   TENANT_ID: ${{ vars.TENANT_ID }}
-  AOAI_API_KEY: ${{ vars.AOAI_API_KEY }}
-  AOAI_BASE_ENDPOINT: ${{ vars.AOAI_BASE_ENDPOINT }}
 
 permissions:
   id-token: write
