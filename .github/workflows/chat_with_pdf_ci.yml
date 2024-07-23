@@ -19,8 +19,6 @@ env:
   SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
   CLIENT_ID: ${{ vars.CLIENT_ID }}
   TENANT_ID: ${{ vars.TENANT_ID }}
-  AOAI_API_KEY: ${{ vars.AOAI_API_KEY }}
-  AOAI_BASE_ENDPOINT: ${{ vars.AOAI_BASE_ENDPOINT }}
 
 permissions:
   id-token: write
@@ -47,9 +45,9 @@ jobs:
 
       - name: Execute PF Evaluation Pipeline for Chat With PDF
         uses: ./.github/actions/execute_shell_code
-        # env:
-        #   BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
-        #   BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
+        env:
+          BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
+          BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
           client_id: ${{ env.CLIENT_ID }}
           tenant_id: ${{ env.TENANT_ID }}
@@ -107,5 +105,5 @@ jobs:
             "CHUNK_SIZE=512" \
             "CHUNK_OVERLAP=64" \
             "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
-            "AZURE_OPENAI_API_KEY=${{ vars.AOAI_API_KEY }}" \
-            "AZURE_OPENAI_ENDPOINT=${{ vars.AOAI_BASE_ENDPOINT }}"
+            "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
+            "AZURE_OPENAI_ENDPOINT=${{ secrets.AOAI_BASE_ENDPOINT }}"
