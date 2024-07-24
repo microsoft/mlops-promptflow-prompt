@@ -3,8 +3,14 @@ name: execute_shell_code
 description: execute a shell script given in the inputs
 
 inputs:
-  azure_credentials:
-    description: "Azure credentials"
+  client_id: 
+    description: "client id of service principal used to authenticate with azure"
+    required: true
+  tenant_id: 
+    description: "tenant id of service principal used to authenticate with azure"
+    required: true
+  subscription_id:
+    description: "subscription id of service principal used to authenticate with azure"
     required: true
   script_parameter:
     description: "Command to execute"
@@ -14,10 +20,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Azure login
-      uses: azure/login@v1
+    - name: Azure CLI login
+      uses: azure/login@v2
       with:
-        creds: ${{ inputs.azure_credentials }}
+        client-id: ${{ inputs.client_id }}
+        tenant-id: ${{ inputs.tenant_id }}
+        subscription-id: ${{ inputs.subscription_id }}
 
     - name: Execute code
       shell: bash
