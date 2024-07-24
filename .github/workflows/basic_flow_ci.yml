@@ -5,7 +5,8 @@ on:
   workflow_call:
   push:
     branches:
-      - "development"
+      # - "development"
+      - "agromova/features/federated_action"
     paths:
       - '.github/**'
       - 'flows/function_basic_flow/**'
