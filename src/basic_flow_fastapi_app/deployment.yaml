@@ -24,7 +24,7 @@ metadata:
   name: basic-flow-app-sa
   namespace: basic-flow-app
   annotations: 
-    azure.workload.identity/client-id: SUBSTITUTE_CLIENT_ID
+    azure.workload.identity/client-id: cd882227-e1c6-4ee6-8be0-771c3000613b
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -34,13 +34,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      azure.workload.identity/use: "true"
+      azure.workload.identity/use: "true" # THIS IS A REQUIRED PROPERTY
       app: basic-flow-app
   template:
     metadata:
       labels:
         app: basic-flow-app
-        azure.workload.identity/use: "true"
+        azure.workload.identity/use: "true" # THIS IS A REQUIRED PROPERTY
     spec:
       serviceAccountName: basic-flow-app-sa
       containers:
