@@ -180,16 +180,27 @@ jobs:
           push: true
           tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      - name: Connect to AKS
-        uses: azure/aks-set-context@v1
+      - name: Azure CLI login
+        uses: azure/login@v1
         with:
-          creds: ${{ secrets.azure_credentials }}
-          cluster-name: ${{ vars.CLUSTER_NAME }}
+          client-id: ${{ env.client_id }}
+          tenant-id: ${{ env.tenant_id }}
+          subscription-id: ${{ env.subscription_id }}
+
+      - name: Connect to AKS
+        uses: azure/aks-set-context@v3
+        with:
           resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+          cluster-name: ${{ vars.CLUSTER_NAME }}
 
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/setup-kubectl@v3
+
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.26'
 
       - name: Create Secrets
         run: |
