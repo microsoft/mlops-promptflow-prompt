@@ -34,11 +34,13 @@ metadata:
 spec:
   selector:
     matchLabels:
+      azure.workload.identity/use: "true"
       app: basic-flow-app
   template:
     metadata:
       labels:
         app: basic-flow-app
+        azure.workload.identity/use: "true"
     spec:
       serviceAccountName: basic-flow-app-sa
       containers:
