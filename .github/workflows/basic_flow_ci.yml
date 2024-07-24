@@ -151,9 +151,8 @@ jobs:
             az functionapp config appsettings set --name ${{ vars.APP_NAME }} --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
             --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
             "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
-            "AZURE_OPENAI_API_KEY=${{ vars.AOAI_API_KEY }}" \
-            "AZURE_OPENAI_ENDPOINT=${{ vars.AOAI_BASE_ENDPOINT }}"
-
+            "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
+            "AZURE_OPENAI_ENDPOINT=${{ secrets.AOAI_BASE_ENDPOINT }}"
 
   run-aks-deployment:
     runs-on: ubuntu-latest
@@ -216,7 +215,6 @@ jobs:
 
       - name: Deploy to AKS
         run: |
+          sed -i 's/SUBSTITUTE_CLIENT_ID/${{ env.CLIENT_ID }}/g' src/basic_flow_fastapi_app/deployment.yaml
           kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
           kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}

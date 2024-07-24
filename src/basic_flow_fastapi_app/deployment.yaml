@@ -18,6 +18,14 @@ spec:
   selector:
     app: basic-flow-app
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: basic-flow-app-sa
+  namespace: basic-flow-app
+  annotations: 
+    azure.workload.identity/client-id: SUBSTITUTE_CLIENT_ID
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,6 +40,7 @@ spec:
       labels:
         app: basic-flow-app
     spec:
+      serviceAccountName: basic-flow-app-sa
       containers:
       - name: basic-flow-app-container
         image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
