@@ -216,5 +216,6 @@ jobs:
 
       - name: Deploy to AKS
         run: |
+          sed -i 's/SUBSTITUTE_CLIENT_ID/${{ env.CLIENT_ID }}/g' src/basic_flow_fastapi_app/deployment.yaml
           kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
           kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
