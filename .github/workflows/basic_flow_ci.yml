@@ -177,14 +177,6 @@ jobs:
           run: |
             az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push Docker image to Azure Container Registry
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./src/basic_flow_fastapi_app/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
-
       - name: Azure CLI login
         uses: azure/login@v1
         with:
@@ -194,6 +186,14 @@ jobs:
 
       - name: 'Run basic AZ CLI command'
         run: az group list
+
+      # - name: Build and push Docker image to Azure Container Registry
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     file: ./src/basic_flow_fastapi_app/Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
       # - name: Connect to AKS
       #   uses: azure/aks-set-context@v3
