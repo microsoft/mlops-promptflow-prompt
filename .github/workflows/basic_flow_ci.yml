@@ -186,7 +186,7 @@ jobs:
           tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
       - name: Azure CLI login
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
           client-id: ${{ env.client_id }}
           tenant-id: ${{ env.tenant_id }}
@@ -195,37 +195,37 @@ jobs:
       - name: 'Run basic AZ CLI command'
         run: az group list
 
-      - name: Connect to AKS
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
-          cluster-name: ${{ vars.CLUSTER_NAME }}
+      # - name: Connect to AKS
+      #   uses: azure/aks-set-context@v3
+      #   with:
+      #     resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+      #     cluster-name: ${{ vars.CLUSTER_NAME }}
 
-      - name: Setup kubectl
-        id: install-kubectl
-        uses: azure/setup-kubectl@v3
+      # - name: Setup kubectl
+      #   id: install-kubectl
+      #   uses: azure/setup-kubectl@v3
 
-      - name: Setup kubelogin
-        uses: azure/use-kubelogin@v1
-        with:
-          kubelogin-version: 'v0.0.26'
+      # - name: Setup kubelogin
+      #   uses: azure/use-kubelogin@v1
+      #   with:
+      #     kubelogin-version: 'v0.0.26'
 
-      - name: Set AKS context
-        id: set-context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: 'mlops-promptflow-prompt'
-          cluster-name: 'aks-prompt-promptflow'
-          admin: 'false'
-          use-kubelogin: 'true'
+      # - name: Set AKS context
+      #   id: set-context
+      #   uses: azure/aks-set-context@v3
+      #   with:
+      #     resource-group: 'mlops-promptflow-prompt'
+      #     cluster-name: 'aks-prompt-promptflow'
+      #     admin: 'false'
+      #     use-kubelogin: 'true'
 
-      - name: Run kubectl
-        run: |
-            kubectl get pods
+      # - name: Run kubectl
+      #   run: |
+      #       kubectl get pods
 
-      - name: AKS ClusterRole
-        run: |
-          kubectl apply -f src/basic_flow_fastapi_app/kubelogin_clusterrole.yml
+      # - name: AKS ClusterRole
+      #   run: |
+      #     kubectl apply -f src/basic_flow_fastapi_app/kubelogin_clusterrole.yml
 
       # - name: Create Secrets
       #   run: |
