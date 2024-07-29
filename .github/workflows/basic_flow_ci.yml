@@ -192,20 +192,26 @@ jobs:
       #     tenant-id: ${{ env.tenant_id }}
       #     subscription-id: ${{ env.subscription_id }}
 
-      # - name: Connect to AKS
-      #   uses: azure/aks-set-context@v3
-      #   with:
-      #     resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
-      #     cluster-name: ${{ vars.CLUSTER_NAME }}
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
 
-      # - name: Setup kubectl
-      #   id: install-kubectl
-      #   uses: azure/setup-kubectl@v3
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.26'
 
-      # - name: Setup kubelogin
-      #   uses: azure/use-kubelogin@v1
-      #   with:
-      #     kubelogin-version: 'v0.0.26'
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+          cluster-name: ${{ vars.CLUSTER_NAME }}
+          admin: 'false'
+          use-kubelogin: 'true'
+
+      - name: Run kubectl
+        run: |
+          kubectl get pods
 
       # - name: Create Secrets
       #   run: |
