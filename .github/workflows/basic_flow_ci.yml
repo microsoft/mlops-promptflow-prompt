@@ -26,8 +26,9 @@ env:
   TENANT_ID: ${{ vars.TENANT_ID }}
 
 permissions:
-  id-token: write
-  contents: read
+      id-token: write
+      contents: read
+
 jobs:
   run-evaluation-full:
     runs-on: ubuntu-latest
@@ -180,9 +181,9 @@ jobs:
       - name: Azure CLI login
         uses: azure/login@v1
         with:
-            client-id: ${{ env.client_id }}
-            tenant-id: ${{ env.tenant_id }}
-            subscription-id: ${{ env.subscription_id }}
+          client-id: ${{ env.client_id }}
+          tenant-id: ${{ env.tenant_id }}
+          subscription-id: ${{ env.subscription_id }}
 
       - name: 'Run basic AZ CLI command'
         run: az group list
