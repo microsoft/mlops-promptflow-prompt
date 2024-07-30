@@ -192,7 +192,7 @@ jobs:
           username: ${{ secrets.ACR_USER_NAME }}
           password: ${{ secrets.ACR_PASSWORD }}
       - run: |
-          docker build -t ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest ./src/basic_flow_fastapi_app
+          docker build -t ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest -f ./src/basic_flow_fastapi_app/Dockerfile ./src/basic_flow_fastapi_app
           docker push ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
       - name: Setup kubectl
