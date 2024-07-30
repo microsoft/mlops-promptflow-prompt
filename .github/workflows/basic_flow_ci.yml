@@ -206,30 +206,30 @@ jobs:
         run: |
           kubectl get pods
 
-      # - name: Create Secrets
-      #   run: |
-      #     kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
-      #     kubectl create secret generic aoai-secret \
-      #       --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
-      #       --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
-      #       --from-literal=aoai-deployment=gpt-35-turbo \
-      #       --from-literal=aoai-version=2023-07-01-preview \
-      #       -n basic-flow-app
-      #     kubectl delete secret appinsights-connection-secret --ignore-not-found=true
-      #     kubectl create secret generic appinsights-connection-secret \
-      #       --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+      - name: Create Secrets
+        run: |
+          kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
+          kubectl create secret generic aoai-secret \
+            --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
+            --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
+            --from-literal=aoai-deployment=gpt-35-turbo \
+            --from-literal=aoai-version=2023-07-01-preview \
+            -n basic-flow-app
+          kubectl delete secret appinsights-connection-secret --ignore-not-found=true
+          kubectl create secret generic appinsights-connection-secret \
+            --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
 
-      # - name: Deploy OTel collector to AKS
-      #   run: |
-      #     # Deploy Cert-Manager
-      #     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-      #     kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
-      #     # Deploy OpenTelemetry Collector to AKS cluster
-      #     kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml # AKS OpenTelemetry Operator and Collector for AKS 
-      #     kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
-      #     kubectl apply -f src/otel_collector/otel-collector.yaml
+      - name: Deploy OTel collector to AKS
+        run: |
+          # Deploy Cert-Manager
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+          kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
+          # Deploy OpenTelemetry Collector to AKS cluster
+          kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml # AKS OpenTelemetry Operator and Collector for AKS 
+          kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
+          kubectl apply -f src/otel_collector/otel-collector.yaml
 
-      # - name: Deploy to AKS
-      #   run: |
-      #     kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
-      #     kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
+          kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
