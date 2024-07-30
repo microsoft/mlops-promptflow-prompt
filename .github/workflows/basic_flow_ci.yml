@@ -177,13 +177,23 @@ jobs:
           run: |
             az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push Docker image to Azure Container Registry
-        uses: docker/build-push-action@v6
+      # - name: Build and push Docker image to Azure Container Registry
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     file: ./src/basic_flow_fastapi_app/Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
         with:
-          context: .
-          file: ./src/basic_flow_fastapi_app/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+          login-server: ${{ secrets.ACR_REGISTRY  }}
+          username: ${{ secrets.ACR_USER_NAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - run: |
+          docker build -t ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest ./src/basic_flow_fastapi_app
+          docker push ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
       - name: Setup kubectl
         id: install-kubectl
