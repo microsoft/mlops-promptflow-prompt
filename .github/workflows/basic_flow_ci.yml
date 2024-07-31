@@ -168,14 +168,26 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Execute Azure ACR Login
-        uses: ./.github/actions/execute_shell_code
+      - name: 'Az CLI login'
+        uses: azure/login@v1
         with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          run: |
-            az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
+          client-id: ${{ env.CLIENT_ID }}
+          tenant-id: ${{ env.TENANT_ID }}
+          subscription-id: ${{ env.SUBSCRIPTION_ID }}
+
+      - name: 'Run az commands'
+        run: |
+          az account show
+          az group list
+
+      # - name: Execute Azure ACR Login
+      #   uses: ./.github/actions/execute_shell_code
+      #   with:
+      #     client_id: ${{ env.CLIENT_ID }}
+      #     tenant_id: ${{ env.TENANT_ID }}
+      #     subscription_id: ${{ env.SUBSCRIPTION_ID }}
+      #     run: |
+      #       az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
 
       # - name: Build and push Docker image to Azure Container Registry
       #   uses: docker/build-push-action@v6
@@ -195,56 +207,56 @@ jobs:
       #     docker build -t ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest -f ./src/basic_flow_fastapi_app/Dockerfile .
       #     docker push ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      - name: Setup kubectl
-        id: install-kubectl
-        uses: azure/setup-kubectl@v3
+      # - name: Setup kubectl
+      #   id: install-kubectl
+      #   uses: azure/setup-kubectl@v3
 
-      - name: Setup kubelogin
-        uses: azure/use-kubelogin@v1
-        with:
-          kubelogin-version: 'v0.0.26'
+      # - name: Setup kubelogin
+      #   uses: azure/use-kubelogin@v1
+      #   with:
+      #     kubelogin-version: 'v0.0.26'
 
-      - name: Set AKS context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
-          cluster-name: ${{ vars.CLUSTER_NAME }}
-          admin: 'false'
-          use-kubelogin: 'true'
+      # - name: Set AKS context
+      #   uses: azure/aks-set-context@v3
+      #   with:
+      #     resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+      #     cluster-name: ${{ vars.CLUSTER_NAME }}
+      #     admin: 'false'
+      #     use-kubelogin: 'true'
 
-      - name: Run kubectl
-        run: |
-          kubectl get pods
+      # - name: Run kubectl
+      #   run: |
+      #     kubectl get pods
 
-      - name: Create Secrets
-        run: |
-          kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
-          kubectl create secret generic aoai-secret \
-            --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
-            --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
-            --from-literal=aoai-deployment=gpt-35-turbo \
-            --from-literal=aoai-version=2023-07-01-preview \
-            -n basic-flow-app
-          kubectl delete secret appinsights-connection-secret --ignore-not-found=true
-          kubectl create secret generic appinsights-connection-secret \
-            --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+      # - name: Create Secrets
+      #   run: |
+      #     kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
+      #     kubectl create secret generic aoai-secret \
+      #       --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
+      #       --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
+      #       --from-literal=aoai-deployment=gpt-35-turbo \
+      #       --from-literal=aoai-version=2023-07-01-preview \
+      #       -n basic-flow-app
+      #     kubectl delete secret appinsights-connection-secret --ignore-not-found=true
+      #     kubectl create secret generic appinsights-connection-secret \
+      #       --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
 
-      - name: Deploy OTel collector to AKS
-        run: |
-          # Deploy Cert-Manager
-          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-          kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
-          # Deploy OpenTelemetry Collector to AKS cluster
-          kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml # AKS OpenTelemetry Operator and Collector for AKS 
-          kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
-          kubectl apply -f src/otel_collector/otel-collector.yaml
+      # - name: Deploy OTel collector to AKS
+      #   run: |
+      #     # Deploy Cert-Manager
+      #     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+      #     kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
+      #     # Deploy OpenTelemetry Collector to AKS cluster
+      #     kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml # AKS OpenTelemetry Operator and Collector for AKS 
+      #     kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
+      #     kubectl apply -f src/otel_collector/otel-collector.yaml
 
-      - name: Deploy to AKS
-        uses: ./.github/actions/execute_shell_code
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          run: |
-            kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
-            kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
+      # - name: Deploy to AKS
+      #   uses: ./.github/actions/execute_shell_code
+      #   with:
+      #     client_id: ${{ env.CLIENT_ID }}
+      #     tenant_id: ${{ env.TENANT_ID }}
+      #     subscription_id: ${{ env.SUBSCRIPTION_ID }}
+      #     run: |
+      #       kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
+      #       kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
