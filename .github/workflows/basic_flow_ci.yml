@@ -168,14 +168,14 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Execute Azure ACR Login
-        uses: ./.github/actions/execute_shell_code
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          run: |
-            az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
+      # - name: Execute Azure ACR Login
+      #   uses: ./.github/actions/execute_shell_code
+      #   with:
+      #     client_id: ${{ env.CLIENT_ID }}
+      #     tenant_id: ${{ env.TENANT_ID }}
+      #     subscription_id: ${{ env.SUBSCRIPTION_ID }}
+      #     run: |
+      #       az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
 
       # - name: Build and push Docker image to Azure Container Registry
       #   uses: docker/build-push-action@v6
@@ -240,6 +240,11 @@ jobs:
           kubectl apply -f src/otel_collector/otel-collector.yaml
 
       - name: Deploy to AKS
-        run: |
-          kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
-          kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
+        uses: ./.github/actions/execute_shell_code
+        with:
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
+          run: |
+            kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
+            kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
