@@ -168,7 +168,7 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Execute Azure Functions Deployment
+      - name: Execute Azure ACR Login
         uses: ./.github/actions/execute_shell_code
         with:
           client_id: ${{ env.CLIENT_ID }}
