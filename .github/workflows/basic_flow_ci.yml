@@ -207,56 +207,63 @@ jobs:
       #     docker build -t ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest -f ./src/basic_flow_fastapi_app/Dockerfile .
       #     docker push ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
 
-      # - name: Setup kubectl
-      #   id: install-kubectl
-      #   uses: azure/setup-kubectl@v3
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
 
-      # - name: Setup kubelogin
-      #   uses: azure/use-kubelogin@v1
-      #   with:
-      #     kubelogin-version: 'v0.0.26'
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.26'
 
-      # - name: Set AKS context
-      #   uses: azure/aks-set-context@v3
-      #   with:
-      #     resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
-      #     cluster-name: ${{ vars.CLUSTER_NAME }}
-      #     admin: 'false'
-      #     use-kubelogin: 'true'
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+          cluster-name: ${{ vars.CLUSTER_NAME }}
+          admin: 'false'
+          use-kubelogin: 'true'
 
-      # - name: Run kubectl
-      #   run: |
-      #     kubectl get pods
+      - name: Run kubectl
+        run: |
+          kubectl get pods
 
-      # - name: Create Secrets
-      #   run: |
-      #     kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
-      #     kubectl create secret generic aoai-secret \
-      #       --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
-      #       --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
-      #       --from-literal=aoai-deployment=gpt-35-turbo \
-      #       --from-literal=aoai-version=2023-07-01-preview \
-      #       -n basic-flow-app
-      #     kubectl delete secret appinsights-connection-secret --ignore-not-found=true
-      #     kubectl create secret generic appinsights-connection-secret \
-      #       --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+      - name: Create Secrets
+        run: |
+          kubectl get serviceaccount basic-flow-app-sa -n basic-flow-app || kubectl create serviceaccount basic-flow-app-sa -n basic-flow-app
+          kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
+          kubectl create secret generic aoai-secret \
+            --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
+            --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
+            --from-literal=aoai-deployment=gpt-35-turbo \
+            --from-literal=aoai-version=2023-07-01-preview \
+            -n basic-flow-app
+          kubectl delete secret acr-secret -n basic-flow-app --ignore-not-found=true
+          kubectl create secret docker-registry acr-secret \
+            --docker-server=${{ secrets.ACR_REGISTRY }} \
+            --docker-username=${{ secrets.ACR_USER_NAME }} \
+            --docker-password=${{ secrets.ACR_PASSWORD }} \
+            --docker-email=mlops_promptflow_team@example.com \
+            -n basic-flow-app
+          kubectl patch serviceaccount basic-flow-app-sa \
+            -p '{"imagePullSecrets": [{"name": "acr-secret"}]}' \
+            -n basic-flow-app
+          kubectl delete secret appinsights-connection-secret --ignore-not-found=true
+          kubectl create secret generic appinsights-connection-secret \
+            --from-literal=connection-string=${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }} \
+            -n basic-flow-app
 
-      # - name: Deploy OTel collector to AKS
-      #   run: |
-      #     # Deploy Cert-Manager
-      #     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-      #     kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
-      #     # Deploy OpenTelemetry Collector to AKS cluster
-      #     kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml # AKS OpenTelemetry Operator and Collector for AKS 
-      #     kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
-      #     kubectl apply -f src/otel_collector/otel-collector.yaml
+      - name: Deploy OTel collector to AKS
+        run: |
+          # Deploy Cert-Manager
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+          kubectl wait --for=condition=ready --timeout=60s -n cert-manager --all pods
+          # Deploy OpenTelemetry Collector to AKS cluster
+          kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.96.0/opentelemetry-operator.yaml # AKS OpenTelemetry Operator and Collector for AKS 
+          kubectl wait --for=condition=ready --timeout=60s -n opentelemetry-operator-system --all pods
+          kubectl apply -f src/otel_collector/otel-collector.yaml
 
-      # - name: Deploy to AKS
-      #   uses: ./.github/actions/execute_shell_code
-      #   with:
-      #     client_id: ${{ env.CLIENT_ID }}
-      #     tenant_id: ${{ env.TENANT_ID }}
-      #     subscription_id: ${{ env.SUBSCRIPTION_ID }}
-      #     run: |
-      #       kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
-      #       kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
+          kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
