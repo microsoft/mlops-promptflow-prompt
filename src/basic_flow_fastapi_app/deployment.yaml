@@ -47,7 +47,7 @@ spec:
       serviceAccountName: basic-flow-app-sa
       containers:
         - name: basic-flow-app-container
-          image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
+          image: mlopspromptflowacrw.azurecr.io/basic-flow-image:latest
           imagePullPolicy: Always
           env:
           - name: AZURE_OPENAI_API_KEY
