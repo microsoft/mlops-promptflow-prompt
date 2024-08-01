@@ -186,9 +186,8 @@ jobs:
           client_id: ${{ env.CLIENT_ID }}
           tenant_id: ${{ env.TENANT_ID }}
           subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          run: |
-            # az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
-            az acr build --image ${{ secrets.ACR_REGISTRY  }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} .
+          script_parameter: |
+            az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} .
 
       # - name: Build and push Docker image to Azure Container Registry
       #   uses: docker/build-push-action@v6
@@ -224,6 +223,9 @@ jobs:
           cluster-name: ${{ vars.CLUSTER_NAME }}
           admin: 'false'
           use-kubelogin: 'true'
+
+      - name: Run Az version
+        run: az --version
 
       - name: Run kubectl
         run: |
