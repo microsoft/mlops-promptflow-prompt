@@ -189,24 +189,6 @@ jobs:
           script_parameter: |
             az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} -f ./src/basic_flow_fastapi_app/Dockerfile .
 
-      # - name: Build and push Docker image to Azure Container Registry
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     file: ./src/basic_flow_fastapi_app/Dockerfile
-      #     push: true
-      #     tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
-
-      # - name: 'Build and push image'
-      #   uses: azure/docker-login@v1
-      #   with:
-      #     login-server: ${{ secrets.ACR_REGISTRY  }}
-      #     username: ${{ secrets.ACR_USER_NAME }}
-      #     password: ${{ secrets.ACR_PASSWORD }}
-      # - run: |
-      #     docker build -t ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest -f ./src/basic_flow_fastapi_app/Dockerfile .
-      #     docker push ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
-
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/setup-kubectl@v3
@@ -223,13 +205,6 @@ jobs:
           cluster-name: ${{ vars.CLUSTER_NAME }}
           admin: 'false'
           use-kubelogin: 'true'
-
-      - name: Run Az version
-        run: az --version
-
-      - name: Run kubectl
-        run: |
-          kubectl get pods
 
       - name: Create Secrets
         run: |
