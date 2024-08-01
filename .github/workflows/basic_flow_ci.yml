@@ -187,7 +187,7 @@ jobs:
           tenant_id: ${{ env.TENANT_ID }}
           subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
-            az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} f ./src/basic_flow_fastapi_app/Dockerfile .
+            az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} -f ./src/basic_flow_fastapi_app/Dockerfile .
 
       # - name: Build and push Docker image to Azure Container Registry
       #   uses: docker/build-push-action@v6
