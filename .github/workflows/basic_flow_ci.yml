@@ -28,6 +28,7 @@ env:
 permissions:
   id-token: write
   contents: read
+
 jobs:
   run-evaluation-full:
     runs-on: ubuntu-latest
@@ -168,18 +169,6 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: 'Az CLI login'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ env.CLIENT_ID }}
-          tenant-id: ${{ env.TENANT_ID }}
-          subscription-id: ${{ env.SUBSCRIPTION_ID }}
-
-      - name: 'Run az commands'
-        run: |
-          az account show
-          az group list
-
       - name: Build and push image to ACR
         uses: ./.github/actions/execute_shell_code
         with:
@@ -188,6 +177,13 @@ jobs:
           subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} -f ./src/basic_flow_fastapi_app/Dockerfile .
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.CLIENT_ID }}
+          tenant-id: ${{ env.TENANT_ID }}
+          subscription-id: ${{ env.SUBSCRIPTION_ID }}
 
       - name: Setup kubectl
         id: install-kubectl
