@@ -206,6 +206,10 @@ jobs:
           admin: 'false'
           use-kubelogin: 'true'
 
+      - name: Replace Image Placeholder in deployment.yaml
+        run: |
+          sed -i 's|IMAGE_PLACEHOLDER|${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest|g' src/basic_flow_fastapi_app/deployment.yaml
+
       - name: Create Secrets
         run: |
           kubectl get serviceaccount basic-flow-app-sa -n basic-flow-app || kubectl create serviceaccount basic-flow-app-sa -n basic-flow-app
