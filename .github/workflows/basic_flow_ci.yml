@@ -180,14 +180,15 @@ jobs:
           az account show
           az group list
 
-      # - name: Execute Azure ACR Login
-      #   uses: ./.github/actions/execute_shell_code
-      #   with:
-      #     client_id: ${{ env.CLIENT_ID }}
-      #     tenant_id: ${{ env.TENANT_ID }}
-      #     subscription_id: ${{ env.SUBSCRIPTION_ID }}
-      #     run: |
-      #       az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
+      - name: Build and push image to ACR
+        uses: ./.github/actions/execute_shell_code
+        with:
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
+          run: |
+            # az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
+            az acr build --image ${{ secrets.ACR_REGISTRY  }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} .
 
       # - name: Build and push Docker image to Azure Container Registry
       #   uses: docker/build-push-action@v6
@@ -240,11 +241,10 @@ jobs:
             -n basic-flow-app
           kubectl delete secret acr-secret -n basic-flow-app --ignore-not-found=true
           kubectl create secret docker-registry acr-secret \
+            --namespace basic-flow-app \
             --docker-server=${{ secrets.ACR_REGISTRY }} \
             --docker-username=${{ secrets.ACR_USER_NAME }} \
-            --docker-password=${{ secrets.ACR_PASSWORD }} \
-            --docker-email=mlops_promptflow_team@example.com \
-            -n basic-flow-app
+            --docker-password=${{ secrets.ACR_PASSWORD }} 
           kubectl patch serviceaccount basic-flow-app-sa \
             -p '{"imagePullSecrets": [{"name": "acr-secret"}]}' \
             -n basic-flow-app

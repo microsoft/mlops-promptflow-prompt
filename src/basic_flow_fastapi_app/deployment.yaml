@@ -46,36 +46,38 @@ spec:
     spec:
       serviceAccountName: basic-flow-app-sa
       containers:
-      - name: basic-flow-app-container
-        image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
-        imagePullPolicy: Always
-        env:
-        - name: AZURE_OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aoai-secret
-              key: aoai-key
-        - name: AZURE_OPENAI_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: aoai-secret
-              key: aoai-endpoint
-        - name: AZURE_OPENAI_API_VERSION
-          valueFrom:
-            secretKeyRef:
-              name: aoai-secret
-              key: aoai-version
-        - name: AZURE_OPENAI_DEPLOYMENT
-          valueFrom:
-            secretKeyRef:
-              name: aoai-secret
-              key: aoai-deployment
-        ports:
-        - containerPort: 8080
-        resources:
-          limits:
-            cpu: "0.5"
-            memory: "250Mi"
-          requests:
-            cpu: "0.25"
-            memory: "100Mi"
+        - name: basic-flow-app-container
+          image: acrpromptpromptflow.azurecr.io/basic-flow-image:latest
+          imagePullPolicy: Always
+          env:
+          - name: AZURE_OPENAI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aoai-secret
+                key: aoai-key
+          - name: AZURE_OPENAI_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: aoai-secret
+                key: aoai-endpoint
+          - name: AZURE_OPENAI_API_VERSION
+            valueFrom:
+              secretKeyRef:
+                name: aoai-secret
+                key: aoai-version
+          - name: AZURE_OPENAI_DEPLOYMENT
+            valueFrom:
+              secretKeyRef:
+                name: aoai-secret
+                key: aoai-deployment
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "250Mi"
+            requests:
+              cpu: "0.25"
+              memory: "100Mi"
+      imagePullSecrets:
+        - name: acr-secret
