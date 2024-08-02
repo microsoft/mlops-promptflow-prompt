@@ -18,7 +18,13 @@ env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+  SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+  CLIENT_ID: ${{ vars.CLIENT_ID }}
+  TENANT_ID: ${{ vars.TENANT_ID }}
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
   build-validation:
     name: Build Validation
@@ -47,7 +53,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.plan_and_execute.evaluate.evaluate \
               --environment_name pr

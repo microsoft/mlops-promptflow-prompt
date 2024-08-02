@@ -18,9 +18,6 @@ on:
       subscription_id:
         description: "the subscription ID hosting the AML instance."
         required: true
-      azure_credentials:
-        description: "the credentials to use to authenticate with Azure."
-        required: true
       aoai_api_key:
         description: "the API key to use to authenticate with AOAI."
         required: true
@@ -31,7 +28,13 @@ env:
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
+  SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+  CLIENT_ID: ${{ vars.CLIENT_ID }}
+  TENANT_ID: ${{ vars.TENANT_ID }}
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
   build-validation:
     name: Build Validation
@@ -60,7 +63,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.${{ inputs.model_type }}.evaluate.evaluate \
               --environment_name ${{ inputs.exec_environment }}

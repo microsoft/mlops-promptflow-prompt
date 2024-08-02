@@ -5,7 +5,8 @@ on:
   workflow_call:
   push:
     branches:
-      - "development"
+      # - "development"
+      - "agromova/features/federated_action"
     paths:
       - '.github/**'
       - 'flows/function_basic_flow/**'
@@ -20,6 +21,13 @@ env:
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
   IMAGE_NAME: "basic-flow-image"
+  SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+  CLIENT_ID: ${{ vars.CLIENT_ID }}
+  TENANT_ID: ${{ vars.TENANT_ID }}
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   run-evaluation-full:
@@ -47,7 +55,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.function_basic_flow.evaluate.evaluate \
               --environment_name dev
@@ -58,7 +68,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.class_basic_flow.evaluate.evaluate \
               --environment_name dev
@@ -69,7 +81,9 @@ jobs:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m flows.yaml_basic_flow.evaluate.evaluate \
               --environment_name dev
@@ -93,7 +107,9 @@ jobs:
       - name: Execute Online Deployment Script
         uses: ./.github/actions/execute_shell_code
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             python -m mlops.deployment.deploy_online_endpoint \
               --environment_name dev --flow_type function_basic_flow
@@ -126,7 +142,9 @@ jobs:
       - name: Execute Azure Functions Deployment
         uses: ./.github/actions/execute_shell_code
         with:
-          azure_credentials: ${{ secrets.azure_credentials }}
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
           script_parameter: |
             az functionapp deployment source config-zip -g ${{ vars.RESOURCE_GROUP_NAME }} -n \
             ${{ vars.APP_NAME }} --src 'src/basic_func_impl/build.zip' \
@@ -137,7 +155,6 @@ jobs:
             "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
             "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
             "AZURE_OPENAI_ENDPOINT=${{ secrets.AOAI_BASE_ENDPOINT }}"
-
 
   run-aks-deployment:
     runs-on: ubuntu-latest
@@ -152,37 +169,62 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Login to Azure Container Registry
-        run: |
-          az acr login --name ${{ secrets.ACR_REGISTRY }} --username ${{ secrets.ACR_USER_NAME }} --password ${{ secrets.ACR_PASSWORD }}
-
-      - name: Build and push Docker image to Azure Container Registry
-        uses: docker/build-push-action@v2
+      - name: Build and push image to ACR
+        uses: ./.github/actions/execute_shell_code
         with:
-          context: .
-          file: ./src/basic_flow_fastapi_app/Dockerfile
-          push: true
-          tags: ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+          client_id: ${{ env.CLIENT_ID }}
+          tenant_id: ${{ env.TENANT_ID }}
+          subscription_id: ${{ env.SUBSCRIPTION_ID }}
+          script_parameter: |
+            az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} -f ./src/basic_flow_fastapi_app/Dockerfile .
 
-      - name: Connect to AKS
-        uses: azure/aks-set-context@v1
+      - name: 'Az CLI login'
+        uses: azure/login@v1
         with:
-          creds: ${{ secrets.azure_credentials }}
-          cluster-name: ${{ vars.CLUSTER_NAME }}
-          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+          client-id: ${{ env.CLIENT_ID }}
+          tenant-id: ${{ env.TENANT_ID }}
+          subscription-id: ${{ env.SUBSCRIPTION_ID }}
 
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/setup-kubectl@v3
 
+      - name: Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.26'
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+          cluster-name: ${{ vars.CLUSTER_NAME }}
+          admin: 'false'
+          use-kubelogin: 'true'
+
+      - name: Replace Image Placeholder in deployment.yaml
+        run: |
+          sed -i 's|IMAGE_PLACEHOLDER|${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest|g' src/basic_flow_fastapi_app/deployment.yaml
+
       - name: Create Secrets
         run: |
+          kubectl get serviceaccount basic-flow-app-sa -n basic-flow-app || kubectl create serviceaccount basic-flow-app-sa -n basic-flow-app
+          kubectl annotate serviceaccount basic-flow-app-sa -n basic-flow-app azure.workload.identity/client-id="${{ env.CLIENT_ID }}" --overwrite
           kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
           kubectl create secret generic aoai-secret \
             --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \
             --from-literal=aoai-endpoint=${{ secrets.AOAI_BASE_ENDPOINT }} \
             --from-literal=aoai-deployment=gpt-35-turbo \
             --from-literal=aoai-version=2023-07-01-preview \
+            -n basic-flow-app
+          kubectl delete secret acr-secret -n basic-flow-app --ignore-not-found=true
+          kubectl create secret docker-registry acr-secret \
+            --namespace basic-flow-app \
+            --docker-server=${{ secrets.ACR_REGISTRY }} \
+            --docker-username=${{ secrets.ACR_USER_NAME }} \
+            --docker-password=${{ secrets.ACR_PASSWORD }} 
+          kubectl patch serviceaccount basic-flow-app-sa \
+            -p '{"imagePullSecrets": [{"name": "acr-secret"}]}' \
             -n basic-flow-app
           kubectl delete secret appinsights-connection-secret --ignore-not-found=true
           kubectl create secret generic appinsights-connection-secret \
@@ -202,5 +244,3 @@ jobs:
         run: |
           kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
           kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
