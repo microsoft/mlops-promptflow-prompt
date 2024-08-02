@@ -209,6 +209,7 @@ jobs:
       - name: Create Secrets
         run: |
           kubectl get serviceaccount basic-flow-app-sa -n basic-flow-app || kubectl create serviceaccount basic-flow-app-sa -n basic-flow-app
+          kubectl annotate serviceaccount basic-flow-app-sa -n basic-flow-app azure.workload.identity/client-id="${{ env.CLIENT_ID }}" --overwrite
           kubectl delete secret aoai-secret -n basic-flow-app --ignore-not-found=true
           kubectl create secret generic aoai-secret \
             --from-literal=aoai-key=${{ secrets.AOAI_API_KEY }} \

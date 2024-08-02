@@ -110,12 +110,10 @@ OpenID Connect (OIDC) Federated Credentials allow GitHub Actions workflows to se
     metadata:
     name: basic-flow-app-sa
     namespace: basic-flow-app
-    annotations: 
-        azure.workload.identity/client-id: "{client-ID}"
 ```
-1. Create a Kubernetes service account and annotate it with the client-ID of the managed identity. `annotations: azure.workload.identity/client-id: "{client-ID}"` for the service account. 
-2. Add `labels: azure.workload.identity/use: "true"` for template and spec.
-3. Provide secret for kubectl to access ACR: `imagePullSecrets:- name: acr-secret`
+1. In `basic_flow_ci.yaml` create a Kubernetes service account and annotate it with the client-ID of the managed identity. `kubectl annotate serviceaccount basic-flow-app-sa -n basic-flow-app azure.workload.identity/client-id="${{ env.CLIENT_ID }}" --overwrite`.
+2. In the `deployment.yaml`, add `labels: azure.workload.identity/use: "true"` for template and spec.
+3. In the `deployment.yaml`, provide secret for kubectl to access ACR: `imagePullSecrets:- name: acr-secret`
 ![ImagePullSecrets](../docs/images/aks_deployment_imagePullSecret.jpg)
 
 

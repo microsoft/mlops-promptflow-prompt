@@ -23,8 +23,6 @@ kind: ServiceAccount
 metadata:
   name: basic-flow-app-sa
   namespace: basic-flow-app
-  annotations: 
-    azure.workload.identity/client-id: "cd882227-e1c6-4ee6-8be0-771c3000613b"
 ---
 apiVersion: apps/v1
 kind: Deployment
