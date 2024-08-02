@@ -96,8 +96,6 @@ OpenID Connect (OIDC) Federated Credentials allow GitHub Actions workflows to se
     metadata:
     name: basic-flow-app-service
     namespace: basic-flow-app
-    annotations: 
-        azure.workload.identity/client-id: "{client-ID}"
     spec:
     type: LoadBalancer
     ports:
