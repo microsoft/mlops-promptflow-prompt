@@ -1,5 +1,7 @@
 azure-functions
 azure-functions-durable
+azure-storage-blob
+azure-identity
 python-dotenv>=0.10.3
 promptflow>=1.11.0
 promptflow-tools
@@ -9,6 +11,7 @@ faiss-cpu
 openai
 jinja2
 tiktoken
+keyrings.alt
 
 ## Telemetry
 azure-monitor-opentelemetry

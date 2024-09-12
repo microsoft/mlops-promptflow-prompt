@@ -32,7 +32,7 @@ def download(url: str) -> str:
 
     except Exception as e:
         log(f"Error uploading file: {e}")
-        raise (f"Error uploading file: {e}")
+        raise RuntimeError(f"Error uploading file: {e}")
 
 
 def normalize_filename(filename):
