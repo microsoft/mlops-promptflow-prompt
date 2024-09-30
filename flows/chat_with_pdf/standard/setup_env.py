@@ -7,7 +7,7 @@ from promptflow.connections import AzureOpenAIConnection, OpenAIConnection
 
 from chat_with_pdf.utils.lock import acquire_lock
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + "/chat_with_pdf/"
+BASE_DIR = "/tmp/"
 
 
 @tool

@@ -2,29 +2,37 @@
 import requests
 import os
 import re
-
-from utils.lock import acquire_lock
+from urllib.parse import urlparse
 from utils.logging import log
-from constants import PDF_DIR
+from constants import STORAGE_ACCOUNT_URL, PDFS_CONTAINER_NAME
+from azure.storage.blob import BlobServiceClient
+from utils.create_container import create_container_if_not_exists
+from azure.identity import DefaultAzureCredential
 
 
 def download(url: str) -> str:
     """Download a pdf file from a url and return the path to the file."""
-    path = os.path.join(PDF_DIR, normalize_filename(url) + ".pdf")
-    lock_path = path + ".lock"
-
-    with acquire_lock(lock_path):
-        if os.path.exists(path):
-            log("Pdf already exists in " + os.path.abspath(path))
-            return path
+    try:
+        # Ensure the container exists
+        create_container_if_not_exists(PDFS_CONTAINER_NAME)
 
         log("Downloading pdf from " + url)
         response = requests.get(url)
 
-        with open(path, "wb") as f:
-            f.write(response.content)
+        parsed_url = urlparse(url)
+        file_name = normalize_filename(os.path.basename(parsed_url.path))
 
-        return path
+        blob_service_client = BlobServiceClient(STORAGE_ACCOUNT_URL, DefaultAzureCredential())
+        blob_client = blob_service_client.get_blob_client(container=PDFS_CONTAINER_NAME, blob=file_name)
+
+        # Upload the file content
+        blob_client.upload_blob(response.content, overwrite=True)
+
+        return file_name
+
+    except Exception as e:
+        log(f"Error uploading file: {e}")
+        raise RuntimeError(f"Error uploading file: {e}")
 
 
 def normalize_filename(filename):
