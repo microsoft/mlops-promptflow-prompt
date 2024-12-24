@@ -24,6 +24,9 @@ on:
       - 'flows/yaml_basic_flow/**'
       - 'src/**'
       - 'tests/**'
+  push: 
+    branches:
+      - 'agromova/features/devops_with_container_v3'
 
 jobs:
   run-pr-workflow:
@@ -36,3 +39,6 @@ jobs:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
       aoai_api_key: ${{ secrets.AOAI_API_KEY }}
       aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}
+      acr_username: ${{ secrets.ACR_USER_NAME }}
+      acr_password: ${{ secrets.ACR_PASSWORD }}
+      acr_registry: ${{ secrets.ACR_REGISTRY }}
