@@ -2,5 +2,8 @@
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PDF_DIR = os.path.join(BASE_DIR, ".pdfs")
-INDEX_DIR = os.path.join(BASE_DIR, ".index/.pdfs/")
+
+
+STORAGE_ACCOUNT_URL = f"https://{os.getenv('STORAGE_ACCT_NAME')}.blob.core.windows.net/"
+PDFS_CONTAINER_NAME = "pdf-container"
+INDEX_CONTAINER_NAME = "faiss-index"
