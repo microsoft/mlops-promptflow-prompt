@@ -3,27 +3,24 @@ name: Build Validation Workflow
 
 on:
   workflow_call:
-
-env:
-  PYTHON_VERSION: "3.11"
+    secrets:
+      ACR_USER_NAME:
+        required: true
+      ACR_PASSWORD:
+        required: true
 
 jobs:
   run-unit-tests:
     runs-on: ubuntu-latest
+    container:
+      image: aipfacr.azurecr.io/devops_container_image:latest
+      options: --user root
+      credentials:
+          username: ${{ secrets.ACR_USER_NAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Load Python Dependencies
-        shell: bash
-        run: |
-          set -e
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade -r requirements.txt
 
       - name: Lint Code
         run: flake8

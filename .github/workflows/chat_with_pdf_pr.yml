@@ -26,3 +26,5 @@ jobs:
     secrets:
       aoai_api_key: ${{ secrets.AOAI_API_KEY }}
       aoai_base_endpoint: ${{ secrets.AOAI_BASE_ENDPOINT }}
+      ACR_USER_NAME: ${{ secrets.ACR_USER_NAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
