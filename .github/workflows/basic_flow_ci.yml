@@ -15,8 +15,6 @@ on:
       - 'src/basic_flow_fastapi_app/**'
 
 env:
-  PYTHON_VERSION: "3.11"
-  # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
   IMAGE_NAME: "basic-flow-image"
@@ -37,7 +35,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: '3.11'
 
       - name: Export Secrets 
         uses: oNaiPs/secrets-to-env-action@v1
@@ -45,47 +43,48 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Configure DevOps Agent
-        uses: ./.github/actions/configure_devops_agent          
+      - name: Load Python Dependencies
+        shell: bash
+        run: |
+            set -e # fail on error
+            python -m pip install --upgrade pip
+            python -m pip install --upgrade -r requirements.txt
+            az version
+  
+      - name: Azure CLI login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }}       
 
       - name: Execute PF Evaluation Pipeline for Function Flow
-        uses: ./.github/actions/execute_shell_code
+        shell: bash
+        run: |
+          python -m flows.function_basic_flow.evaluate.evaluate \
+            --environment_name dev
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          script_parameter: |
-            python -m flows.function_basic_flow.evaluate.evaluate \
-              --environment_name dev
 
       - name: Execute PF Evaluation Pipeline for Class Flow
-        uses: ./.github/actions/execute_shell_code
+        shell: bash
+        run: |
+          python -m flows.class_basic_flow.evaluate.evaluate \
+            --environment_name dev
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          script_parameter: |
-            python -m flows.class_basic_flow.evaluate.evaluate \
-              --environment_name dev
 
       - name: Execute PF Evaluation Pipeline for YAML Flow
-        uses: ./.github/actions/execute_shell_code
+        shell: bash
+        run: |
+          python -m flows.yaml_basic_flow.evaluate.evaluate \
+            --environment_name dev
         env:
           BUILD_BUILDID: "${{ github.run_id }}" # Match the expected name from Azure DevOps pipelines
           BUILD_SOURCEBRANCHNAME: ${{ github.head_ref || github.ref_name }}
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          script_parameter: |
-            python -m flows.yaml_basic_flow.evaluate.evaluate \
-              --environment_name dev
+
 
   run-online-deployment:
     runs-on: ubuntu-latest
@@ -100,18 +99,26 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
 
-      - name: Configure DevOps Agent
-        uses: ./.github/actions/configure_devops_agent
+      - name: Load Python Dependencies
+        shell: bash
+        run: |
+            set -e # fail on error
+            python -m pip install --upgrade pip
+            python -m pip install --upgrade -r requirements.txt
+            az version
+
+      - name: Azure CLI login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }}   
 
       - name: Execute Online Deployment Script
-        uses: ./.github/actions/execute_shell_code
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          script_parameter: |
-            python -m mlops.deployment.deploy_online_endpoint \
-              --environment_name dev --flow_type function_basic_flow
+        shell: bash
+        run: |
+          python -m mlops.deployment.deploy_online_endpoint \
+            --environment_name dev --flow_type function_basic_flow
 
 
   run-function-deployment:
@@ -138,22 +145,25 @@ jobs:
         run: |
             zip build.zip * -r
 
-      - name: Execute Azure Functions Deployment
-        uses: ./.github/actions/execute_shell_code
+      - name: Azure CLI login
+        uses: azure/login@v2
         with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          script_parameter: |
-            az functionapp deployment source config-zip -g ${{ vars.RESOURCE_GROUP_NAME }} -n \
-            ${{ vars.APP_NAME }} --src 'src/basic_func_impl/build.zip' \
-            --build-remote true
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }}   
 
-            az functionapp config appsettings set --name ${{ vars.APP_NAME }} --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
-            --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
-            "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
-            "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
-            "AZURE_OPENAI_ENDPOINT=${{ secrets.AOAI_BASE_ENDPOINT }}"
+      - name: Execute Azure Functions Deployment
+        shell: bash
+        run: |
+          az functionapp deployment source config-zip -g ${{ vars.RESOURCE_GROUP_NAME }} -n \
+          ${{ vars.APP_NAME }} --src 'src/basic_func_impl/build.zip' \
+          --build-remote true
+
+          az functionapp config appsettings set --name ${{ vars.APP_NAME }} --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
+          --settings "AZURE_OPENAI_DEPLOYMENT=gpt-35-turbo" \
+          "AZURE_OPENAI_API_VERSION=2023-07-01-preview" \
+          "AZURE_OPENAI_API_KEY=${{ secrets.AOAI_API_KEY }}" \
+          "AZURE_OPENAI_ENDPOINT=${{ secrets.AOAI_BASE_ENDPOINT }}"
 
   run-aks-deployment:
     runs-on: ubuntu-latest
@@ -167,22 +177,18 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
-
+          
+      - name: Azure CLI login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }} 
+        
       - name: Build and push image to ACR
-        uses: ./.github/actions/execute_shell_code
-        with:
-          client_id: ${{ env.CLIENT_ID }}
-          tenant_id: ${{ env.TENANT_ID }}
-          subscription_id: ${{ env.SUBSCRIPTION_ID }}
-          script_parameter: |
-            az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} -f ./src/basic_flow_fastapi_app/Dockerfile .
-
-      - name: 'Az CLI login'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ env.CLIENT_ID }}
-          tenant-id: ${{ env.TENANT_ID }}
-          subscription-id: ${{ env.SUBSCRIPTION_ID }}
+        shell: bash
+        run: |
+          az acr build --image ${{ secrets.ACR_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest --registry ${{ secrets.ACR_REGISTRY }} -g ${{ vars.RESOURCE_GROUP_NAME }} -f ./src/basic_flow_fastapi_app/Dockerfile .
 
       - name: Setup kubectl
         id: install-kubectl
@@ -243,3 +249,4 @@ jobs:
         run: |
           kubectl apply -f src/basic_flow_fastapi_app/deployment.yaml
           kubectl rollout status deployment/basic-flow-app-deployment -n basic-flow-app
+  
