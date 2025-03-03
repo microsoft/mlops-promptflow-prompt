@@ -35,7 +35,7 @@ jobs:
 
   execute-ml-job-pipeline:
     name: Execute PF Job Pipeline
-    runs-on: ubuntu-
+    runs-on: ubuntu-latest
     container:
       image: aipfacr.azurecr.io/devops_container_image:latest
       options: --user root
