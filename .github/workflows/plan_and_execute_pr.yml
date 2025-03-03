@@ -29,10 +29,19 @@ jobs:
   build-validation:
     name: Build Validation
     uses: ./.github/workflows/build_validation_workflow.yml
+    secrets:
+      ACR_USER_NAME: ${{ secrets.ACR_USER_NAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 
   execute-ml-job-pipeline:
     name: Execute PF Job Pipeline
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-
+    container:
+      image: aipfacr.azurecr.io/devops_container_image:latest
+      options: --user root
+      credentials:
+          username: ${{ secrets.ACR_USER_NAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
     needs: build-validation
     steps:
       - name: Checkout Actions
@@ -43,18 +52,6 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
           convert: upper
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-    
-      - name: Load Python Dependencies
-        shell: bash
-        run: |
-            set -e # fail on error
-            python -m pip install --upgrade pip
-            python -m pip install --upgrade -r requirements.txt
-            az version
   
       - name: Azure CLI login
         uses: azure/login@v2
