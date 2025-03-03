@@ -3,7 +3,7 @@
 Create a new conda environment using the following commands:
 
 ```cli
-conda create -n pf Python=3.9
+conda create -n pf Python=3.11
 conda activate pf
 ```
 

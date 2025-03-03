@@ -12,7 +12,7 @@ on:
       - 'src/chat_with_pdf_func_impl/**'
 
 env:
-  PYTHON_VERSION: "3.9"
+  PYTHON_VERSION: "3.11"
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
