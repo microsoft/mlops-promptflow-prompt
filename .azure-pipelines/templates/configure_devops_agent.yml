@@ -1,8 +1,8 @@
 steps:
 - task: UsePythonVersion@0
-  displayName: 'Use Python 3.9'
+  displayName: 'Use Python 3.11'
   inputs:
-    versionSpec: '3.9'
+    versionSpec: '3.11'
 
 - script: |
     set -e

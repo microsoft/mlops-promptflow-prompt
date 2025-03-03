@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  PYTHON_VERSION: "3.9"
+  PYTHON_VERSION: "3.11"
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
   SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}

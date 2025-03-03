@@ -5,8 +5,7 @@ on:
   workflow_call:
   push:
     branches:
-      # - "development"
-      - "agromova/features/federated_action"
+      - "development"
     paths:
       - '.github/**'
       - 'flows/function_basic_flow/**'
@@ -16,7 +15,7 @@ on:
       - 'src/basic_flow_fastapi_app/**'
 
 env:
-  PYTHON_VERSION: "3.9"
+  PYTHON_VERSION: "3.11"
   # Setting an environment variable with the value of a configuration variable
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}

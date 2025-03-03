@@ -33,7 +33,7 @@ RUN sudo apt-get update \
 COPY ./requirements.txt .
 
 RUN conda init bash \
-    && conda create -n promptflow-env python=3.9.16 pip=23.0.1 -q -y \
+    && conda create -n promptflow-env python=3.11 pip=23.0.1 -q -y \
     && conda run -n promptflow-env \
     && pip install -r requirements.txt \
     && conda clean -a -y
