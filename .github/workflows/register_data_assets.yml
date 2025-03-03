@@ -3,13 +3,11 @@ name: Register Datasets
 on:
   workflow_dispatch:
 
+# variables to run the Python script    
 env:
-  PYTHON_VERSION: "3.11"
   PROJECT_NAME: ${{ vars.PROJECT_NAME }}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
   SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
-  CLIENT_ID: ${{ vars.CLIENT_ID }}
-  TENANT_ID: ${{ vars.TENANT_ID }}
 
 permissions:
   id-token: write
@@ -20,14 +18,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Configure DevOps Agent
-        uses: ./.github/actions/configure_devops_agent
-      - name: Execute Dataset Registration
-        uses: ./.github/actions/execute_shell_code
+
+      - uses: actions/setup-python@v4
         with:
-            client_id: ${{ env.CLIENT_ID }}
-            tenant_id: ${{ env.TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.register_data_assets \
-                    --data_config_path config/data_config.json
+          python-version: '3.11'
+  
+      - name: Load Python Dependencies
+        shell: bash
+        run: |
+          set -e # fail on error
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade -r requirements.txt
+          az version
+
+      - name: Azure CLI login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUBSCRIPTION_ID }}
+
+      - name: Execute Dataset Registration
+        shell: bash
+        run: |
+          python -m mlops.common.register_data_assets \
+            --data_config_path config/data_config.json
